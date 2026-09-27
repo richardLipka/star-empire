@@ -1,20 +1,13 @@
 // @ts-check
 /**
  * What a perspective says about each star system, for the "Status" map view.
+ * Labels are translations: `status.<key>`.
  *
  * @typedef {'capital' | 'relay' | 'outpost' | 'relayDown' | 'foreign' | 'explored' | 'unexplored'} StarStatus
  */
 
-/** Display order and labels. */
-export const STATUSES = /** @type {const} */ ([
-  ['capital', 'Capital'],
-  ['relay', 'Outpost with relay'],
-  ['outpost', 'Outpost, no relay'],
-  ['relayDown', 'Relay down'],
-  ['foreign', 'Held by another empire'],
-  ['explored', 'Explored, empty'],
-  ['unexplored', 'Unexplored'],
-]);
+/** Display order. @type {StarStatus[]} */
+export const STATUSES = ['capital', 'relay', 'outpost', 'relayDown', 'foreign', 'explored', 'unexplored'];
 
 /**
  * @param {import('./picture.js').Picture} pic

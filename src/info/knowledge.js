@@ -5,7 +5,10 @@
  *
  * @typedef {'capital' | 'relay' | 'courier' | 'ansible'} Via
  * @typedef {{ validAt: number, receivedAt: number, via: Via, hops: number, data: any }} Entry
- * @typedef {{ id: string, kind: string, subject: string, text: string, validAt: number, receivedAt: number, via: Via, hops: number }} Dispatch
+ * A notable piece of news at the capital. `key` names the text (translated
+ * by the UI under `dispatch.<key>`); `params` fill it in. Parameters named
+ * system, near, observer, from or to hold system ids.
+ * @typedef {{ id: string, key: string, params: Record<string, string | number>, validAt: number, receivedAt: number, via: Via, hops: number }} Dispatch
  * @typedef {object} Knowledge
  * @property {Record<string, Entry>} systems      latest report per system
  * @property {Record<string, Entry>} fleets       latest report per own fleet

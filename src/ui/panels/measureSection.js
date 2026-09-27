@@ -1,6 +1,7 @@
 // @ts-check
 import { h, kv } from '../dom.js';
-import { formatDuration } from '../../core/time.js';
+import { t } from '../../i18n/index.js';
+import { fmtDuration, fmtLy } from '../../i18n/format.js';
 import { measure } from '../../galaxy/measure.js';
 import { DRIVE_TIERS, WEAR_ABOVE_G } from '../../fleet/drives.js';
 
@@ -10,14 +11,14 @@ import { DRIVE_TIERS, WEAR_ABOVE_G } from '../../fleet/drives.js';
  */
 export function renderMeasure(a, b) {
   const m = measure(a, b, DRIVE_TIERS);
-  const oneG = m.trips.find((t) => t.drive.accelG === 1) ?? m.trips[m.trips.length - 1];
+  const oneG = m.trips.find((x) => x.drive.accelG === 1) ?? m.trips[m.trips.length - 1];
   return [
-    h('h3', {}, `Measure: ${a.name} → ${b.name}`),
-    kv([['Distance', `${m.distance.toFixed(2)} ly`], ['Light delay', formatDuration(m.lightDelay)]]),
+    h('h3', {}, t('panel.measure', { from: a.name, to: b.name })),
+    kv([[t('measure.distance'), fmtLy(m.distance)], [t('measure.light'), fmtDuration(m.lightDelay)]]),
     kv(m.trips.map(({ drive, profile }) => [
-      `${drive.accelG} g → ${drive.cruise} c${drive.accelG > WEAR_ABOVE_G ? ' ⚠' : ''}`,
-      `${formatDuration(profile.totalTime)} (crew ${formatDuration(profile.properTime)})`,
+      t('measure.trip', { g: drive.accelG, c: drive.cruise }) + (drive.accelG > WEAR_ABOVE_G ? ' ⚠' : ''),
+      t('measure.tripValue', { total: fmtDuration(profile.totalTime), crew: fmtDuration(profile.properTime) }),
     ])),
-    h('p.hint', {}, `Warning at arrival, braking at ${oneG.drive.accelG} g: ${formatDuration(oneG.profile.warning)}. ⚠ = wear above ${WEAR_ABOVE_G} g.`),
+    h('p.hint', {}, t('measure.warning', { g: oneG.drive.accelG, warning: fmtDuration(oneG.profile.warning), wear: WEAR_ABOVE_G })),
   ];
 }

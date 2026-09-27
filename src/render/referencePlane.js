@@ -6,9 +6,9 @@ import { theme } from './theme.js';
 /**
  * Concentric distance rings and radial spokes on the galactic plane,
  * the classic 3D star-map reference. Units are light-years.
- * @param {{ radius: number, step?: number, spokes?: number }} opts
+ * @param {{ radius: number, step?: number, spokes?: number, label: (ly: number) => string }} opts
  */
-export function createReferencePlane({ radius, step = 10, spokes = 12 }) {
+export function createReferencePlane({ radius, step = 10, spokes = 12, label: labelText }) {
   const group = new THREE.Group();
   const ringMat = new THREE.LineBasicMaterial({ color: theme.line, transparent: true, opacity: 0.8 });
   const spokeMat = new THREE.LineBasicMaterial({ color: theme.line, transparent: true, opacity: 0.45 });
@@ -23,7 +23,7 @@ export function createReferencePlane({ radius, step = 10, spokes = 12 }) {
 
     const el = document.createElement('div');
     el.className = 'ring-label';
-    el.textContent = `${r} ly`;
+    el.textContent = labelText(r);
     const label = new CSS2DObject(el);
     label.center.set(0, 1);
     label.position.set(r, 0, 0);

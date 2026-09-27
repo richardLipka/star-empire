@@ -3,7 +3,8 @@ import { createRng, random, int, hashUnit } from '../src/core/rng.js';
 import { createQueue, push, pop, size } from '../src/core/scheduler.js';
 import { stableStringify, stateHash } from '../src/core/serialize.js';
 import { distance, normalize } from '../src/core/vec3.js';
-import { formatDuration, formatYear } from '../src/core/time.js';
+import { fmtDuration, fmtYear } from '../src/i18n/format.js';
+import { setLocale } from '../src/i18n/index.js';
 
 describe('rng', () => {
   it('is deterministic per seed and serializable', () => {
@@ -77,11 +78,16 @@ describe('vec3 and time', () => {
     expect(distance([0, 0, 0], [3, 4, 12])).toBe(13);
     expect(normalize([0, 0, 5])).toEqual([0, 0, 1]);
   });
-  it('formats durations', () => {
-    expect(formatDuration(2 / 365.25)).toBe('2 d');
-    expect(formatDuration(0.5)).toBe('6.0 mo');
-    expect(formatDuration(11.44)).toBe('11.4 y');
-    expect(formatDuration(1204.2)).toBe('1,204 y');
-    expect(formatYear(0)).toBe('2400.000');
+  it('formats durations per locale', () => {
+    setLocale('en');
+    expect(fmtDuration(2 / 365.25)).toBe('2 d');
+    expect(fmtDuration(0.5)).toBe('6.0 mo');
+    expect(fmtDuration(11.44)).toBe('11.4 y');
+    expect(fmtDuration(1204.2)).toBe('1,204 y');
+    expect(fmtYear(0)).toBe('2400.000');
+    setLocale('cs');
+    expect(fmtDuration(11.44)).toBe('11,4 r.');
+    expect(fmtYear(0)).toBe('2400,000');
+    setLocale('en');
   });
 });

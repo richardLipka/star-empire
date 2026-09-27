@@ -1,5 +1,6 @@
 // @ts-check
 import { applyThemeToCss } from '../render/theme.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Build the static page layout: top bar, 3D viewport and side panel.
@@ -8,9 +9,10 @@ import { applyThemeToCss } from '../render/theme.js';
  */
 export function createShell(root) {
   applyThemeToCss(document.documentElement);
+  document.title = t('app.title');
   root.innerHTML = `
     <header class="topbar">
-      <span class="brand">Star Empire</span>
+      <span class="brand"></span>
       <div class="topbar-slot" data-slot="time"></div>
       <span class="spacer"></span>
       <div class="topbar-slot" data-slot="tools"></div>
@@ -19,6 +21,7 @@ export function createShell(root) {
     <aside class="sidepanel"></aside>
   `;
   const q = (/** @type {string} */ sel) => /** @type {HTMLElement} */ (root.querySelector(sel));
+  q('.brand').textContent = t('app.brand');
   return {
     viewport: q('.viewport'),
     side: q('.sidepanel'),

@@ -11,6 +11,10 @@ import { isCatalogueDesignation } from '../galaxy/index.js';
 import { knowledgePicture, truthPicture } from '../perspective/picture.js';
 import { classifySystems } from '../perspective/starStatus.js';
 import { knowledgeOf } from '../info/module.js';
+import { t } from '../i18n/index.js';
+import { fmtLy } from '../i18n/format.js';
+import { fleetLabel } from './panels/fleetList.js';
+import { describeSighting } from './text/describe.js';
 
 const EMPIRE = 'A';
 /** Seconds between restyling all stars and labels (moving objects update every frame). */
@@ -38,7 +42,8 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
   let picture = getPicture();
   let statuses = classifySystems(picture, catalog.systems);
 
-  const panel = createSidePanel(side, { catalog, game, getPicture: () => picture, getStatuses: () => statuses, empire: EMPIRE, toast });
+  const name = (/** @type {string} */ id) => catalog.get(id).name;
+  const panel = createSidePanel(side, { catalog, game, getPicture: () => picture, getStatuses: () => statuses, empire: EMPIRE, toast, name });
   const view = createGalaxyView({
     catalog,
     inputElement: viewport.inputElement,
@@ -52,10 +57,11 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
       selection.measure = id;
       updateSelection();
     },
+    texts: { ring: (ly) => t('map.ring', { n: ly }), distance: fmtLy, galacticCentre: t('map.galacticCentre') },
   });
-  const overlay = createInfoOverlay({ scene: view.scene, catalog });
-  const controls = mountMapControls(viewportEl, { state: map, legend: () => legendItems(map.colourBy, catalog.systems, statuses), onChange: redraw });
-  const dispatches = mountDispatchLog(viewportEl, { getDispatches: () => knowledgeOf(game.world, EMPIRE).dispatches });
+  const overlay = createInfoOverlay({ scene: view.scene, catalog, labels: { fleet: (f) => fleetLabel(f, name), sighting: (s) => describeSighting(s, name) } });
+  const controls = mountMapControls(viewportEl, { state: map, empire: EMPIRE, legend: () => legendItems(map.colourBy, catalog.systems, statuses), onChange: redraw });
+  const dispatches = mountDispatchLog(viewportEl, { getDispatches: () => knowledgeOf(game.world, EMPIRE).dispatches, name });
 
   function updateSelection() {
     view.select(selection.selected);
@@ -74,7 +80,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
 
   function redraw() {
     picture = getPicture();
-    overlay.update(picture, map);
+    overlay.update(picture, { ...map, labelMode: view.getLabelMode(), focus: view.getFocus() });
     restyle();
     panel.refresh();
     dispatches.render();
@@ -83,14 +89,15 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
   /** @type {import('../render/galaxyView.js').LabelMode[]} */
   const modes = ['auto', 'all', 'none'];
   let mode = 0;
+  const labelText = () => t('labels.button', { mode: t(`labels.${modes[mode]}`) });
   const labelBtn = h('button.btn', {
-    title: 'Star labels',
+    title: t('labels.title'),
     onclick: () => {
       mode = (mode + 1) % modes.length;
       view.setLabelMode(modes[mode]);
-      labelBtn.textContent = `Labels: ${modes[mode]}`;
+      labelBtn.textContent = labelText();
     },
-  }, 'Labels: auto');
+  }, labelText());
   toolsSlot.prepend(h('div.btn-group', {}, labelBtn));
 
   window.addEventListener('keydown', (e) => {
@@ -115,7 +122,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
     /** Every animation frame. @param {number} dt */
     frame(dt) {
       picture = getPicture();
-      overlay.update(picture, map);
+      overlay.update(picture, { ...map, labelMode: view.getLabelMode(), focus: view.getFocus() });
       sinceStyle += dt;
       sincePanel += dt;
       if (sinceStyle > RESTYLE_EVERY) {

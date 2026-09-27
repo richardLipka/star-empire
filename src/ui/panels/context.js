@@ -7,6 +7,8 @@
  * @property {() => import('../../perspective/picture.js').Picture} getPicture
  * @property {() => Map<string, import('../../perspective/starStatus.js').StarStatus>} getStatuses
  * @property {string} empire                        the player's empire
+ * @property {(id: string) => string} name            system id → display name
+ * @property {() => { selected: string | null, measure: string | null }} getSelection
  * @property {(msg: string) => void} toast
  * @property {(fn: (world: any, ctx: any) => any, done?: string) => any} act   run a world action, report errors, re-render
  */

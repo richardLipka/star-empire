@@ -2,7 +2,7 @@
 
 Implementation is step by step.
 
-**Status:** M0–M3 done, plus the M3.1 quality pass (detection, rival, map views). Next: M4, the directives engine. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
+**Status:** M0–M4 done (with the M3.1 quality pass and internationalization). Next: see "Suggested next steps" below. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
 
 ## Target directory layout
 
@@ -77,19 +77,22 @@ star-empire/
 - Bugs fixed: luminosity class parsing ("III" read as supergiant), repeated pause toasts, docked-fleet reports ageing forever.
 - **Tests (68)**, including plume geometry, detection timing and warning, own-fleet certainty transitions, foreign fleets at our systems, status classification, spectral descriptions and save migration.
 
-### M4: Directives engine, first slice (`empire/`, `ui/`)
-- Directive model: category, type, target (system, set of systems, region or cone, empire-wide), parameters, priority, expiry, issue time.
-- Data-driven directive definitions in `src/data/directives.json` feed the category and submenu UI.
-- Governors: a simple AI that turns active directives into local actions.
-- Prototype directives: **Economy › production focus (growth / shipbuilding)** and **Expansion › colonize (nearest / most habitable / direction cone)**.
-- The arrival front of empire-wide directives is shown on the galaxy map.
+### M4: Directives engine and governors (`governors/`, `i18n/`) ✔
+- Data-driven catalogue (`src/data/directives.json`): 8 categories, 17 directives. Working now: explore, settle, readiness, send fleet, courier runs, reporting mode, relay maintenance. Accepted but not yet effective: warships, deliveries, autonomy, economy focus, terraforming, research focus, diplomatic stance.
+- Common parameters: priority, condition (threat seen / no threat), expiry. Targets: one system, a region, or the whole empire, as far as the capital knows its holdings.
+- Governors keep a book per system. Newer orders replace older ones. The yearly round handles expiry, standing settings, relay repair, courier schedules, and a shared shipyard slot (by priority, then in turn).
+- Scouts and settlers carry relay modules; settlers found outposts with relays. The relay network grows with the empire (in the sandbox, 41 outposts after about 450 years, and isolated Arcturus got connected).
+- The capital's view of every order is built only from reports: in transit, awaiting report, in effect, carried out, superseded, unreachable, expired, revoked.
+- UI: Orders tab (composer by category, target, parameters, sandbox "apply instantly"; issued list with status chips and revoke), Governor section per system (as last reported), fleet roles, fleet labels thinned by label mode.
+- Internationalization: all texts in `src/i18n/locales` (English, Czech), locale formatting, simulation emits keys only, language switch that resumes the game. Enforced by a lint rule and tests.
+- Save migration v2 → v3.
+- **Tests (96)**, including delivery timing and acknowledgement, fronts and unreachable targets, replacement, revocation and expiry, reporting modes, relay repair policies, explore, settle (and failure), priorities and rotation, conditions, courier runs, determinism over 250 years, locale completeness and placeholder parity, and a hard-coded-text scan.
 
-### M5: Colonies and colony ships (`colony/`, `fleet/`)
-- Colony: population, industry, one abstract resource ("materiel"), growth driven by habitability. Centuries to self-sufficiency.
-- Colony ship with sealed orders (target plus fallback). Relativistic constant-acceleration profile using the starting drive (0.1 g, cruise 0.1 c); acceleration and cruise speed are parameters, ready for research later. Founds a colony on arrival.
-- Galaxy view: detected braking plumes as flashes (own fleets with predicted paths exist since M3).
+### M5: Colonies and production (`colony/` → later `planet/`)
+- Turn outposts into colonies: population, industry, one abstract resource ("materiel"), growth driven by habitability (and food from habitable worlds).
+- Ships cost materiel and build time, replacing the placeholder shipyard interval. Settlers carry colonists; a colony needs a population to grow.
+- Economy › production focus and Military › warships become effective.
 - Stats panel with running Legacy components (years, population, output, systems).
-- **v0.1 done:** the player sets directives and watches the empire spread through a delay they can feel.
 
 ### M6: First rival and first drift (`ai/`, `empire/`)
 - Human Empire B starts at another star with the same rules and the same fog. Contested colony targets. Braking detections of each other's ships.
@@ -115,6 +118,20 @@ star-empire/
 | M15 | Trade and logistics | Cargo hauling of rare goods, recurring convoys (supplies, people, artefacts). |
 | M16 | `events/` | Wormhole discovery and knowledge (basic wormholes exist since M3), alien relics and technology, unique weapons, ansible rarity and construction. First alien powers enter the game here. |
 | M17 | Game shape | Full Legacy scoring, hall of records, full Chronicle, onboarding scenario, balancing. |
+
+## Suggested next steps (after M4)
+
+In this order, because each one makes the next meaningful:
+
+1. **M5 Colonies and production.** Outposts become colonies with population, industry and materiel. Ships get a real cost, which replaces the placeholder shipyard. Without this there is no economy for directives to steer, and expansion is free.
+2. **M6 Loyalty and drift, plus AI for Empire B.** Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
+3. **M9 Fleets (ship design and sealed orders), then M10 combat.** Once rivals expand, contested systems need warships and battle plans. Detection (M3.1) already gives the warning times.
+4. **M12 Research.** Drive tiers, relay range and sensor range are already data-driven, so research only has to raise them, and blueprints travel through the existing relay network.
+5. **M7 Star systems and M8 planets.** These give depth to the numbers M5 introduces (habitability, resources per body).
+6. **Early infrastructure work (can start any time):**
+   - a performance pass for many fleets: spatial index for detection, fewer notifications;
+   - a first onboarding / tutorial scenario;
+   - survey records that travel with ships instead of being shared instantly between governors.
 
 ## Working rules
 

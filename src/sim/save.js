@@ -1,5 +1,6 @@
 // @ts-check
 import { WORLD_VERSION } from './world.js';
+import { GameError } from '../core/errors.js';
 
 const FORMAT = 'star-empire-save';
 
@@ -19,6 +20,21 @@ const migrations = {
     }
     return { ...w, version: 2 };
   },
+  /** v2 → v3: governors, fleet roles, reporting modes, structured dispatches. */
+  2: (w) => {
+    for (const p of Object.values(w.state.empire.presence)) /** @type {any} */ (p).reporting ??= 'routine';
+    for (const f of Object.values(w.state.fleet.fleets)) Object.assign(f, { transmitter: false, role: 'generic', mission: null, ...f });
+    for (const e of Object.values(w.state.empire.empires)) delete /** @type {any} */ (e).name;
+    for (const k of Object.values(w.state.info?.knowledge ?? {})) {
+      /** @type {any} */ (k).dispatches = /** @type {any[]} */ (/** @type {any} */ (k).dispatches).map((d) => ('key' in d ? d : { ...d, key: 'legacy', params: { text: d.text } }));
+    }
+    for (const b of Object.values(w.state.governors?.books ?? {})) /** @type {any} */ (b).memory.lastLaunch ??= {};
+    if (!w.modules.includes('governors')) {
+      w.modules.push('governors');
+      w.state.governors = { books: {}, issued: {} };
+    }
+    return { ...w, version: 3 };
+  },
 };
 
 /**
@@ -35,14 +51,19 @@ export function serializeWorld(world, meta = {}) {
  * @returns {import('./world.js').World}
  */
 export function deserializeWorld(text) {
-  const data = JSON.parse(text);
-  if (data?.format !== FORMAT || !data.world) throw new Error('Not a Star Empire save file');
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new GameError('saveFormat');
+  }
+  if (data?.format !== FORMAT || !data.world) throw new GameError('saveFormat');
   let world = data.world;
   while (world.version < WORLD_VERSION) {
     const migrate = migrations[world.version];
-    if (!migrate) throw new Error(`No migration from save version ${world.version}`);
+    if (!migrate) throw new GameError('saveTooOld', { version: world.version });
     world = migrate(world);
   }
-  if (world.version > WORLD_VERSION) throw new Error(`Save version ${world.version} is newer than this game`);
+  if (world.version > WORLD_VERSION) throw new GameError('saveTooNew', { version: world.version });
   return world;
 }

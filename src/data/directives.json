@@ -1,0 +1,399 @@
+{
+  "note": "Directive catalogue. Texts are in src/i18n/locales/*: directive.<id>.name/.desc, param.<param>, option.<param>.<value>, category.<id>. 'implemented: false' directives are accepted and acknowledged by governors but have no effect until their module exists.",
+  "common": [
+    {
+      "id": "priority",
+      "type": "enum",
+      "options": [
+        "low",
+        "normal",
+        "high"
+      ],
+      "default": "normal"
+    },
+    {
+      "id": "when",
+      "type": "enum",
+      "options": [
+        "always",
+        "threatSeen",
+        "noThreat"
+      ],
+      "default": "always"
+    },
+    {
+      "id": "expires",
+      "type": "enum",
+      "options": [
+        "never",
+        "10",
+        "50",
+        "100"
+      ],
+      "default": "never"
+    }
+  ],
+  "categories": [
+    {
+      "id": "expansion",
+      "directives": [
+        {
+          "id": "expansion.explore",
+          "implemented": true,
+          "repeating": true,
+          "params": [
+            {
+              "id": "frequency",
+              "type": "enum",
+              "options": [
+                "low",
+                "normal",
+                "high"
+              ],
+              "default": "normal"
+            },
+            {
+              "id": "maxRange",
+              "type": "number",
+              "min": 5,
+              "max": 40,
+              "step": 5,
+              "default": 20,
+              "unit": "ly"
+            },
+            {
+              "id": "toward",
+              "type": "system",
+              "optional": true
+            },
+            {
+              "id": "jumps",
+              "type": "number",
+              "min": 1,
+              "max": 6,
+              "step": 1,
+              "default": 3
+            }
+          ]
+        },
+        {
+          "id": "expansion.settle",
+          "implemented": true,
+          "repeating": true,
+          "params": [
+            {
+              "id": "criteria",
+              "type": "enum",
+              "options": [
+                "nearest",
+                "habitable",
+                "rich"
+              ],
+              "default": "nearest"
+            },
+            {
+              "id": "frequency",
+              "type": "enum",
+              "options": [
+                "low",
+                "normal",
+                "high"
+              ],
+              "default": "normal"
+            },
+            {
+              "id": "maxRange",
+              "type": "number",
+              "min": 5,
+              "max": 40,
+              "step": 5,
+              "default": 15,
+              "unit": "ly"
+            },
+            {
+              "id": "toward",
+              "type": "system",
+              "optional": true
+            },
+            {
+              "id": "buildRelay",
+              "type": "boolean",
+              "default": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "military",
+      "directives": [
+        {
+          "id": "military.readiness",
+          "implemented": true,
+          "params": [
+            {
+              "id": "posture",
+              "type": "enum",
+              "options": [
+                "peace",
+                "vigilance",
+                "fortify"
+              ],
+              "default": "vigilance"
+            }
+          ]
+        },
+        {
+          "id": "military.warships",
+          "implemented": false,
+          "params": [
+            {
+              "id": "level",
+              "type": "enum",
+              "options": [
+                "none",
+                "defensive",
+                "steady",
+                "war"
+              ],
+              "default": "defensive"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fleet",
+      "directives": [
+        {
+          "id": "fleet.send",
+          "implemented": true,
+          "oneShot": true,
+          "params": [
+            {
+              "id": "destination",
+              "type": "system"
+            },
+            {
+              "id": "drive",
+              "type": "drive",
+              "default": 0
+            },
+            {
+              "id": "ansible",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "id": "courier",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "directives": [
+        {
+          "id": "logistics.courier",
+          "implemented": true,
+          "repeating": true,
+          "params": [
+            {
+              "id": "destination",
+              "type": "system"
+            },
+            {
+              "id": "every",
+              "type": "number",
+              "min": 5,
+              "max": 100,
+              "step": 5,
+              "default": 20,
+              "unit": "y"
+            }
+          ]
+        },
+        {
+          "id": "logistics.deliver",
+          "implemented": false,
+          "params": [
+            {
+              "id": "destination",
+              "type": "system"
+            },
+            {
+              "id": "cargo",
+              "type": "enum",
+              "options": [
+                "supplies",
+                "colonists",
+                "equipment",
+                "artefacts"
+              ],
+              "default": "supplies"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "governance",
+      "directives": [
+        {
+          "id": "governance.reporting",
+          "implemented": true,
+          "params": [
+            {
+              "id": "mode",
+              "type": "enum",
+              "options": [
+                "routine",
+                "frequent",
+                "silent"
+              ],
+              "default": "routine"
+            }
+          ]
+        },
+        {
+          "id": "governance.relay",
+          "implemented": true,
+          "params": [
+            {
+              "id": "repair",
+              "type": "enum",
+              "options": [
+                "fast",
+                "normal",
+                "never"
+              ],
+              "default": "normal"
+            }
+          ]
+        },
+        {
+          "id": "governance.autonomy",
+          "implemented": false,
+          "params": [
+            {
+              "id": "level",
+              "type": "enum",
+              "options": [
+                "tight",
+                "normal",
+                "broad"
+              ],
+              "default": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "economy",
+      "directives": [
+        {
+          "id": "economy.focus",
+          "implemented": false,
+          "params": [
+            {
+              "id": "focus",
+              "type": "enum",
+              "options": [
+                "balanced",
+                "industry",
+                "mining",
+                "agriculture",
+                "research",
+                "shipbuilding"
+              ],
+              "default": "balanced"
+            }
+          ]
+        },
+        {
+          "id": "economy.terraform",
+          "implemented": false,
+          "params": [
+            {
+              "id": "program",
+              "type": "enum",
+              "options": [
+                "none",
+                "survey",
+                "full"
+              ],
+              "default": "survey"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "directives": [
+        {
+          "id": "research.focus",
+          "implemented": false,
+          "params": [
+            {
+              "id": "field",
+              "type": "enum",
+              "options": [
+                "drives",
+                "communication",
+                "sensors",
+                "biology",
+                "weapons"
+              ],
+              "default": "drives"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diplomacy",
+      "directives": [
+        {
+          "id": "diplomacy.stance",
+          "implemented": false,
+          "params": [
+            {
+              "id": "stance",
+              "type": "enum",
+              "options": [
+                "open",
+                "wary",
+                "closed",
+                "hostile"
+              ],
+              "default": "wary"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "capacity": {
+    "note": "Placeholder until the economy exists: one new ship per system per interval (years), by frequency.",
+    "launchInterval": {
+      "low": 40,
+      "normal": 20,
+      "high": 10
+    },
+    "relayRepairYears": {
+      "fast": 4,
+      "normal": 12
+    },
+    "reportIntervalFactor": {
+      "routine": 1,
+      "frequent": 0.25
+    },
+    "threatMemoryYears": 10,
+    "fortifyRepairFactor": 0.5
+  }
+}

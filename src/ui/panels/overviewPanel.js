@@ -1,6 +1,7 @@
 // @ts-check
 import { h, kv } from '../dom.js';
-import { formatDuration } from '../../core/time.js';
+import { t } from '../../i18n/index.js';
+import { fmtDuration } from '../../i18n/format.js';
 import { infoState } from '../../info/module.js';
 import { countStatuses } from '../../perspective/starStatus.js';
 
@@ -14,14 +15,14 @@ export function renderSummary(c) {
   const counts = countStatuses(c.getStatuses());
   const truth = pic.mode === 'truth';
   return [kv([
-    [truth ? 'Outposts' : 'Outposts known', String(own.length)],
-    [truth ? 'Relays working' : 'Relays believed working', String(pic.relays.length)],
-    ['Overdue', String(own.filter((s) => s.overdue).length)],
-    ['Oldest news', formatDuration(own.reduce((m, s) => Math.max(m, s.age), 0))],
-    ['Explored systems', String((counts.explored ?? 0) + own.length)],
-    ['Foreign systems known', String(counts.foreign ?? 0)],
-    ['Drive plumes on record', String(pic.sightings.filter((s) => !s.own).length)],
-    ['Our orders in flight', String(pic.messages.filter((m) => m.kind === 'directive' || m.kind === 'fleetOrder' || m.kind === 'note').length)],
+    [t(truth ? 'panel.outposts' : 'panel.outpostsKnown'), String(own.length)],
+    [t(truth ? 'panel.relaysWorking' : 'panel.relaysBelieved'), String(pic.relays.length)],
+    [t('panel.overdue'), String(own.filter((s) => s.overdue).length)],
+    [t('panel.oldestNews'), fmtDuration(own.reduce((m, s) => Math.max(m, s.age), 0))],
+    [t('panel.explored'), String((counts.explored ?? 0) + own.length)],
+    [t('panel.foreign'), String(counts.foreign ?? 0)],
+    [t('panel.plumes'), String(pic.sightings.filter((s) => !s.own).length)],
+    [t('panel.ordersInFlight'), String(pic.messages.filter((m) => m.kind === 'directive' || m.kind === 'fleetOrder' || m.kind === 'note').length)],
   ])];
 }
 
@@ -35,24 +36,28 @@ export function renderOverview(c, live) {
     type: 'checkbox', checked: infoState(c.game.world).pauseOnDispatch === c.empire,
     onchange: (/** @type {Event} */ e) => c.game.act((w) => (infoState(w).pauseOnDispatch = /** @type {HTMLInputElement} */ (e.target).checked ? c.empire : null)),
   });
+  // The translated sentence places the two links; split it around placeholders.
+  const credits = t('panel.credits', { source: '§S§', author: m.author, license: '§L§' }).split(/(§S§|§L§)/).map((part) => {
+    if (part === '§S§') return h('a', { href: m.url, target: '_blank', rel: 'noopener' }, m.source);
+    if (part === '§L§') return h('a', { href: m.licenseUrl, target: '_blank', rel: 'noopener' }, m.license);
+    return part;
+  });
   return [
-    h('h2', {}, `Empire ${c.empire}`),
-    h('p.hint', {}, `Seat at Sol. ${m.systemCount} systems within ${m.radiusLy} ly. Sandbox: relay outposts founded in 2400, one beyond every relay's reach; Empire B next door, unknown to you.`),
+    h('h2', {}, t('empire.name', { id: c.empire })),
+    h('p.hint', {}, t('panel.overviewHint', { systems: m.systemCount, radius: m.radiusLy })),
     live.summary,
-    h('div.tools', {}, h('label', {}, pause, ' Pause when a dispatch arrives')),
-    h('h3', {}, 'Controls'),
+    h('div.tools', {}, h('label', {}, pause, ` ${t('panel.pauseOnDispatch')}`)),
+    h('h3', {}, t('panel.controls')),
     kv([
-      ['Click', 'select a system'],
-      ['Shift+click', 'measure / choose target'],
-      ['Double-click', 'centre the view'],
-      ['Drag / wheel', 'orbit / zoom'],
-      ['Space', 'pause / run'],
-      ['Esc', 'deselect'],
+      [t('control.click'), t('control.clickDo')],
+      [t('control.shift'), t('control.shiftDo')],
+      [t('control.double'), t('control.doubleDo')],
+      [t('control.drag'), t('control.dragDo')],
+      [t('control.space'), t('control.spaceDo')],
+      [t('control.esc'), t('control.escDo')],
     ]),
-    h('h3', {}, 'Known fleets'),
+    h('h3', {}, t('panel.knownFleets')),
     live.fleets,
-    h('p.hint.credits', {},
-      'Star data: ', h('a', { href: m.url, target: '_blank', rel: 'noopener' }, m.source), ` by ${m.author}, `,
-      h('a', { href: m.licenseUrl, target: '_blank', rel: 'noopener' }, m.license), '.'),
+    h('p.hint.credits', {}, ...credits),
   ];
 }

@@ -1,15 +1,14 @@
 // @ts-check
 import { h, kv } from '../dom.js';
-import { formatDuration, formatYear } from '../../core/time.js';
+import { t } from '../../i18n/index.js';
+import { fmtDuration, fmtYear } from '../../i18n/format.js';
 import { createNetwork } from '../../info/network.js';
-import { STATUSES } from '../../perspective/starStatus.js';
-import { describeSighting } from '../../perspective/describe.js';
-import { nameOf } from './context.js';
+import { describeSighting } from '../text/describe.js';
 
 /** @param {import('../../info/network.js').Route} r */
 const relayHops = (r) => {
   const n = r.hops.filter((x) => x.kind === 'radio').length;
-  return n <= 1 ? 'direct' : `${n} hops`;
+  return n <= 1 ? t('intel.direct') : t('intel.hops', { count: n });
 };
 
 /**
@@ -24,26 +23,26 @@ export function renderIntel(c, id) {
   const net = createNetwork({ capital: pic.capital, range: pic.range, relays: pic.relays, fleets: [], posOf: (x) => c.catalog.get(x).pos });
   const out = net.route(pic.capital, id);
   const back = known?.owner === pic.empire && known.relay === 'ok' ? net.route(id, pic.capital) : null;
-  const name = nameOf(c.catalog);
 
   /** @type {[string, string][]} */
-  const rows = [['Status', /** @type {string} */ (STATUSES.find(([k]) => k === status)?.[1])]];
+  const rows = [[t('intel.status'), t(`status.${status}`)]];
   if (known) {
-    rows.push(['Held by', `Empire ${known.owner}`]);
-    if (known.owner === pic.empire) rows.push(['Relay', known.relay === 'ok' ? 'working' : known.relay === 'none' ? 'none' : 'down']);
+    rows.push([t('intel.heldBy'), t('empire.name', { id: known.owner })]);
+    if (known.owner === pic.empire) rows.push([t('intel.relay'), t(known.relay === 'ok' ? 'intel.relayOk' : known.relay === 'none' ? 'intel.relayNone' : 'intel.relayDown')]);
     if (pic.mode === 'knowledge' && id !== pic.capital) {
-      rows.push(['Latest news from', formatYear(known.validAt)]);
-      rows.push(['Age of news', formatDuration(known.age)]);
-      rows.push(['Received', `${formatYear(known.receivedAt)} via ${known.via}${known.hops ? ` (${known.hops} hop${known.hops > 1 ? 's' : ''})` : ''}`]);
+      rows.push([t('intel.latest'), fmtYear(known.validAt)]);
+      rows.push([t('intel.age'), fmtDuration(known.age)]);
+      const via = t(`intel.via.${known.via}`);
+      rows.push([t('intel.received'), t('intel.receivedVia', { year: fmtYear(known.receivedAt), via }) + (known.hops ? ` (${t('intel.hops', { count: known.hops })})` : '')]);
     }
   }
-  rows.push(['Orders reach it', out ? `${formatDuration(out.delay)} · ${relayHops(out)}` : 'not by light']);
-  if (known?.owner === pic.empire) rows.push(['Its reports need', back ? `${formatDuration(back.delay)} · ${relayHops(back)}` : 'no route (silent)']);
+  rows.push([t('intel.ordersReach'), out ? `${fmtDuration(out.delay)} · ${relayHops(out)}` : t('intel.notByLight')]);
+  if (known?.owner === pic.empire) rows.push([t('intel.reportsNeed'), back ? `${fmtDuration(back.delay)} · ${relayHops(back)}` : t('intel.silent')]);
 
   const nodes = [kv(rows)];
-  if (known?.overdue) nodes.push(h('p.warn', {}, `Reports overdue: nothing received for ${formatDuration(pic.now - known.receivedAt)}.`));
+  if (known?.overdue) nodes.push(h('p.warn', {}, t('intel.overdue', { years: fmtDuration(pic.now - known.receivedAt) })));
   const seen = pic.sightings.filter((s) => s.near === id || s.observer === id).slice(-4);
-  if (seen.length) nodes.push(h('div.small', {}, h('div.dim', {}, 'Drive plumes near here:'), ...seen.map((s) => h('div', {}, describeSighting(s, name)))));
-  nodes.push(h('p.hint', {}, pic.mode === 'knowledge' ? 'As known at the capital now. Switch to Truth to compare.' : 'Truth: the real state right now.'));
+  if (seen.length) nodes.push(h('div.small', {}, h('div.dim', {}, t('intel.plumesNear')), ...seen.map((s) => h('div', {}, describeSighting(s, c.name)))));
+  nodes.push(h('p.hint', {}, t(pic.mode === 'knowledge' ? 'intel.asKnown' : 'intel.truth')));
   return nodes;
 }

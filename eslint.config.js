@@ -21,6 +21,7 @@ export default [
         patterns: [
           { group: ['three', 'three/*'], message: 'Simulation modules must not depend on rendering.' },
           { group: ['**/render/**', '**/ui/**'], message: 'Simulation modules must not import presentation code.' },
+          { group: ['**/i18n/**'], message: 'Simulation code produces keys and parameters; only the UI translates.' },
         ],
       }],
     },

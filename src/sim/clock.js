@@ -3,17 +3,17 @@ import { DAYS_PER_YEAR } from '../core/units.js';
 
 /**
  * Speed presets in game years per real second.
- * @type {{ label: string, rate: number }[]}
+ * @type {{ rate: number }[]}
  */
 export const SPEEDS = [
-  { label: '1 d/s', rate: 1 / DAYS_PER_YEAR },
-  { label: '1 wk/s', rate: 7 / DAYS_PER_YEAR },
-  { label: '1 mo/s', rate: 1 / 12 },
-  { label: '3 mo/s', rate: 0.25 },
-  { label: '1 y/s', rate: 1 },
-  { label: '5 y/s', rate: 5 },
-  { label: '20 y/s', rate: 20 },
-  { label: '50 y/s', rate: 50 },
+  { rate: 1 / DAYS_PER_YEAR },
+  { rate: 7 / DAYS_PER_YEAR },
+  { rate: 1 / 12 },
+  { rate: 0.25 },
+  { rate: 1 },
+  { rate: 5 },
+  { rate: 20 },
+  { rate: 50 },
 ];
 
 /**
@@ -24,7 +24,7 @@ export const SPEEDS = [
  * @param {{ speedIndex?: number }} [opts]
  */
 export function createClock(sim, { speedIndex = 4 } = {}) {
-  const state = { paused: true, speedIndex, lastPause: /** @type {string | null} */ (null) };
+  const state = { paused: true, speedIndex, lastPause: /** @type {{ key: string, params?: Record<string, any> } | null} */ (null) };
   const notify = () => sim.bus.emit('clock/changed', { ...state, time: sim.world.time });
 
   return {

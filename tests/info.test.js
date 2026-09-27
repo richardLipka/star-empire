@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { sandbox, sys, catalog, runUntil } from './helpers.js';
 import { knowledgeOf, truthNetwork, infoState } from '../src/info/module.js';
-import { sendNote, orderDispatch, orderRedirect } from '../src/info/orders.js';
+import { sendNote, orderRedirect } from '../src/info/orders.js';
+import { orderDispatch } from '../src/governors/issue.js';
+import { imposeDirective } from '../src/governors/module.js';
 import { setRelay } from '../src/empire/module.js';
 import { distance } from '../src/core/vec3.js';
 import { fleetState, fleetPosition } from '../src/fleet/module.js';
@@ -13,7 +15,7 @@ import { stateHash } from '../src/core/serialize.js';
 
 const pos = (id) => catalog.get(id).pos;
 const dist = (a, b) => distance(pos(a), pos(b));
-const lastNote = (world, text) => knowledgeOf(world, 'A').dispatches.find((d) => d.text === text);
+const lastNote = (world, text) => knowledgeOf(world, 'A').dispatches.find((d) => d.key === 'note' && d.params.text === text);
 
 describe('light-speed timing', () => {
   it('a note from Alpha Centauri arrives exactly 4.32 years later', () => {
@@ -92,6 +94,7 @@ describe('losing and rebuilding a relay', () => {
   it('a message waits at a dead relay and continues when it is rebuilt', () => {
     const { sim, world, act } = sandbox();
     const fom = sys('Fomalhaut');
+    act((w, c) => imposeDirective(w, c, { system: fom, type: 'governance.relay', params: { repair: 'never' } }));
     const msg = act((w, c) => sendNote(w, c, { empire: 'A', from: sys('Deneb Algedi'), to: 'sol', text: 'wait' }));
     const firstHop = dist(sys('Deneb Algedi'), fom);
     act((w, c) => setRelay(w, c, { system: fom, state: 'destroyed' }));
@@ -109,6 +112,7 @@ describe('losing and rebuilding a relay', () => {
   it('a system with a dead relay goes silent but still receives orders', () => {
     const { sim, world, act } = sandbox();
     const tau = sys('Tau Ceti');
+    act((w, c) => imposeDirective(w, c, { system: tau, type: 'governance.relay', params: { repair: 'never' } }));
     act((w, c) => setRelay(w, c, { system: tau, state: 'destroyed' }));
     sim.advanceTo(20);
     const k = knowledgeOf(world, 'A').systems[tau];

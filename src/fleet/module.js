@@ -1,10 +1,11 @@
 // @ts-check
 import { defineModule } from '../sim/module.js';
+import { GameError } from '../core/errors.js';
 import { planTrip } from './plan.js';
 import { brakeLeg, positionOnLegs, velocityOnLegs } from './legs.js';
 import { length, normalize } from '../core/vec3.js';
 import { wormholes } from '../events/wormholes.js';
-import { empireState, markExplored } from '../empire/module.js';
+import { markExplored } from '../empire/module.js';
 
 /**
  * Fleets moving between systems at sublight speed.
@@ -16,6 +17,9 @@ import { empireState, markExplored } from '../empire/module.js';
  * @property {import('./legs.js').Drive} drive
  * @property {boolean} ansible      carries an ansible: instant link to the capital
  * @property {boolean} courier      carries information (reports, queued messages) with it
+ * @property {boolean} transmitter  carries a relay module: can transmit from any system it is docked at
+ * @property {'generic' | 'scout' | 'settler' | 'courier'} role
+ * @property {any} mission          what its governor sent it to do (plain data), or null
  * @property {'docked' | 'transit'} status
  * @property {string | null} at     system when docked
  * @property {string | null} dest   destination when in transit
@@ -29,16 +33,11 @@ export const fleetModule = defineModule({
   dependsOn: ['galaxy', 'empire', 'wormholes'],
   initState: () => ({ /** @type {Record<string, Fleet>} */ fleets: {} }),
   listeners: {
-    /** Orders arriving by message. */
+    /** Orders addressed to a fleet (by ansible, or handed over at its system). */
     'info/delivered'(world, { message }, ctx) {
-      const { kind, payload, target, empire } = message;
-      if (kind === 'directive' && payload.type === 'dispatchFleet') {
-        const p = empireState(world).presence[target];
-        if (!p || p.empire !== empire) return; // the outpost is gone: the order lapses
-        const f = createFleet(world, ctx, { empire, at: target, drive: payload.drive, ansible: payload.ansible, courier: payload.courier });
-        launchFleet(world, ctx, { fleet: f.id, to: payload.to });
-      } else if (kind === 'fleetOrder' && payload.type === 'redirect') {
-        if (fleetState(world).fleets[target]) redirectFleet(world, ctx, { fleet: target, to: payload.to });
+      const { kind, payload, target } = message;
+      if (kind === 'fleetOrder' && payload.type === 'redirect' && fleetState(world).fleets[target]) {
+        redirectFleet(world, ctx, { fleet: target, to: payload.to });
       }
     },
   },
@@ -77,17 +76,32 @@ const posLookup = (ctx) => (/** @type {string} */ id) => ctx.data.catalog.get(id
  * Create a docked fleet.
  * @param {import('../sim/world.js').World} world
  * @param {import('../sim/module.js').SimContext} ctx
- * @param {{ empire: string, at: string, drive: import('./legs.js').Drive, ansible?: boolean, courier?: boolean, name?: string }} p
+ * @param {{ empire: string, at: string, drive: import('./legs.js').Drive, ansible?: boolean, courier?: boolean, transmitter?: boolean,
+ *           role?: Fleet['role'], mission?: any, name?: string }} p
  */
-export function createFleet(world, ctx, { empire, at, drive, ansible = false, courier = false, name }) {
+export function createFleet(world, ctx, { empire, at, drive, ansible = false, courier = false, transmitter = false, role = 'generic', mission = null, name }) {
   const id = ctx.newId('fleet');
   const number = Object.values(fleetState(world).fleets).filter((x) => x.empire === empire).length + 1;
   /** @type {Fleet} */
-  const f = { id, empire, name: name ?? `${empire}-${number}`, drive, ansible, courier, status: 'docked', at, dest: null, legs: [], trip: 0, cargo: { reports: [], messages: [] } };
+  const f = { id, empire, name: name ?? `${empire}-${number}`, drive: { accelG: drive.accelG, cruise: drive.cruise }, ansible, courier, transmitter, role, mission, status: 'docked', at, dest: null, legs: [], trip: 0, cargo: { reports: [], messages: [] } };
   fleetState(world).fleets[id] = f;
   ctx.notify('fleet/created', { fleet: id, system: at });
-  if (ansible) ctx.notify('info/networkChanged', { empire });
+  if (ansible || transmitter) ctx.notify('info/networkChanged', { empire });
   return f;
+}
+
+/**
+ * Remove a fleet (a settler consumed by its new outpost, a courier home from its run).
+ * @param {import('../sim/world.js').World} world
+ * @param {import('../sim/module.js').SimContext} ctx
+ * @param {string} id
+ */
+export function disbandFleet(world, ctx, id) {
+  const f = fleetState(world).fleets[id];
+  if (!f) return;
+  delete fleetState(world).fleets[id];
+  ctx.notify('fleet/disbanded', { fleet: id, empire: f.empire, system: f.at });
+  ctx.notify('info/networkChanged', { empire: f.empire });
 }
 
 /**
@@ -98,7 +112,7 @@ export function createFleet(world, ctx, { empire, at, drive, ansible = false, co
  */
 export function launchFleet(world, ctx, { fleet: id, to }) {
   const f = fleetState(world).fleets[id];
-  if (f.status !== 'docked') throw new Error(`${id} is not docked`);
+  if (f.status !== 'docked') throw new GameError('fleetNotDocked', { fleet: f.name });
   if (f.at === to) return;
   const from = /** @type {string} */ (f.at);
   const legs = planTrip({ fromPos: ctx.data.catalog.get(from).pos, fromSystem: from, toSystem: to, departAt: ctx.now, drive: f.drive, posOf: posLookup(ctx), wormholes: wormholes(world) });

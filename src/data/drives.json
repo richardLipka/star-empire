@@ -1,10 +1,27 @@
 {
   "tiers": [
-    { "id": "fusion-1", "name": "Early fusion torch", "accelG": 0.1, "cruise": 0.1 },
-    { "id": "fusion-2", "name": "Advanced fusion torch", "accelG": 0.3, "cruise": 0.3 },
-    { "id": "antimatter-1", "name": "Antimatter drive", "accelG": 1, "cruise": 0.6 },
-    { "id": "antimatter-hard", "name": "Antimatter drive, hard burn", "accelG": 3, "cruise": 0.6 }
+    {
+      "id": "fusion-1",
+      "accelG": 0.1,
+      "cruise": 0.1
+    },
+    {
+      "id": "fusion-2",
+      "accelG": 0.3,
+      "cruise": 0.3
+    },
+    {
+      "id": "antimatter-1",
+      "accelG": 1,
+      "cruise": 0.6
+    },
+    {
+      "id": "antimatter-hard",
+      "accelG": 3,
+      "cruise": 0.6
+    }
   ],
   "start": "fusion-1",
-  "wearAboveG": 1
+  "wearAboveG": 1,
+  "note": "Drive tiers. Names are in src/i18n/locales/*: drive.<id>."
 }

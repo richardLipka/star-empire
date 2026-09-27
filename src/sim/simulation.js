@@ -3,6 +3,7 @@ import { createEventBus } from '../core/eventBus.js';
 import { newId } from '../core/ids.js';
 import * as queue from '../core/scheduler.js';
 import { createWorld } from './world.js';
+import { GameError } from '../core/errors.js';
 
 /** Safety valve against runaway event loops within one advance call. */
 const MAX_STEPS_PER_ADVANCE = 1_000_000;
@@ -57,11 +58,11 @@ export function createSimulation({ modules, seed = 1, world, tickInterval = 1 / 
   if (!isNew) {
     const expected = modules.map((m) => m.id).join(',');
     if (w.modules.join(',') !== expected) {
-      throw new Error(`Save was made with modules [${w.modules}] but the game has [${expected}]`);
+      throw new GameError('saveModules', { saved: w.modules.join(', '), expected });
     }
   }
 
-  /** @type {string | null} */
+  /** @type {{ key: string, params?: Record<string, any> } | null} */
   let pauseReason = null;
 
   /** @type {SimContext} */
@@ -121,7 +122,7 @@ export function createSimulation({ modules, seed = 1, world, tickInterval = 1 / 
    * Events at the same instant as a tick run before it.
    * Stops early if a module requests an auto-pause.
    * @param {number} target
-   * @returns {{ time: number, paused: string | null }}
+   * @returns {{ time: number, paused: { key: string, params?: Record<string, any> } | null }}
    */
   function advanceTo(target) {
     pauseReason = null;

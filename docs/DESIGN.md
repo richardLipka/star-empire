@@ -87,6 +87,23 @@ The player gives **general directives**, not micro-orders. Local governors (AI a
 - **Properties:** priority, optional expiry date, and a condition ("if hostile ships are detected, then…").
 - A governor *interprets* directives through its traits and local conditions. Low loyalty means directives may be delayed, partly followed or ignored.
 
+### How directives work (M4)
+
+- **Catalogue:** `src/data/directives.json` defines the categories, directives, parameters and defaults. Every directive also has *priority* (low/normal/high), *condition* (always / after a foreign plume is seen here / while no threat is seen) and *expiry*. Directives marked `implemented: false` (warships, deliveries, autonomy, economy, terraforming, research, diplomacy) are accepted and acknowledged, but do nothing until their module exists.
+- **Issuing** (`src/governors/issue.js`): the player targets one system, our systems within a radius of a system, or the whole empire (as far as the capital knows its holdings). Each target gets its own message, so an empire-wide order spreads out as a front. Unreachable targets are reported at once.
+- **Governors** (`src/governors/module.js`): one per held system. Each keeps a *book*: one standing directive per kind, where a newer order replaces an older one and a stale one never overrides. Once a year the governor:
+  - drops expired orders and applies standing settings (posture, reporting mode, relay repair policy);
+  - rebuilds a destroyed relay by policy (fortified systems twice as fast);
+  - runs courier schedules;
+  - gives its single shipyard slot to the most important proposal: by priority, then taking turns.
+- **Behaviours** (`src/governors/behaviours/`), one file per directive type:
+  - *explore:* scouts with a relay module fly to the nearest unexplored systems (optionally toward a system), report from where they arrive, and hop on;
+  - *settle:* settlers found outposts. "Most habitable" and "richest" consider only surveyed systems, and a settler finds out on arrival if someone else got there first;
+  - *send fleet:* a one-shot order;
+  - *courier runs:* out and back on a schedule, carrying news.
+- **Acknowledgement:** routine reports quote the governor's book. The capital's view of each order (`src/perspective/directives.js`) is therefore built only from what came back: *in transit* until the planned arrival, *awaiting report*, then *in effect* / *carried out* / *superseded*, or *unreachable* / *expired* / *revoked*.
+- **Placeholders until the economy exists:** new ships appear without cost, one per system per 10, 20 or 40 years depending on frequency; relays are rebuilt after 4 or 12 years. Governors share the empire's survey records directly; later, survey records should travel with ships.
+
 ## 5. Movement and detection
 
 ### Flight profile
@@ -191,7 +208,8 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 | `info/` | Relay messages, relay network and chain routing, system mailboxes, light-speed propagation, KnowledgeBase, exploration records, overdue-report tracking. |
 | `detection/` | Drive-plume sightings (and later sensor nets), reported to the capital like any message. |
 | `perspective/` | Read-only views for the UI: what an empire knows (`knowledgePicture`) or the truth (`truthPicture`), star status classification, shared descriptions. |
-| `empire/` | Empire state, capital, governors, **directives engine** (categories, targeting, interpretation), loyalty and secession, Legacy score. |
+| `empire/` | Empire state, capital, presence and relays, exploration records (later: loyalty and secession, Legacy score). |
+| `governors/` | Directive catalogue, issuing and revoking, governors' books, behaviours (explore, settle, send fleet, courier runs, standing settings). |
 
 ### Gameplay
 
@@ -279,6 +297,15 @@ core/  ←  sim/  ←  gameplay modules (galaxy/, fleet/, info/, empire/, ...)
 - `core/`, `sim/` and gameplay modules are **headless**: no DOM, no Three.js. ESLint rejects such imports.
 - Presentation reads simulation state and sends commands. It never mutates the world directly.
 - `main.js` is the only place that knows about every layer.
+
+### Internationalization
+
+- Every text the player sees lives in `src/i18n/locales/<lang>.json`, which currently holds English and Czech. Code refers to texts by key; `t(key, params)` interpolates `{name}` placeholders and chooses plural forms (`one` / `few` / `many` / `other`) by the locale's rules. Missing keys fall back to English.
+- Numbers, years, durations and distances are formatted per locale (`src/i18n/format.js`), so Czech gets decimal commas and its own unit abbreviations.
+- **Content and control are separate.** Simulation code never produces text: dispatches, pause reasons and errors are keys with parameters (system ids, fleet names), and `GameError` carries a key. Data files (directives, drives) hold ids, not names. The UI turns all of these into sentences (`src/ui/text/`). The renderer only places labels the UI gives it.
+- **Enforced:** ESLint forbids importing i18n from simulation folders. Tests check that every locale has exactly the English keys and placeholders, that every directive, option, status, drive, error and produced dispatch has a text, and that UI and rendering code contain no English sentences.
+- **Adding a language:** copy `en.json`, translate it, and register it in `src/i18n/index.js`. The tests list anything missing.
+- Changing the language in the top bar reloads the page. The running game is stashed and resumes where it was.
 
 ### Other
 

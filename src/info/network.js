@@ -6,6 +6,7 @@ import { distance } from '../core/vec3.js';
  *
  * Rules (DESIGN §3):
  * - A system with a working relay can transmit to any system within relay range.
+ *   So can a system where a fleet carrying a relay module (transmitter) is docked.
  * - Every system can receive; a system without a relay cannot pass messages on by radio.
  * - Fleets cannot receive in transit, except fleets carrying an ansible.
  * - Ansibles connect instantly to the hub at the capital (and so to each other).
@@ -13,7 +14,7 @@ import { distance } from '../core/vec3.js';
  * - Wormholes carry ships, never messages: they are not part of this graph.
  *
  * @typedef {import('../core/vec3.js').Vec3} Vec3
- * @typedef {{ id: string, ansible: boolean, dockedAt: string | null, pos: Vec3 }} NetFleet
+ * @typedef {{ id: string, ansible: boolean, transmitter?: boolean, dockedAt: string | null, pos: Vec3 }} NetFleet
  * @typedef {object} NetworkInput
  * @property {string} capital
  * @property {number} range
@@ -39,6 +40,8 @@ export function createNetwork(input) {
     /** @type {NetFleet[]} */ (dockedAt.get(f.dockedAt)).push(f);
   }
   const ansibles = input.fleets.filter((f) => f.ansible);
+  /** Systems that can transmit by radio: working relays, plus docked fleets carrying a transmitter. */
+  const radio = new Set([...relays, ...input.fleets.filter((f) => f.transmitter && f.dockedAt).map((f) => /** @type {string} */ (f.dockedAt))]);
 
   /** @param {string} node */
   const posOf = (node) => (isFleetNode(node) ? /** @type {NetFleet} */ (fleets.get(node)).pos : input.posOf(node));
@@ -63,9 +66,9 @@ export function createNetwork(input) {
     }
     for (const f of dockedAt.get(node) ?? []) out.push({ from: node, to: f.id, delay: 0, kind: 'local' });
     if (node === input.capital) for (const f of ansibles) out.push({ from: node, to: f.id, delay: 0, kind: 'ansible' });
-    if (relays.has(node)) {
+    if (radio.has(node)) {
       const here = input.posOf(node);
-      const candidates = new Set([...relays, ...dockedAt.keys()]);
+      const candidates = new Set([...radio, ...dockedAt.keys()]);
       if (!isFleetNode(target)) candidates.add(target);
       for (const other of candidates) {
         if (other === node) continue;

@@ -33,16 +33,19 @@ const BRIGHT_ABSMAG = 1.5;
  * @param {(name: string, system: import('../galaxy/catalog.js').StarSystem) => boolean} opts.isMinorName
  * @param {(id: string | null) => void} opts.onSelect
  * @param {(id: string | null) => void} opts.onMeasure
+ * @param {{ ring: (ly: number) => string, distance: (ly: number) => string, galacticCentre: string }} opts.texts  translated labels
  * @returns {import('./viewport.js').View & {
  *   select(id: string | null): void,
  *   setMeasure(id: string | null): void,
  *   setLabelMode(mode: LabelMode): void,
- *   focus(id: string): void,
  *   setAnnotations(a: Map<string, Annotation>): void,
  *   setStarAppearance(colors: THREE.Color[], sizes: number[]): void,
+ *   focus(id: string): void,
+ *   getFocus(): THREE.Vector3,
+ *   getLabelMode(): LabelMode,
  * }}
  */
-export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect, onMeasure }) {
+export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect, onMeasure, texts }) {
   const systems = catalog.systems;
   const radius = catalog.meta.radiusLy;
   const scene = new THREE.Scene();
@@ -56,8 +59,8 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
   controls.minDistance = 0.5;
   controls.maxDistance = radius * 5;
 
-  scene.add(createReferencePlane({ radius: Math.ceil(radius / 10) * 10 }));
-  scene.add(directionLabel('▸ galactic centre', new THREE.Vector3(radius + 6, 0, 0)));
+  scene.add(createReferencePlane({ radius: Math.ceil(radius / 10) * 10, label: texts.ring }));
+  scene.add(directionLabel(texts.galacticCentre, new THREE.Vector3(radius + 6, 0, 0)));
 
   // --- stars and drop lines -------------------------------------------------
   const scenePos = systems.map((s) => toScene(s.pos));
@@ -172,7 +175,7 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     measureLine.geometry.setFromPoints([a, b]);
     measureLine.computeLineDistances();
     measureLabel.position.copy(a).lerp(b, 0.5);
-    measureLabelEl.textContent = `${a.distanceTo(b).toFixed(2)} ly`;
+    measureLabelEl.textContent = texts.distance(a.distanceTo(b));
   }
 
   // --- picking -------------------------------------------------------------------
@@ -279,6 +282,8 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     focus(id) {
       focusIndex(systems.indexOf(catalog.get(id)));
     },
+    getFocus: () => controls.target,
+    getLabelMode: () => labelMode,
     setStarAppearance(nextColors, nextSizes) {
       const colorAttr = /** @type {THREE.BufferAttribute} */ (stars.geometry.getAttribute('color'));
       const sizeAttr = /** @type {THREE.BufferAttribute} */ (stars.geometry.getAttribute('size'));

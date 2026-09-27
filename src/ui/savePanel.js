@@ -1,7 +1,9 @@
 // @ts-check
 import { h } from './dom.js';
 import { serializeWorld, deserializeWorld } from '../sim/save.js';
-import { formatYear } from '../core/time.js';
+import { t } from '../i18n/index.js';
+import { fmtYear } from '../i18n/format.js';
+import { describeError } from './text/describe.js';
 
 const SLOT_KEY = 'star-empire:save:quick';
 
@@ -24,18 +26,18 @@ export function mountSavePanel(slot, { getWorld, loadWorld, toast }) {
 
   function quickSave() {
     const s = storage();
-    if (!s) return toast('Browser storage unavailable; use Export instead.');
+    if (!s) return toast(t('save.storageOff'));
     try {
       s.setItem(SLOT_KEY, serializeWorld(getWorld(), { label: 'quick' }));
-      toast(`Saved at ${formatYear(getWorld().time)}`);
+      toast(t('save.saved', { year: fmtYear(getWorld().time) }));
     } catch (e) {
-      toast(`Save failed: ${e instanceof Error ? e.message : e}`);
+      toast(t('save.failed', { error: describeError(e) }));
     }
   }
 
   function quickLoad() {
     const text = storage()?.getItem(SLOT_KEY);
-    if (!text) return toast('No quick save found.');
+    if (!text) return toast(t('save.noQuick'));
     tryLoad(text);
   }
 
@@ -43,15 +45,15 @@ export function mountSavePanel(slot, { getWorld, loadWorld, toast }) {
   function tryLoad(text) {
     try {
       loadWorld(deserializeWorld(text));
-      toast(`Loaded ${formatYear(getWorld().time)}`);
+      toast(t('save.loaded', { year: fmtYear(getWorld().time) }));
     } catch (e) {
-      toast(`Load failed: ${e instanceof Error ? e.message : e}`);
+      toast(t('save.loadFailed', { error: describeError(e) }));
     }
   }
 
   function exportFile() {
     const blob = new Blob([serializeWorld(getWorld(), { label: 'export' })], { type: 'application/json' });
-    const a = /** @type {HTMLAnchorElement} */ (h('a', { href: URL.createObjectURL(blob), download: `star-empire-${formatYear(getWorld().time)}.json` }));
+    const a = /** @type {HTMLAnchorElement} */ (h('a', { href: URL.createObjectURL(blob), download: `star-empire-${fmtYear(getWorld().time)}.json` }));
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
@@ -64,11 +66,14 @@ export function mountSavePanel(slot, { getWorld, loadWorld, toast }) {
 
   slot.append(
     h('div.btn-group', {},
-      h('button.btn', { onclick: quickSave, title: 'Quick save to this browser' }, 'Save'),
-      h('button.btn', { onclick: quickLoad, title: 'Load the quick save' }, 'Load'),
-      h('button.btn', { onclick: exportFile, title: 'Download the game as a JSON file' }, 'Export'),
-      h('button.btn', { onclick: () => fileInput.click(), title: 'Load a JSON save file' }, 'Import'),
+      h('button.btn', { onclick: quickSave, title: t('save.saveTitle') }, t('save.save')),
+      h('button.btn', { onclick: quickLoad, title: t('save.loadTitle') }, t('save.load')),
+      h('button.btn', { onclick: exportFile, title: t('save.exportTitle') }, t('save.export')),
+      h('button.btn', { onclick: () => fileInput.click(), title: t('save.importTitle') }, t('save.import')),
       fileInput,
     ),
   );
 }
+
+/** Save the running game for a moment (e.g. across a reload to change language). */
+export const RESUME_KEY = 'star-empire:resume';

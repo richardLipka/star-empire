@@ -7,6 +7,7 @@ import { setRelay } from '../src/empire/module.js';
 import { serializeWorld, deserializeWorld } from '../src/sim/save.js';
 import { createSimulation } from '../src/sim/simulation.js';
 import { MODULES, DATA } from '../src/app/modules.js';
+import { WORLD_VERSION } from '../src/sim/world.js';
 
 describe('star status view', () => {
   it('classifies capital, relays, outposts, explored and unexplored from knowledge', () => {
@@ -30,15 +31,17 @@ describe('star status view', () => {
 
 describe('spectral descriptions', () => {
   it('describes common types', () => {
-    expect(describeSpectral('G2V', 'G').kind).toBe('yellow main-sequence dwarf');
-    expect(describeSpectral('K1III', 'K').kind).toBe('orange giant');
-    expect(describeSpectral('M5Ve', 'M').kind).toBe('red main-sequence dwarf');
-    expect(describeSpectral('DA2', 'D').kind).toBe('white dwarf');
-    expect(describeSpectral('sdM4', 'M').kind).toBe('red subdwarf');
-    expect(describeSpectral('A0m...', 'A').kind).toBe('white star');
+    expect(describeSpectral('G2V', 'G')).toMatchObject({ cls: 'G', lum: 'dwarf', temp: [5200, 6000] });
+    expect(describeSpectral('K1III', 'K').lum).toBe('giant');
+    expect(describeSpectral('M5Ve', 'M').lum).toBe('dwarf');
+    expect(describeSpectral('DA2', 'D').lum).toBe('whiteDwarf');
+    expect(describeSpectral('sdM4', 'M').lum).toBe('subdwarf');
+    expect(describeSpectral('A0m...', 'A').lum).toBe('star');
+    expect(describeSpectral('G8IV', 'G').lum).toBe('subgiant');
+    expect(describeSpectral('B8Ia', 'B').lum).toBe('supergiant');
   });
   it('every catalogue star gets a description', () => {
-    for (const s of catalog.systems) for (const st of s.stars) expect(describeSpectral(st.spect, st.cls).kind).toBeTruthy();
+    for (const s of catalog.systems) for (const st of s.stars) expect(describeSpectral(st.spect, st.cls).lum).toBeTruthy();
   });
 });
 
@@ -54,9 +57,14 @@ describe('save migration', () => {
     delete w.state.empire.explored;
     for (const k of Object.values(w.state.info.knowledge)) delete k.explored;
     w.state.info.pauseOnDispatch = false;
-    w.queue.heap = w.queue.heap.filter((e) => !e.type.startsWith('detection/'));
+    w.queue.heap = w.queue.heap.filter((e) => !e.type.startsWith('detection/') && !e.type.startsWith('governors/'));
+    w.modules = w.modules.filter((m) => m !== 'governors');
+    delete w.state.governors;
+    for (const p of Object.values(w.state.empire.presence)) delete p.reporting;
+    for (const k of Object.values(w.state.info.knowledge)) k.dispatches = k.dispatches.map((d) => ({ id: d.id, text: 'old', validAt: d.validAt, receivedAt: d.receivedAt }));
     const loaded = deserializeWorld(JSON.stringify(v1));
-    expect(loaded.version).toBe(2);
+    expect(loaded.version).toBe(WORLD_VERSION);
+    expect(loaded.modules).toEqual(MODULES.map((m) => m.id));
     const resumed = createSimulation({ modules: MODULES, data: DATA, world: loaded });
     resumed.advanceTo(20);
     expect(resumed.world.state.detection.sightings).toBeDefined();

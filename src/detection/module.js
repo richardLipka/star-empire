@@ -83,6 +83,7 @@ export const detectionModule = defineModule({
     'detection/seen'(world, payload, ctx) {
       const p = empireState(world).presence[payload.observer];
       if (!p || p.empire !== payload.observerEmpire) return; // the observer is gone
+      ctx.notify('detection/observed', { observer: payload.observer, empire: p.empire, fleetEmpire: payload.fleetEmpire, phase: payload.phase });
       const capital = empireState(world).empires[p.empire].capital;
       /** @type {Omit<Sighting, 'receivedAt' | 'id'>} */
       const sighting = {
@@ -145,12 +146,10 @@ function recordSighting(world, ctx, empire, s) {
   if (list.length > MAX_SIGHTINGS) list.splice(0, list.length - MAX_SIGHTINGS);
   const own = s.fleetEmpire === empire;
   if (own && s.phase === 'accelerating') return; // our own departures are reported anyway
-  const catalog = ctx.data.catalog;
-  const where = s.near ? catalog.get(s.near).name : 'deep space';
-  const who = own ? `Our fleet` : `Drive plume (Empire ${s.fleetEmpire} signature)`;
-  const what = s.phase === 'braking' ? `braking toward ${where}` : `accelerating away from ${where}`;
   recordDispatch(world, ctx, empire, {
-    id: sighting.id, kind: 'sighting', subject: s.near ?? '', text: `${who} ${what}, seen from ${catalog.get(s.observer).name}`,
+    id: sighting.id,
+    key: `plume.${own ? 'own' : 'foreign'}.${s.phase}${s.near ? '' : 'Deep'}`,
+    params: { empire: s.fleetEmpire, near: s.near ?? '', observer: s.observer },
     validAt: s.emittedAt, receivedAt: s.receivedAt, via: 'relay', hops: 0,
   });
 }

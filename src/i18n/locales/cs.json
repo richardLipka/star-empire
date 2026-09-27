@@ -1,0 +1,241 @@
+{
+  "app": { "title": "Hvězdné impérium", "brand": "Hvězdné impérium" },
+  "lang": { "label": "Jazyk" },
+  "empire": { "name": "Impérium {id}" },
+  "time": { "year": "ROK", "run": "▶ Spustit", "pause": "❚❚ Pauza", "toggleTitle": "Pauza / pokračovat (mezerník)", "paused": "pozastaveno: {reason}" },
+  "speed": { "days": "{n} d/s", "weeks": "{n} týd./s", "months": "{n} měs./s", "years": "{n} r./s" },
+  "unit": { "days": "{n} d", "months": "{n} měs.", "years": "{n} r.", "ly": "{n} sv. r.", "lsun": "{n} L☉", "kelvin": "{min}–{max} K" },
+  "save": {
+    "save": "Uložit", "load": "Načíst", "export": "Export", "import": "Import",
+    "saveTitle": "Rychlé uložení v tomto prohlížeči", "loadTitle": "Načíst rychlé uložení",
+    "exportTitle": "Stáhnout hru jako soubor JSON", "importTitle": "Načíst uloženou hru ze souboru JSON",
+    "saved": "Uloženo v roce {year}", "loaded": "Načten rok {year}", "noQuick": "Rychlé uložení nenalezeno.",
+    "storageOff": "Úložiště prohlížeče není dostupné; použijte Export.",
+    "failed": "Uložení selhalo: {error}", "loadFailed": "Načtení selhalo: {error}"
+  },
+  "error": {
+    "saveFormat": "toto není uložená hra Hvězdného impéria",
+    "saveTooOld": "chybí převod ze starší verze uložení {version}",
+    "saveTooNew": "verze uložení {version} je novější než tato hra",
+    "saveModules": "hra byla uložena s jinými herními moduly",
+    "systemHeld": "{system} drží impérium {empire}",
+    "noPresence": "v systému {system} nic nedržíme",
+    "wormholeSameSystem": "červí díra potřebuje dva různé systémy",
+    "fleetNotDocked": "{fleet} nekotví",
+    "noTargets": "v tomto cíli nemáme žádný systém",
+    "unknown": "Chyba: {message}"
+  },
+  "labels": { "button": "Popisky: {mode}", "title": "Popisky hvězd", "auto": "auto", "all": "vše", "none": "žádné" },
+  "map": {
+    "knows": "Co ví impérium {empire}", "knowsTitle": "Jen to, co ví hlavní město, tak staré, jak to je",
+    "truth": "Skutečnost", "truthTitle": "Pískoviště: skutečný stav včetně toho, co nikdo neviděl",
+    "network": "Síť", "networkTitle": "Spojení relé v dosahu",
+    "ranges": "Dosahy", "rangesTitle": "Koule dosahu relé: kam sahá komunikace",
+    "colour": "Barva", "colourTitle": "Barvit hvězdy podle: {mode}",
+    "spectral": "Spektrální třída", "status": "Stav", "age": "Stáří zpráv",
+    "legendHint": "Kliknutím na položku legendy ji zvýrazníte.",
+    "ageScale": "zprávy: nyní → {years}+ r. staré", "overdue": "opožděné",
+    "symbols": "Symboly", "galacticCentre": "▸ střed Galaxie", "ring": "{n} sv. r."
+  },
+  "symbol": {
+    "fleetKnown": "flotila, poloha známá", "fleetPredicted": "flotila, poloha odhadnutá",
+    "fleetUnconfirmed": "přílet nepotvrzen", "ansible": "flotila s ansiblem (živě)",
+    "plume": "vlečka motoru (zážeh)", "report": "hlášení na cestě", "order": "rozkaz na cestě",
+    "wormhole": "ústí červí díry", "held": "držený systém (kroužek)"
+  },
+  "status": {
+    "capital": "Hlavní město", "relay": "Základna s relé", "outpost": "Základna bez relé", "relayDown": "Relé zničeno",
+    "foreign": "Drží jiné impérium", "explored": "Prozkoumáno, prázdné", "unexplored": "Neprozkoumáno",
+    "short": { "capital": "hlavní město", "relay": "relé", "outpost": "základna bez relé", "relayDown": "relé zničeno" }
+  },
+  "spectral": {
+    "class": { "O": "O modrá", "B": "B modrobílá", "A": "A bílá", "F": "F žlutobílá", "G": "G žlutá", "K": "K oranžová", "M": "M červený trpaslík", "D": "D bílý trpaslík", "?": "nezařazeno" },
+    "colour": { "O": "modrý", "B": "modrobílý", "A": "bílý", "F": "žlutobílý", "G": "žlutý", "K": "oranžový", "M": "červený", "D": "bílý", "?": "neznámý" },
+    "lum": {
+      "giant": "{colour} obr", "brightGiant": "{colour} jasný obr", "subgiant": "{colour} podobr",
+      "subdwarf": "{colour} podtrpaslík", "dwarf": "{colour} trpaslík hlavní posloupnosti", "supergiant": "{colour} veleobr",
+      "whiteDwarf": "bílý trpaslík", "star": "{colour} hvězda", "unknown": "nezařazená hvězda"
+    }
+  },
+  "tab": { "system": "Systém", "orders": "Rozkazy" },
+  "panel": {
+    "overviewHint": "Sídlo u Slunce. {systems} systémů do {radius} sv. r. Pískoviště: základny s relé založené roku 2400, jedna mimo dosah všech relé; vedle sídlí impérium B, o kterém nevíte.",
+    "seat": "Sídlo impéria {empire}.",
+    "fromSol": "{distance} od Slunce · světlo {light} · let raným fúzním pohonem {trip}",
+    "outposts": "Základny", "outpostsKnown": "Známé základny", "relaysWorking": "Funkční relé", "relaysBelieved": "Relé považovaná za funkční",
+    "overdue": "Opožděné", "oldestNews": "Nejstarší zprávy", "explored": "Prozkoumané systémy", "foreign": "Známé cizí systémy",
+    "plumes": "Zaznamenané vlečky motorů", "ordersInFlight": "Naše rozkazy na cestě",
+    "pauseOnDispatch": "Pozastavit při příchodu zprávy",
+    "controls": "Ovládání", "knownFleets": "Známé flotily", "fleets": "Flotily", "intelligence": "Zpravodajství",
+    "governor": "Guvernér", "sandbox": "Nástroje pískoviště", "star": "Hvězda", "stars": "Hvězdy ({count})", "survey": "Průzkum",
+    "measure": "Měření: {from} → {to}", "credits": "Data hvězd: {source}, autor {author}, {license}."
+  },
+  "control": {
+    "click": "Klik", "clickDo": "vybrat systém", "shift": "Shift+klik", "shiftDo": "měřit / zvolit cíl",
+    "double": "Dvojklik", "doubleDo": "vystředit pohled", "drag": "Tažení / kolečko", "dragDo": "otáčet / přiblížit",
+    "space": "Mezerník", "spaceDo": "pauza / běh", "esc": "Esc", "escDo": "zrušit výběr"
+  },
+  "intel": {
+    "status": "Stav", "heldBy": "Drží", "relay": "Relé", "relayOk": "funkční", "relayNone": "žádné", "relayDown": "zničené",
+    "latest": "Poslední zprávy z roku", "age": "Stáří zpráv", "received": "Přijato",
+    "receivedVia": "{year} přes {via}", "hops": { "one": "{count} skok", "few": "{count} skoky", "many": "{count} skoku", "other": "{count} skoků" },
+    "ordersReach": "Rozkazy dorazí za", "reportsNeed": "Jeho hlášení potřebují", "notByLight": "světlem nedosažitelné", "silent": "bez spojení (mlčí)",
+    "direct": "přímo", "overdue": "Hlášení opožděna: nic nepřišlo už {years}.",
+    "plumesNear": "Vlečky motorů poblíž:", "asKnown": "Jak to nyní ví hlavní město. Pro srovnání přepněte na Skutečnost.",
+    "truth": "Skutečnost: skutečný stav právě teď.",
+    "via": { "capital": "hlavní město", "relay": "relé", "courier": "kurýra", "ansible": "ansible", "truth": "skutečnost" }
+  },
+  "survey": {
+    "habitability": "Obyvatelnost", "resources": "Suroviny", "bodies": "Velká tělesa",
+    "unexplored": "Neprozkoumáno: známe jen to, co ukážou dalekohledy (hvězdy výše). Pošlete průzkumníka."
+  },
+  "measure": {
+    "distance": "Vzdálenost", "light": "Zpoždění světla", "trip": "{g} g → {c} c", "tripValue": "{total} (posádka {crew})",
+    "warning": "Varování při příletu, brzdění {g} g: {warning}. ⚠ = opotřebení nad {wear} g."
+  },
+  "drive": {
+    "fusion-1": "Raný fúzní pohon", "fusion-2": "Pokročilý fúzní pohon", "antimatter-1": "Antihmotový pohon",
+    "antimatter-hard": "Antihmotový pohon, tvrdý zážeh", "spec": "{g} g · {c} c", "wear": "(opotřebení)"
+  },
+  "fleet": {
+    "foreignName": "Flotila impéria {empire}",
+    "role": { "generic": "flotila", "scout": "průzkumník", "settler": "osadník", "courier": "kurýr" },
+    "at": "u {system}", "live": "živě", "liveAnsible": "živě (ansible)",
+    "transitLive": "→ {dest}, přílet {eta} · živě (ansible)",
+    "transit": "→ {dest}, přílet {eta}",
+    "burn": { "accelerating": "zrychluje", "braking": "brzdí", "coasting": "letí setrvačností" },
+    "confirmed": "u {system} · potvrzeno, hlášení staré {age}",
+    "expected": "očekává se → {dest}, přílet {eta} · hlášení o odletu staré {age}",
+    "brakingSeen": "brzdění pozorováno",
+    "unconfirmed": "měla dorazit k {dest} v roce {eta} · přílet nepotvrzen",
+    "unconfirmedBraking": "měla dorazit k {dest} v roce {eta} · přílet nepotvrzen (brzdění bylo pozorováno)",
+    "certainty": {
+      "live": "vidíme ji teď", "confirmed": "přílet ohlášen", "expected": "odhad podle hlášení o odletu",
+      "unconfirmed": "hlášení o příletu zatím nepřišlo", "actual": "skutečnost"
+    },
+    "redirect": "Přesměrovat sem", "noLink": "za letu bez spojení", "none": "Žádné známé.",
+    "redirected": "{fleet} přesměrována k {system} přes ansible", "unreachable": "{fleet} je nedosažitelná"
+  },
+  "sighting": {
+    "own": "naše flotila", "foreign": "pohon impéria {empire}",
+    "braking": "{who} brzdí → {near} · před {age}", "accelerating": "{who} zrychluje od {near} · před {age}",
+    "deepSpace": "hluboký vesmír"
+  },
+  "dispatch": {
+    "title": "Zprávy", "empty": "Zatím nic. Rozkazy i hlášení cestují rychlostí světla.",
+    "meta": " · stáří {age} · {via}", "metaHops": " · stáří {age} · {via}, {hops}",
+    "fleet": {
+      "departed": "{fleet} odletěla od {system}", "arrived": "{fleet} dorazila k {system}",
+      "settled": "{fleet} založila základnu u {system}", "settleFailed": "{fleet} našla {system} již obsazený"
+    },
+    "note": "Zpráva z {from}: {text}",
+    "foreignFleetPresent": "U {system} kotví flotila impéria {empire}",
+    "plume": {
+      "foreign": {
+        "braking": "Vlečka motoru (signatura impéria {empire}) brzdí k {near}, pozorováno z {observer}",
+        "brakingDeep": "Vlečka motoru (signatura impéria {empire}) brzdí v hlubokém vesmíru, pozorováno z {observer}",
+        "accelerating": "Vlečka motoru (signatura impéria {empire}) zrychluje od {near}, pozorováno z {observer}",
+        "acceleratingDeep": "Vlečka motoru (signatura impéria {empire}) zrychluje v hlubokém vesmíru, pozorováno z {observer}"
+      },
+      "own": {
+        "braking": "Naše flotila brzdí k {near}, pozorováno z {observer}",
+        "brakingDeep": "Naše flotila brzdí v hlubokém vesmíru, pozorováno z {observer}",
+        "accelerating": "Naše flotila zrychluje od {near}, pozorováno z {observer}",
+        "acceleratingDeep": "Naše flotila zrychluje v hlubokém vesmíru, pozorováno z {observer}"
+      }
+    },
+    "legacy": "{text}"
+  },
+  "sandbox": {
+    "found": "Založit základnu", "founded": "Základna založena u {system}",
+    "destroyRelay": "Zničit relé", "destroyHint": "přijímá, nevysílá", "relayDestroyed": "Relé u {system} zničeno",
+    "rebuildRelay": "Obnovit relé", "relayRebuilt": "Relé u {system} obnoveno", "heldBy": "Drží impérium {empire} (skutečnost).",
+    "pickTarget": "Shift+klikem zvolte druhý systém pro zprávy, flotily a červí díry.",
+    "note": "Poslat zprávu → {system}", "noteText": "Zpráva z {system}", "noteSent": "Zpráva odeslána {from} → {to}",
+    "orderFleet": "Rozkaz flotile {from} → {to}", "orderSent": "Rozkaz odeslán z hlavního města: {from} vyšle flotilu k {to}",
+    "orderHint": "Rozkaz nejprve letí z hlavního města do tohoto systému; flotila odstartuje, až dorazí.",
+    "wormhole": "Otevřít červí díru ↔ {system}", "wormholeOpened": "Červí díra otevřena {from} ↔ {to}",
+    "rival": "Flotila impéria B → {system}", "rivalTitle": "Soupeřova flotila odstartuje hned, neviditelná, dokud její vlečka nemíří na některý váš systém",
+    "rivalLaunched": "Flotila impéria B odstartovala {from} → {to} (nikdo vám to neřekne)",
+    "ansible": "ansible", "courier": "kurýr"
+  },
+  "governor": {
+    "none": "Od tohoto guvernéra zatím nepřišlo hlášení.",
+    "asOf": "Podle hlášení z roku {year} (před {age}):",
+    "posture": "Pohotovost", "reporting": "Hlášení", "relayRepair": "Oprava relé",
+    "inForce": "Platné rozkazy", "noOrders": "Žádné trvalé rozkazy (platí výchozí).",
+    "onTheWay": "Rozkazy na cestě sem", "arrives": "dorazí {year}"
+  },
+  "orders": {
+    "compose": "Nová směrnice", "category": "Oblast", "directive": "Směrnice", "target": "Komu",
+    "targetSystem": "Vybraný systém ({system})", "targetRegion": "Naše systémy do", "targetEmpire": "Celé impérium",
+    "needSelection": "nejprve vyberte systém", "priority": "Priorita", "when": "Podmínka", "expires": "Platnost",
+    "issue": "Vydat směrnici", "instant": "Pískoviště: použít ihned (bez cesty)",
+    "notImplemented": "Guvernér ji přijme a potvrdí, ale nemá účinek, dokud neexistuje příslušný modul.",
+    "issued": { "one": "Směrnice odeslána do {count} systému; poslední dorazí {year}.", "few": "Směrnice odeslána do {count} systémů; poslední dorazí {year}.", "many": "Směrnice odeslána do {count} systému; poslední dorazí {year}.", "other": "Směrnice odeslána do {count} systémů; poslední dorazí {year}." },
+    "issuedUnreachable": "Cíle nedosažitelné světlem: {count}.",
+    "imposed": { "one": "Použito ihned v {count} systému (pískoviště).", "few": "Použito ihned ve {count} systémech (pískoviště).", "many": "Použito ihned v {count} systému (pískoviště).", "other": "Použito ihned v {count} systémech (pískoviště)." },
+    "systemParam": "{value} (změna shift+klikem)", "systemNone": "— shift+klikem zvolte systém",
+    "list": "Vydané směrnice", "noneIssued": "Zatím žádné.", "revoke": "Odvolat", "revoked": "Odvolání odesláno.",
+    "issuedAt": "vydáno {year}", "noEffectYet": "zatím bez účinku",
+    "status": {
+      "inTransit": "na cestě", "awaitingReport": "čeká na hlášení", "inEffect": "platí", "carriedOut": "provedeno",
+      "superseded": "nahrazeno", "unreachable": "nedosažitelné", "expired": "vypršelo", "revoked": "odvoláno"
+    },
+    "targetDesc": { "system": "{system}", "region": "do {radius} sv. r. od {system}", "empire": "celé impérium" }
+  },
+  "category": {
+    "expansion": "Expanze", "military": "Armáda", "fleet": "Operace flotil", "logistics": "Logistika",
+    "governance": "Správa", "economy": "Hospodářství", "research": "Výzkum", "diplomacy": "Diplomacie"
+  },
+  "directive": {
+    "expansion": {
+      "explore": { "name": "Průzkum", "desc": "Vysílat průzkumníky k nejbližším neprozkoumaným systémům. Nesou modul relé, hlásí se z místa příletu a pak letí dál." },
+      "settle": { "name": "Osidlování", "desc": "Vysílat osadnické lodě zakládat základny. „Nejobyvatelnější“ a „nejbohatší“ berou v úvahu jen prozkoumané systémy." }
+    },
+    "military": {
+      "readiness": { "name": "Pohotovost", "desc": "Trvalý vojenský stav. Opevněné systémy obnovují relé dvakrát rychleji." },
+      "warships": { "name": "Stavba válečných lodí", "desc": "Kolik válečných lodí stavět." }
+    },
+    "fleet": { "send": { "name": "Vyslat flotilu", "desc": "Po příchodu rozkazu vyslat jednu flotilu z cílového systému do určeného místa." } },
+    "logistics": {
+      "courier": { "name": "Kurýrní lety", "desc": "Pravidelné kurýrní lodě do cíle a zpět, vozí zprávy a čekající hlášení." },
+      "deliver": { "name": "Doprava", "desc": "Převézt zásoby, kolonisty, vybavení nebo artefakty do jiného systému." }
+    },
+    "governance": {
+      "reporting": { "name": "Hlášení", "desc": "Jak často systém podává hlášení. Mlčící systémy nic nevysílají (ale přijímají)." },
+      "relay": { "name": "Údržba relé", "desc": "Jak rychle obnovit zničené relé." },
+      "autonomy": { "name": "Samospráva", "desc": "Jak volně guvernér vykládá rozkazy." }
+    },
+    "economy": {
+      "focus": { "name": "Zaměření výroby", "desc": "Čemu má hospodářství systému dávat přednost." },
+      "terraform": { "name": "Terraformace", "desc": "Program terraformace vhodných světů." }
+    },
+    "research": { "focus": { "name": "Zaměření výzkumu", "desc": "Kterému oboru se mají věnovat místní ústavy." } },
+    "diplomacy": { "stance": { "name": "Postoj", "desc": "Obecný postoj k ostatním státům." } }
+  },
+  "param": {
+    "priority": "Priorita", "when": "Podmínka", "expires": "Platnost", "frequency": "Četnost", "maxRange": "Dosah",
+    "toward": "Směrem k", "jumps": "Skoků na průzkumníka", "criteria": "Vybírat", "buildRelay": "Postavit relé", "posture": "Pohotovost",
+    "level": "Úroveň", "destination": "Cíl", "drive": "Pohon", "ansible": "Ansible", "courier": "Kurýr",
+    "every": "Každých", "cargo": "Náklad", "mode": "Režim", "repair": "Oprava", "focus": "Zaměření", "program": "Program",
+    "field": "Obor", "stance": "Postoj"
+  },
+  "option": {
+    "priority": { "low": "nízká", "normal": "běžná", "high": "vysoká" },
+    "when": { "always": "vždy", "threatSeen": "po spatření cizí vlečky zde", "noThreat": "dokud není vidět hrozba" },
+    "expires": { "never": "trvale", "10": "10 let", "50": "50 let", "100": "100 let" },
+    "frequency": { "low": "nízká", "normal": "běžná", "high": "vysoká" },
+    "criteria": { "nearest": "nejbližší", "habitable": "nejobyvatelnější", "rich": "nejbohatší" },
+    "posture": { "peace": "mír", "vigilance": "ostražitost", "fortify": "opevnění" },
+    "level": { "none": "žádné", "defensive": "obranné", "steady": "stálé", "war": "válečný stav", "tight": "přísná", "normal": "běžná", "broad": "široká" },
+    "cargo": { "supplies": "zásoby", "colonists": "kolonisté", "equipment": "vybavení", "artefacts": "artefakty" },
+    "mode": { "routine": "běžné (ročně)", "frequent": "časté (čtvrtletně)", "silent": "rádiové ticho" },
+    "repair": { "fast": "rychle", "normal": "běžně", "never": "nikdy" },
+    "focus": { "balanced": "vyvážené", "industry": "průmysl", "mining": "těžba", "agriculture": "zemědělství", "research": "výzkum", "shipbuilding": "loďařství" },
+    "program": { "none": "žádný", "survey": "průzkum", "full": "plný program" },
+    "field": { "drives": "pohony", "communication": "komunikace", "sensors": "senzory", "biology": "biologie", "weapons": "zbraně" },
+    "stance": { "open": "otevřený", "wary": "opatrný", "closed": "uzavřený", "hostile": "nepřátelský" },
+    "yes": "ano", "no": "ne"
+  }
+}

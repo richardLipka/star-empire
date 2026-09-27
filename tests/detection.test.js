@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { sandbox, sys, catalog, runUntil } from './helpers.js';
 import { createFleet, launchFleet, fleetState } from '../src/fleet/module.js';
-import { orderDispatch } from '../src/info/orders.js';
+import { orderDispatch } from '../src/governors/issue.js';
 import { sightingsOf, plumeVisible, PLUME_RANGE } from '../src/detection/module.js';
 import { knowledgePicture, truthPicture, burnPhase } from '../src/perspective/picture.js';
 import { knowledgeOf } from '../src/info/module.js';
@@ -55,7 +55,7 @@ describe('detecting a rival fleet', () => {
     expect(s[0]).toMatchObject({ phase: 'braking', fleetEmpire: 'B', fleet: null, near: tau, observer: tau });
     expect(s[0].seenAt).toBeCloseTo(seenAt, 9);
     expect(s[0].receivedAt).toBeCloseTo(reportedAt, 9);
-    expect(knowledgeOf(world, 'A').dispatches.at(-1).text).toMatch(/Empire B signature\) braking toward Tau Ceti/);
+    expect(knowledgeOf(world, 'A').dispatches.at(-1)).toMatchObject({ key: 'plume.foreign.braking', params: { empire: 'B', near: tau, observer: tau } });
 
     // Warning at Tau Ceti before arrival: braking time minus light time of the flash.
     expect(leg.arriveAt - seenAt).toBeCloseTo(leg.profile.warning, 9);
@@ -171,8 +171,8 @@ describe('fleets seen at our systems', () => {
     expect(own.certainty).toBe('confirmed');
     expect(own.age).toBeLessThan(distance(pos(tau), pos('sol')) + 1.01); // refreshed by routine reports
     const foreign = pic.fleets.find((f) => f.id === b.id);
-    expect(foreign).toMatchObject({ empire: 'B', at: tau, certainty: 'confirmed', name: 'Empire B fleet' });
-    expect(knowledgeOf(world, 'A').dispatches.some((d) => d.text === 'Empire B fleet present at Tau Ceti')).toBe(true);
+    expect(foreign).toMatchObject({ empire: 'B', at: tau, certainty: 'confirmed', name: null });
+    expect(knowledgeOf(world, 'A').dispatches.some((d) => d.key === 'foreignFleetPresent' && d.params.system === tau)).toBe(true);
   });
 
   it('a foreign fleet that leaves is dropped once a newer report omits it', () => {

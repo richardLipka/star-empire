@@ -16,7 +16,7 @@ export const pingModule = defineModule({
       const s = world.state.ping;
       s.pings.push({ n, t: ctx.now, id: ctx.newId('p') });
       ctx.notify('ping/pinged', { n });
-      if (s.pauseAt === n) ctx.requestPause(`ping ${n}`);
+      if (s.pauseAt === n) ctx.requestPause({ key: 'ping', params: { n } });
       ctx.scheduleIn(range(ctx.rng, 0.1, 2), 'ping/ping', { n: n + 1 });
     },
   },

@@ -1,16 +1,8 @@
 // @ts-check
 import { h } from '../dom.js';
-import { describeFleet } from '../../perspective/describe.js';
+import { t } from '../../i18n/index.js';
+import { describeFleet, fleetName } from '../text/describe.js';
 import { orderRedirect } from '../../info/orders.js';
-import { nameOf } from './context.js';
-
-const CERTAINTY_NOTE = {
-  live: 'seen now',
-  confirmed: 'arrival reported',
-  expected: 'predicted from its departure report',
-  unconfirmed: 'no arrival report yet',
-  actual: 'truth',
-};
 
 /**
  * Fleets as the current perspective shows them, with redirect for ansible fleets.
@@ -19,26 +11,28 @@ const CERTAINTY_NOTE = {
  */
 export function renderFleetList(c, selected) {
   const pic = c.getPicture();
-  const name = nameOf(c.catalog);
-  if (!pic.fleets.length) return [h('p.hint', {}, 'None known.')];
+  if (!pic.fleets.length) return [h('p.hint', {}, t('fleet.none'))];
   return pic.fleets.map((f) => {
     let action = null;
     if (selected && f.empire === c.empire && f.ansible && f.at !== selected && f.dest !== selected) {
       action = h('button.btn', { onclick: () => {
         const ok = c.act((w, ctx) => orderRedirect(w, ctx, { empire: c.empire, fleet: f.id, to: selected }));
-        c.toast(ok ? `${f.name} redirected to ${name(selected)} by ansible` : `${f.name} cannot be reached`);
-      } }, 'Redirect here');
+        c.toast(t(ok ? 'fleet.redirected' : 'fleet.unreachable', { fleet: fleetName(f), system: c.name(selected) }));
+      } }, t('fleet.redirect'));
     } else if (selected && f.empire === c.empire && !f.ansible && !f.at) {
-      action = h('span.dim', {}, 'no link in flight');
+      action = h('span.dim', {}, t('fleet.noLink'));
     }
     return h('div.fleet-row', {},
       h('div', {},
-        h('span', { className: `certainty ${f.certainty}` }, `${f.name}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''}`),
-        f.empire !== c.empire ? h('span.dim', {}, ` (Empire ${f.empire})`) : null,
-        h('div.dim', {}, describeFleet(f, name)),
-        h('div.dim.small', {}, CERTAINTY_NOTE[f.certainty]),
+        h('span', { className: `certainty ${f.certainty}` }, `${fleetName(f)}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''}`),
+        f.empire === c.empire && f.role !== 'generic' ? h('span.dim', {}, ` · ${t(`fleet.role.${f.role}`)}`) : null,
+        h('div.dim', {}, describeFleet(f, c.name)),
+        h('div.dim.small', {}, t(`fleet.certainty.${f.certainty}`)),
       ),
       action,
     );
   });
 }
+
+/** Map label for a fleet. @param {import('../../perspective/picture.js').PicFleet} f @param {(id: string) => string} name */
+export const fleetLabel = (f, name) => `${fleetName(f)}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''} ${describeFleet(f, name)}`;

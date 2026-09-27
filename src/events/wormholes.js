@@ -1,5 +1,6 @@
 // @ts-check
 import { defineModule } from '../sim/module.js';
+import { GameError } from '../core/errors.js';
 
 /**
  * Wormholes: paired mouths at two systems. Ships pass instantly; messages
@@ -22,7 +23,7 @@ export const wormholes = (world) => world.state.wormholes.list;
  * @param {{ a: string, b: string }} ends system ids
  */
 export function openWormhole(world, ctx, { a, b }) {
-  if (a === b) throw new Error('A wormhole needs two different systems');
+  if (a === b) throw new GameError('wormholeSameSystem');
   if (wormholes(world).some((w) => (w.a === a && w.b === b) || (w.a === b && w.b === a))) return null;
   const w = { id: ctx.newId('wormhole'), a, b, openedAt: ctx.now };
   wormholes(world).push(w);

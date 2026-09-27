@@ -1,0 +1,598 @@
+{
+  "app": {
+    "title": "Star Empire",
+    "brand": "Star Empire"
+  },
+  "lang": {
+    "label": "Language"
+  },
+  "empire": {
+    "name": "Empire {id}"
+  },
+  "time": {
+    "year": "YEAR",
+    "run": "▶ Run",
+    "pause": "❚❚ Pause",
+    "toggleTitle": "Pause / resume (space)",
+    "paused": "paused: {reason}"
+  },
+  "speed": {
+    "days": "{n} d/s",
+    "weeks": "{n} wk/s",
+    "months": "{n} mo/s",
+    "years": "{n} y/s"
+  },
+  "unit": {
+    "days": "{n} d",
+    "months": "{n} mo",
+    "years": "{n} y",
+    "ly": "{n} ly",
+    "lsun": "{n} L☉",
+    "kelvin": "{min}–{max} K"
+  },
+  "save": {
+    "save": "Save",
+    "load": "Load",
+    "export": "Export",
+    "import": "Import",
+    "saveTitle": "Quick save to this browser",
+    "loadTitle": "Load the quick save",
+    "exportTitle": "Download the game as a JSON file",
+    "importTitle": "Load a JSON save file",
+    "saved": "Saved at {year}",
+    "loaded": "Loaded {year}",
+    "noQuick": "No quick save found.",
+    "storageOff": "Browser storage unavailable; use Export instead.",
+    "failed": "Save failed: {error}",
+    "loadFailed": "Load failed: {error}"
+  },
+  "error": {
+    "saveFormat": "not a Star Empire save file",
+    "saveTooOld": "no migration from save version {version}",
+    "saveTooNew": "save version {version} is newer than this game",
+    "saveModules": "the save was made with different game modules",
+    "systemHeld": "{system} is held by Empire {empire}",
+    "noPresence": "we hold nothing at {system}",
+    "wormholeSameSystem": "a wormhole needs two different systems",
+    "fleetNotDocked": "{fleet} is not docked",
+    "noTargets": "no system of ours in that target",
+    "unknown": "Error: {message}"
+  },
+  "labels": {
+    "button": "Labels: {mode}",
+    "title": "Star labels",
+    "auto": "auto",
+    "all": "all",
+    "none": "none"
+  },
+  "map": {
+    "knows": "Empire {empire} knows",
+    "knowsTitle": "Only what the capital knows, as old as it is",
+    "truth": "Truth",
+    "truthTitle": "Sandbox: the real state, including what nobody has seen",
+    "network": "Network",
+    "networkTitle": "Relay links within range",
+    "ranges": "Ranges",
+    "rangesTitle": "Relay range spheres: the reach of communication",
+    "colour": "Colour",
+    "colourTitle": "Colour stars by {mode}",
+    "spectral": "Spectral class",
+    "status": "Status",
+    "age": "Info age",
+    "legendHint": "Click legend entries to highlight them.",
+    "ageScale": "news: now → {years}+ y old",
+    "overdue": "overdue",
+    "symbols": "Symbols",
+    "galacticCentre": "▸ galactic centre",
+    "ring": "{n} ly"
+  },
+  "symbol": {
+    "fleetKnown": "fleet, position known",
+    "fleetPredicted": "fleet, position predicted",
+    "fleetUnconfirmed": "arrival unconfirmed",
+    "ansible": "ansible fleet (live)",
+    "plume": "drive plume (burn)",
+    "report": "report in flight",
+    "order": "order in flight",
+    "wormhole": "wormhole mouth",
+    "held": "held system (ring)"
+  },
+  "status": {
+    "capital": "Capital",
+    "relay": "Outpost with relay",
+    "outpost": "Outpost, no relay",
+    "relayDown": "Relay down",
+    "foreign": "Held by another empire",
+    "explored": "Explored, empty",
+    "unexplored": "Unexplored",
+    "short": {
+      "capital": "capital",
+      "relay": "relay",
+      "outpost": "outpost, no relay",
+      "relayDown": "relay down"
+    }
+  },
+  "spectral": {
+    "class": {
+      "O": "O blue",
+      "B": "B blue-white",
+      "A": "A white",
+      "F": "F yellow-white",
+      "G": "G yellow",
+      "K": "K orange",
+      "M": "M red dwarf",
+      "D": "D white dwarf",
+      "?": "unclassified"
+    },
+    "colour": {
+      "O": "blue",
+      "B": "blue-white",
+      "A": "white",
+      "F": "yellow-white",
+      "G": "yellow",
+      "K": "orange",
+      "M": "red",
+      "D": "white",
+      "?": "unknown"
+    },
+    "lum": {
+      "giant": "{colour} giant",
+      "brightGiant": "{colour} bright giant",
+      "subgiant": "{colour} subgiant",
+      "subdwarf": "{colour} subdwarf",
+      "dwarf": "{colour} main-sequence dwarf",
+      "supergiant": "{colour} supergiant",
+      "whiteDwarf": "white dwarf",
+      "star": "{colour} star",
+      "unknown": "unclassified star"
+    }
+  },
+  "tab": {
+    "system": "System",
+    "orders": "Orders"
+  },
+  "panel": {
+    "overviewHint": "Seat at Sol. {systems} systems within {radius} ly. Sandbox: relay outposts founded in 2400, one beyond every relay's reach; Empire B next door, unknown to you.",
+    "seat": "Seat of Empire {empire}.",
+    "fromSol": "{distance} from Sol · light {light} · early fusion trip {trip}",
+    "outposts": "Outposts",
+    "outpostsKnown": "Outposts known",
+    "relaysWorking": "Relays working",
+    "relaysBelieved": "Relays believed working",
+    "overdue": "Overdue",
+    "oldestNews": "Oldest news",
+    "explored": "Explored systems",
+    "foreign": "Foreign systems known",
+    "plumes": "Drive plumes on record",
+    "ordersInFlight": "Our orders in flight",
+    "pauseOnDispatch": "Pause when a dispatch arrives",
+    "controls": "Controls",
+    "knownFleets": "Known fleets",
+    "fleets": "Fleets",
+    "intelligence": "Intelligence",
+    "governor": "Governor",
+    "sandbox": "Sandbox tools",
+    "star": "Star",
+    "stars": "Stars ({count})",
+    "survey": "Survey",
+    "measure": "Measure: {from} → {to}",
+    "credits": "Star data: {source} by {author}, {license}."
+  },
+  "control": {
+    "click": "Click",
+    "clickDo": "select a system",
+    "shift": "Shift+click",
+    "shiftDo": "measure / choose target",
+    "double": "Double-click",
+    "doubleDo": "centre the view",
+    "drag": "Drag / wheel",
+    "dragDo": "orbit / zoom",
+    "space": "Space",
+    "spaceDo": "pause / run",
+    "esc": "Esc",
+    "escDo": "deselect"
+  },
+  "intel": {
+    "status": "Status",
+    "heldBy": "Held by",
+    "relay": "Relay",
+    "relayOk": "working",
+    "relayNone": "none",
+    "relayDown": "down",
+    "latest": "Latest news from",
+    "age": "Age of news",
+    "received": "Received",
+    "receivedVia": "{year} via {via}",
+    "hops": {
+      "one": "{count} hop",
+      "other": "{count} hops"
+    },
+    "ordersReach": "Orders reach it",
+    "reportsNeed": "Its reports need",
+    "notByLight": "not by light",
+    "silent": "no route (silent)",
+    "direct": "direct",
+    "overdue": "Reports overdue: nothing received for {years}.",
+    "plumesNear": "Drive plumes near here:",
+    "asKnown": "As known at the capital now. Switch to Truth to compare.",
+    "truth": "Truth: the real state right now.",
+    "via": {
+      "capital": "capital",
+      "relay": "relay",
+      "courier": "courier",
+      "ansible": "ansible",
+      "truth": "truth"
+    }
+  },
+  "survey": {
+    "habitability": "Habitability",
+    "resources": "Resources",
+    "bodies": "Major bodies",
+    "unexplored": "Not explored: only what telescopes show (the stars above). Send a scout to survey it."
+  },
+  "measure": {
+    "distance": "Distance",
+    "light": "Light delay",
+    "trip": "{g} g → {c} c",
+    "tripValue": "{total} (crew {crew})",
+    "warning": "Warning at arrival, braking at {g} g: {warning}. ⚠ = wear above {wear} g."
+  },
+  "drive": {
+    "fusion-1": "Early fusion torch",
+    "fusion-2": "Advanced fusion torch",
+    "antimatter-1": "Antimatter drive",
+    "antimatter-hard": "Antimatter drive, hard burn",
+    "spec": "{g} g · {c} c",
+    "wear": "(wear)"
+  },
+  "fleet": {
+    "foreignName": "Empire {empire} fleet",
+    "role": {
+      "generic": "fleet",
+      "scout": "scout",
+      "settler": "settler",
+      "courier": "courier"
+    },
+    "at": "at {system}",
+    "live": "live",
+    "liveAnsible": "live (ansible)",
+    "transitLive": "→ {dest}, ETA {eta} · live (ansible)",
+    "transit": "→ {dest}, ETA {eta}",
+    "burn": {
+      "accelerating": "accelerating",
+      "braking": "braking",
+      "coasting": "coasting"
+    },
+    "confirmed": "at {system} · confirmed, report {age} old",
+    "expected": "expected → {dest}, ETA {eta} · departure report {age} old",
+    "brakingSeen": "braking seen",
+    "unconfirmed": "should have reached {dest} in {eta} · arrival unconfirmed",
+    "unconfirmedBraking": "should have reached {dest} in {eta} · arrival unconfirmed (braking was seen)",
+    "certainty": {
+      "live": "seen now",
+      "confirmed": "arrival reported",
+      "expected": "predicted from its departure report",
+      "unconfirmed": "no arrival report yet",
+      "actual": "truth"
+    },
+    "redirect": "Redirect here",
+    "noLink": "no link in flight",
+    "none": "None known.",
+    "redirected": "{fleet} redirected to {system} by ansible",
+    "unreachable": "{fleet} cannot be reached"
+  },
+  "sighting": {
+    "own": "own fleet",
+    "foreign": "Empire {empire} drive",
+    "braking": "{who} braking → {near} · {age} ago",
+    "accelerating": "{who} accelerating from {near} · {age} ago",
+    "deepSpace": "deep space"
+  },
+  "dispatch": {
+    "title": "Dispatches",
+    "empty": "Nothing yet. Orders and reports travel at light speed.",
+    "meta": " · {age} old · {via}",
+    "metaHops": " · {age} old · {via}, {hops}",
+    "fleet": {
+      "departed": "{fleet} departed {system}",
+      "arrived": "{fleet} arrived at {system}",
+      "settled": "{fleet} founded an outpost at {system}",
+      "settleFailed": "{fleet} found {system} already taken"
+    },
+    "note": "Note from {from}: {text}",
+    "foreignFleetPresent": "Empire {empire} fleet present at {system}",
+    "plume": {
+      "foreign": {
+        "braking": "Drive plume (Empire {empire} signature) braking toward {near}, seen from {observer}",
+        "brakingDeep": "Drive plume (Empire {empire} signature) braking in deep space, seen from {observer}",
+        "accelerating": "Drive plume (Empire {empire} signature) accelerating away from {near}, seen from {observer}",
+        "acceleratingDeep": "Drive plume (Empire {empire} signature) accelerating in deep space, seen from {observer}"
+      },
+      "own": {
+        "braking": "Our fleet braking toward {near}, seen from {observer}",
+        "brakingDeep": "Our fleet braking in deep space, seen from {observer}",
+        "accelerating": "Our fleet accelerating away from {near}, seen from {observer}",
+        "acceleratingDeep": "Our fleet accelerating in deep space, seen from {observer}"
+      }
+    },
+    "legacy": "{text}"
+  },
+  "sandbox": {
+    "found": "Found outpost",
+    "founded": "Outpost founded at {system}",
+    "destroyRelay": "Destroy relay",
+    "destroyHint": "receives, cannot send",
+    "relayDestroyed": "Relay at {system} destroyed",
+    "rebuildRelay": "Rebuild relay",
+    "relayRebuilt": "Relay at {system} rebuilt",
+    "heldBy": "Held by Empire {empire} (truth).",
+    "pickTarget": "Shift+click a second system for messages, fleets and wormholes.",
+    "note": "Send note → {system}",
+    "noteText": "Note from {system}",
+    "noteSent": "Note sent {from} → {to}",
+    "orderFleet": "Order fleet {from} → {to}",
+    "orderSent": "Order sent from the capital: {from} to launch for {to}",
+    "orderHint": "The order travels from the capital to this system first; the fleet launches when it arrives.",
+    "wormhole": "Open wormhole ↔ {system}",
+    "wormholeOpened": "Wormhole opened {from} ↔ {to}",
+    "rival": "Empire B fleet → {system}",
+    "rivalTitle": "A rival fleet launches now, unseen until its plume points at one of your systems",
+    "rivalLaunched": "Empire B fleet launched {from} → {to} (you will not be told)",
+    "ansible": "ansible",
+    "courier": "courier"
+  },
+  "governor": {
+    "none": "No report of this governor yet.",
+    "asOf": "As reported in {year} ({age} ago):",
+    "posture": "Posture",
+    "reporting": "Reporting",
+    "relayRepair": "Relay repair",
+    "inForce": "Orders in force",
+    "noOrders": "No standing orders (defaults apply).",
+    "onTheWay": "Orders on the way here",
+    "arrives": "arrives {year}"
+  },
+  "orders": {
+    "compose": "New directive",
+    "category": "Category",
+    "directive": "Directive",
+    "target": "Send to",
+    "targetSystem": "Selected system ({system})",
+    "targetRegion": "Our systems within",
+    "targetEmpire": "Whole empire",
+    "needSelection": "select a system first",
+    "priority": "Priority",
+    "when": "Condition",
+    "expires": "Expires",
+    "issue": "Issue directive",
+    "instant": "Sandbox: apply instantly (no travel)",
+    "notImplemented": "Accepted and acknowledged, but has no effect until its module exists.",
+    "issued": {
+      "one": "Directive sent to {count} system; last arrival {year}.",
+      "other": "Directive sent to {count} systems; last arrival {year}."
+    },
+    "issuedUnreachable": "{count} target(s) cannot be reached by light.",
+    "imposed": {
+      "one": "Applied instantly at {count} system (sandbox).",
+      "other": "Applied instantly at {count} systems (sandbox)."
+    },
+    "systemParam": "{value} (shift+click to change)",
+    "systemNone": "— shift+click a system",
+    "list": "Issued directives",
+    "noneIssued": "None yet.",
+    "revoke": "Revoke",
+    "revoked": "Revocation sent.",
+    "issuedAt": "issued {year}",
+    "noEffectYet": "no effect yet",
+    "status": {
+      "inTransit": "in transit",
+      "awaitingReport": "awaiting report",
+      "inEffect": "in effect",
+      "carriedOut": "carried out",
+      "superseded": "superseded",
+      "unreachable": "unreachable",
+      "expired": "expired",
+      "revoked": "revoked"
+    },
+    "targetDesc": {
+      "system": "{system}",
+      "region": "within {radius} ly of {system}",
+      "empire": "whole empire"
+    }
+  },
+  "category": {
+    "expansion": "Expansion",
+    "military": "Military",
+    "fleet": "Fleet operations",
+    "logistics": "Logistics",
+    "governance": "Governance",
+    "economy": "Economy",
+    "research": "Research",
+    "diplomacy": "Diplomacy"
+  },
+  "directive": {
+    "expansion": {
+      "explore": {
+        "name": "Explore",
+        "desc": "Send scouts to the nearest unexplored systems. Scouts carry a relay module and report from where they arrive, then hop on."
+      },
+      "settle": {
+        "name": "Settle",
+        "desc": "Send settler ships to found outposts. 'Most habitable' and 'richest' consider only surveyed systems."
+      }
+    },
+    "military": {
+      "readiness": {
+        "name": "Readiness",
+        "desc": "Standing military posture. Fortified systems rebuild their relay twice as fast."
+      },
+      "warships": {
+        "name": "Warship construction",
+        "desc": "How many warships to build."
+      }
+    },
+    "fleet": {
+      "send": {
+        "name": "Send fleet",
+        "desc": "Launch one fleet from the target system to a destination when the order arrives."
+      }
+    },
+    "logistics": {
+      "courier": {
+        "name": "Courier runs",
+        "desc": "Regular courier ships to a destination and back, carrying news and waiting messages."
+      },
+      "deliver": {
+        "name": "Deliver",
+        "desc": "Carry supplies, colonists, equipment or artefacts to another system."
+      }
+    },
+    "governance": {
+      "reporting": {
+        "name": "Reporting",
+        "desc": "How often the system reports. Silent systems send nothing (they still receive)."
+      },
+      "relay": {
+        "name": "Relay maintenance",
+        "desc": "How quickly a destroyed relay is rebuilt."
+      },
+      "autonomy": {
+        "name": "Autonomy",
+        "desc": "How freely the governor interprets orders."
+      }
+    },
+    "economy": {
+      "focus": {
+        "name": "Production focus",
+        "desc": "What the system's economy should favour."
+      },
+      "terraform": {
+        "name": "Terraforming",
+        "desc": "Terraforming programme for suitable worlds."
+      }
+    },
+    "research": {
+      "focus": {
+        "name": "Research focus",
+        "desc": "Which field local institutes should pursue."
+      }
+    },
+    "diplomacy": {
+      "stance": {
+        "name": "Stance",
+        "desc": "General attitude toward other polities."
+      }
+    }
+  },
+  "param": {
+    "priority": "Priority",
+    "when": "Condition",
+    "expires": "Expires",
+    "frequency": "Frequency",
+    "maxRange": "Range",
+    "toward": "Toward",
+    "jumps": "Hops per scout",
+    "criteria": "Choose",
+    "buildRelay": "Build a relay",
+    "posture": "Posture",
+    "level": "Level",
+    "destination": "Destination",
+    "drive": "Drive",
+    "ansible": "Ansible",
+    "courier": "Courier",
+    "every": "Every",
+    "cargo": "Cargo",
+    "mode": "Mode",
+    "repair": "Repair",
+    "focus": "Focus",
+    "program": "Programme",
+    "field": "Field",
+    "stance": "Stance"
+  },
+  "option": {
+    "priority": {
+      "low": "low",
+      "normal": "normal",
+      "high": "high"
+    },
+    "when": {
+      "always": "always",
+      "threatSeen": "after a foreign plume is seen here",
+      "noThreat": "while no threat is seen"
+    },
+    "expires": {
+      "never": "never",
+      "10": "after 10 years",
+      "50": "after 50 years",
+      "100": "after 100 years"
+    },
+    "frequency": {
+      "low": "low",
+      "normal": "normal",
+      "high": "high"
+    },
+    "criteria": {
+      "nearest": "nearest",
+      "habitable": "most habitable",
+      "rich": "richest"
+    },
+    "posture": {
+      "peace": "peace",
+      "vigilance": "vigilance",
+      "fortify": "fortify"
+    },
+    "level": {
+      "none": "none",
+      "defensive": "defensive",
+      "steady": "steady",
+      "war": "war footing",
+      "tight": "tight",
+      "normal": "normal",
+      "broad": "broad"
+    },
+    "cargo": {
+      "supplies": "supplies",
+      "colonists": "colonists",
+      "equipment": "equipment",
+      "artefacts": "artefacts"
+    },
+    "mode": {
+      "routine": "routine (yearly)",
+      "frequent": "frequent (quarterly)",
+      "silent": "radio silence"
+    },
+    "repair": {
+      "fast": "fast",
+      "normal": "normal",
+      "never": "never"
+    },
+    "focus": {
+      "balanced": "balanced",
+      "industry": "industry",
+      "mining": "mining",
+      "agriculture": "agriculture",
+      "research": "research",
+      "shipbuilding": "shipbuilding"
+    },
+    "program": {
+      "none": "none",
+      "survey": "survey",
+      "full": "full programme"
+    },
+    "field": {
+      "drives": "drives",
+      "communication": "communication",
+      "sensors": "sensors",
+      "biology": "biology",
+      "weapons": "weapons"
+    },
+    "stance": {
+      "open": "open",
+      "wary": "wary",
+      "closed": "closed",
+      "hostile": "hostile"
+    },
+    "yes": "yes",
+    "no": "no"
+  }
+}

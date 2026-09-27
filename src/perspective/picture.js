@@ -28,6 +28,7 @@ import { distance, lerp } from '../core/vec3.js';
  * @property {string} id
  * @property {string} name
  * @property {string} empire
+ * @property {string} role           generic, scout, settler, courier
  * @property {Vec3} pos              known (live/confirmed/actual) or predicted (expected/unconfirmed) position
  * @property {Vec3} confirmedPos     where it was when last reported
  * @property {Vec3[]} path           remaining route from `pos`
@@ -100,10 +101,10 @@ export function knowledgePicture(world, ctx, empire) {
   const fleets = [];
   for (const [id, e] of Object.entries(k.fleets)) {
     const f = e.data;
-    if (f.status === 'gone') continue; // a foreign fleet that left: whereabouts unknown
+    if (f.status === 'gone' || f.status === 'disbanded') continue; // left (whereabouts unknown), or no longer exists
     const age = now - e.validAt;
     const live = e.via === 'ansible' || (f.status === 'docked' && f.at === emp.capital);
-    const base = { id, name: f.name, empire: f.empire, validAt: e.validAt, age, ansible: f.ansible, courier: f.courier, burning: null };
+    const base = { id, name: f.name, empire: f.empire, role: f.role ?? 'generic', validAt: e.validAt, age, ansible: f.ansible, courier: f.courier, burning: null };
     if (f.status === 'docked') {
       const p = posOf(f.at);
       fleets.push({ ...base, pos: p, confirmedPos: p, path: [], wormholeJumps: [], at: f.at, dest: null, eta: null, certainty: live ? 'live' : 'confirmed', brakingSeenAt: null });
@@ -156,7 +157,7 @@ export function truthPicture(world, ctx, empire) {
   const fleets = Object.values(fleetState(world).fleets).map((f) => {
     const p = fleetPosition(f, now, posOf);
     return {
-      id: f.id, name: f.name, empire: f.empire, pos: p, confirmedPos: p, path: f.status === 'transit' ? remainingPath(f.legs, now) : [],
+      id: f.id, name: f.name, empire: f.empire, role: f.role, pos: p, confirmedPos: p, path: f.status === 'transit' ? remainingPath(f.legs, now) : [],
       wormholeJumps: wormholeJumps(f.legs, now), at: f.at, dest: f.dest, eta: f.legs.length ? f.legs[f.legs.length - 1].arriveAt : null,
       certainty: 'actual', validAt: now, age: 0, ansible: f.ansible, courier: f.courier, burning: burnPhase(f.legs, now), brakingSeenAt: null,
     };

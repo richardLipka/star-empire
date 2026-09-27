@@ -1,7 +1,7 @@
 // @ts-check
 import drives from '../data/drives.json';
 
-/** @typedef {{ id: string, name: string, accelG: number, cruise: number }} DriveTier */
+/** Display names are translations: `drive.<id>`. @typedef {{ id: string, accelG: number, cruise: number }} DriveTier */
 
 /** @type {DriveTier[]} */
 export const DRIVE_TIERS = drives.tiers;

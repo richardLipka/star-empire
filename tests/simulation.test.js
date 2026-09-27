@@ -65,7 +65,7 @@ describe('simulation', () => {
     sim.world.state.ping.pauseAt = 3;
     straight.world.state.ping.pauseAt = 3; // keep states comparable
     const r = sim.advanceTo(30);
-    expect(r.paused).toBe('ping 3');
+    expect(r.paused).toEqual({ key: 'ping', params: { n: 3 } });
     expect(r.time).toBeLessThan(30);
     sim.advanceTo(30);
     expect(sim.world.state.ping.pings).toEqual(straight.world.state.ping.pings);
@@ -79,8 +79,9 @@ describe('simulation', () => {
 
     const sim = newGame();
     expect(() => sim.ctx.scheduleIn(1, 'nobody/listens')).toThrow(/No handler/);
-    expect(() => createSimulation({ modules: [pingModule], world: sim.world })).toThrow(/modules/);
-    expect(() => deserializeWorld('{"hello":1}')).toThrow(/Not a Star Empire save/);
+    expect(() => createSimulation({ modules: [pingModule], world: sim.world })).toThrow(/saveModules/);
+    expect(() => deserializeWorld('{"hello":1}')).toThrow(/saveFormat/);
+    expect(() => deserializeWorld('not json')).toThrow(/saveFormat/);
   });
 });
 
@@ -105,6 +106,6 @@ describe('clock', () => {
     clock.setPaused(false);
     clock.frame(1);
     expect(clock.state.paused).toBe(true);
-    expect(clock.state.lastPause).toBe('ping 1');
+    expect(clock.state.lastPause).toEqual({ key: 'ping', params: { n: 1 } });
   });
 });

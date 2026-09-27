@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { sandbox, sys, catalog } from './helpers.js';
 import { knowledgePicture, truthPicture } from '../src/perspective/picture.js';
 import { setRelay } from '../src/empire/module.js';
-import { orderDispatch, sendNote } from '../src/info/orders.js';
+import { sendNote } from '../src/info/orders.js';
+import { orderDispatch } from '../src/governors/issue.js';
+import { imposeDirective } from '../src/governors/module.js';
 import { distance } from '../src/core/vec3.js';
 import { fleetState, fleetPosition } from '../src/fleet/module.js';
 
@@ -29,6 +31,7 @@ describe('knowledge picture', () => {
     const { sim, world, ctx, act } = sandbox();
     sim.advanceTo(30);
     const fom = sys('Fomalhaut');
+    act((w, c) => imposeDirective(w, c, { system: fom, type: 'governance.relay', params: { repair: 'never' } }));
     act((w, c) => setRelay(w, c, { system: fom, state: 'destroyed' }));
     sim.advanceTo(30.5);
     const k1 = knowledgePicture(world, ctx, 'A');

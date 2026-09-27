@@ -12,7 +12,7 @@
  * @property {(time: number, type: string, payload?: any) => void} scheduleAt   schedule at absolute time
  * @property {(delay: number, type: string, payload?: any) => void} scheduleIn  schedule after a delay
  * @property {(type: string, payload?: any) => void} notify   inform other modules (sync) and the UI
- * @property {(reason: string) => void} requestPause           ask the clock to auto-pause after this event
+ * @property {(reason: { key: string, params?: Record<string, any> }) => void} requestPause  ask the clock to auto-pause after this event (reason is a dispatch-like key)
  * @property {(prefix: string) => string} newId
  * @property {Readonly<Record<string, any>>} data              static content (star catalogue...), not saved
  *

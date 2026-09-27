@@ -1,6 +1,7 @@
 // @ts-check
 import { h } from './dom.js';
 import { theme } from '../render/theme.js';
+import { t } from '../i18n/index.js';
 
 /**
  * @typedef {object} MapState
@@ -13,33 +14,33 @@ import { theme } from '../render/theme.js';
  * @typedef {{ key: string, label: string, color: string, count: number }} LegendItem
  */
 
-const COLOUR_MODES = /** @type {const} */ ([['spectral', 'Spectral class'], ['status', 'Status'], ['age', 'Info age']]);
+const COLOUR_MODES = /** @type {const} */ (['spectral', 'status', 'age']);
 
 /**
  * Perspective, layers, colour mode and legend, floating over the map.
  * @param {HTMLElement} container
- * @param {{ state: MapState, legend: () => LegendItem[], onChange: () => void }} deps
+ * @param {{ state: MapState, empire: string, legend: () => LegendItem[], onChange: () => void }} deps
  */
-export function mountMapControls(container, { state, legend, onChange }) {
+export function mountMapControls(container, { state, empire, legend, onChange }) {
   /** @param {string} label @param {() => boolean} get @param {() => void} set @param {string} title */
   const button = (label, get, set, title) => {
     const b = h('button.btn', { title, onclick: () => { set(); sync(); onChange(); } }, label);
     return { b, get };
   };
   const buttons = [
-    button('Empire A knows', () => state.mode === 'knowledge', () => (state.mode = 'knowledge'), 'Only what the capital knows, as old as it is'),
-    button('Truth', () => state.mode === 'truth', () => (state.mode = 'truth'), 'Sandbox: the real state, including what nobody has seen'),
-    button('Network', () => state.network, () => (state.network = !state.network), 'Relay links within range'),
-    button('Ranges', () => state.ranges, () => (state.ranges = !state.ranges), 'Relay range spheres: the reach of communication'),
-    ...COLOUR_MODES.map(([key, label]) => button(label, () => state.colourBy === key, () => { state.colourBy = key; state.highlight = null; }, `Colour stars by ${label.toLowerCase()}`)),
+    button(t('map.knows', { empire }), () => state.mode === 'knowledge', () => (state.mode = 'knowledge'), t('map.knowsTitle')),
+    button(t('map.truth'), () => state.mode === 'truth', () => (state.mode = 'truth'), t('map.truthTitle')),
+    button(t('map.network'), () => state.network, () => (state.network = !state.network), t('map.networkTitle')),
+    button(t('map.ranges'), () => state.ranges, () => (state.ranges = !state.ranges), t('map.rangesTitle')),
+    ...COLOUR_MODES.map((key) => button(t(`map.${key}`), () => state.colourBy === key, () => { state.colourBy = key; state.highlight = null; }, t('map.colourTitle', { mode: t(`map.${key}`) }))),
   ];
   const list = h('div.legend');
-  const hint = h('div.dim.small', {}, 'Click legend entries to highlight them.');
+  const hint = h('div.dim.small', {}, t('map.legendHint'));
 
   container.append(h('div.map-overlay.top-left', {},
     h('div.btn-group', {}, buttons[0].b, buttons[1].b),
     h('div.btn-group', {}, buttons[2].b, buttons[3].b),
-    h('div.btn-group', {}, h('span.dim.small', {}, 'Colour'), ...buttons.slice(4).map((x) => x.b)),
+    h('div.btn-group', {}, h('span.dim.small', {}, t('map.colour')), ...buttons.slice(4).map((x) => x.b)),
     list,
     hint,
     symbols(),
@@ -71,8 +72,8 @@ export function mountMapControls(container, { state, legend, onChange }) {
       }, h('span.swatch', { style: `background:${item.color}` }), h('span', {}, item.label), h('span.dim', {}, String(item.count)));
     });
     if (state.colourBy === 'age') {
-      rows.unshift(h('div.legend-row.static', {}, h('span.swatch-bar', { style: `background:linear-gradient(90deg, ${theme.factions.A}, ${theme.info.stale})` }), h('span.dim', {}, `news: now → ${theme.staleAfterYears}+ y old`)));
-      rows.push(h('div.legend-row.static', {}, h('span.swatch', { style: `background:${theme.info.overdue}` }), h('span.dim', {}, 'overdue')));
+      rows.unshift(h('div.legend-row.static', {}, h('span.swatch-bar', { style: `background:linear-gradient(90deg, ${theme.factions.A}, ${theme.info.stale})` }), h('span.dim', {}, t('map.ageScale', { years: theme.staleAfterYears }))));
+      rows.push(h('div.legend-row.static', {}, h('span.swatch', { style: `background:${theme.info.overdue}` }), h('span.dim', {}, t('map.overdue'))));
     }
     list.replaceChildren(...rows);
   }
@@ -85,15 +86,15 @@ export function mountMapControls(container, { state, legend, onChange }) {
 function symbols() {
   const row = (/** @type {Node} */ icon, /** @type {string} */ text) => h('div.legend-row.static', {}, icon, h('span.dim', {}, text));
   return h('details.symbols', {},
-    h('summary', {}, 'Symbols'),
-    row(h('span.swatch.diamond', { style: `background:${theme.factions.A}` }), 'fleet, position known'),
-    row(h('span.swatch.diamond.hollow', { style: `border-color:${theme.factions.A}` }), 'fleet, position predicted'),
-    row(h('span.swatch.diamond.hollow', { style: `border-color:${theme.info.overdue}` }), 'arrival unconfirmed'),
-    row(h('span.swatch.diamond', { style: `background:${theme.info.ansible}` }), 'ansible fleet (live)'),
-    row(h('span.swatch', { style: `background:${theme.info.plume}` }), 'drive plume (burn)'),
-    row(h('span.swatch', { style: `background:${theme.info.report}` }), 'report in flight'),
-    row(h('span.swatch', { style: `background:${theme.info.order}` }), 'order in flight'),
-    row(h('span.swatch.ring', { style: `border-color:${theme.info.wormhole}` }), 'wormhole mouth'),
-    row(h('span.swatch.ring', { style: `border-color:${theme.factions.A}` }), 'held system (ring)'),
+    h('summary', {}, t('map.symbols')),
+    row(h('span.swatch.diamond', { style: `background:${theme.factions.A}` }), t('symbol.fleetKnown')),
+    row(h('span.swatch.diamond.hollow', { style: `border-color:${theme.factions.A}` }), t('symbol.fleetPredicted')),
+    row(h('span.swatch.diamond.hollow', { style: `border-color:${theme.info.overdue}` }), t('symbol.fleetUnconfirmed')),
+    row(h('span.swatch.diamond', { style: `background:${theme.info.ansible}` }), t('symbol.ansible')),
+    row(h('span.swatch', { style: `background:${theme.info.plume}` }), t('symbol.plume')),
+    row(h('span.swatch', { style: `background:${theme.info.report}` }), t('symbol.report')),
+    row(h('span.swatch', { style: `background:${theme.info.order}` }), t('symbol.order')),
+    row(h('span.swatch.ring', { style: `border-color:${theme.info.wormhole}` }), t('symbol.wormhole')),
+    row(h('span.swatch.ring', { style: `border-color:${theme.factions.A}` }), t('symbol.held')),
   );
 }
