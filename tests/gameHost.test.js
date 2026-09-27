@@ -26,3 +26,16 @@ describe('game host', () => {
     expect(pings).toBeGreaterThan(before);
   });
 });
+
+describe('scenario warm-up', () => {
+  it('runs the scenario history before the player takes over', async () => {
+    const { MODULES, DATA } = await import('../src/app/modules.js');
+    const { sandboxScenario } = await import('../src/app/scenarios.js');
+    const { knowledgePicture } = await import('../src/perspective/picture.js');
+    const game = createGameHost({ modules: MODULES, data: DATA, scenario: sandboxScenario });
+    game.newGame('warm');
+    expect(game.world.time).toBe(sandboxScenario.warmupYears);
+    const overdue = knowledgePicture(game.world, game.sim.ctx, 'A').systems.filter((s) => s.overdue).map((s) => DATA.catalog.get(s.id).name);
+    expect(overdue).toEqual(['Arcturus']); // only the outpost beyond every relay
+  });
+});

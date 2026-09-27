@@ -36,6 +36,7 @@ const starSize = (/** @type {number} */ absmag) => (Number.isFinite(absmag) ? Ma
  *   setMeasure(id: string | null): void,
  *   setLabelMode(mode: LabelMode): void,
  *   focus(id: string): void,
+ *   setAnnotations(a: Map<string, { suffix: string, cls: string }>): void,
  * }}
  */
 export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect, onMeasure }) {
@@ -114,6 +115,9 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     return obj;
   });
 
+  /** @type {Map<string, { suffix: string, cls: string }>} */
+  let annotations = new Map();
+
   /** @type {number} */ let selected = -1;
   /** @type {number} */ let measured = -1;
   /** @type {number} */ let hovered = -1;
@@ -125,11 +129,15 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     labelCentre.copy(controls.target);
     systems.forEach((s, i) => {
       const el = labels[i].element;
-      const forced = i === selected || i === measured || i === hovered || i === solIndex;
+      const note = annotations.get(s.id);
+      const forced = i === selected || i === measured || i === hovered || i === solIndex || !!note;
       const local = scenePos[i].distanceTo(labelCentre) <= LOCAL_LABEL_LY;
       const auto = local || (brightest[i] <= BRIGHT_ABSMAG && !isMinorName(s.name, s));
       labels[i].visible = forced || labelMode === 'all' || (labelMode === 'auto' && auto);
       el.classList.toggle('selected', i === selected || i === measured);
+      const text = note?.suffix ? `${s.name} · ${note.suffix}` : s.name;
+      if (el.textContent !== text) el.textContent = text;
+      for (const c of ['fresh', 'stale', 'overdue']) el.classList.toggle(c, note?.cls === c);
     });
   }
 
@@ -267,6 +275,14 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     },
     focus(id) {
       focusIndex(systems.indexOf(catalog.get(id)));
+    },
+    setAnnotations(next) {
+      const changed = next.size !== annotations.size || [...next].some(([k, v]) => {
+        const old = annotations.get(k);
+        return !old || old.suffix !== v.suffix || old.cls !== v.cls;
+      });
+      annotations = next;
+      if (changed) refreshLabels();
     },
   };
 }

@@ -13,6 +13,18 @@ export const theme = {
   lineStrong: '#4d6576',
   accent: '#e8b04a',
   warn: '#d9694a',
+  /** Information layer. */
+  info: {
+    stale: '#3b4650',      // oldest information fades to this
+    overdue: '#d9694a',    // reports missing
+    report: '#7fc8d8',     // routine reports in flight
+    order: '#e8b04a',      // directives and fleet orders
+    note: '#c9d4dc',
+    wormhole: '#c77dff',
+    ansible: '#8ff0c0',
+  },
+  /** Information older than this (years) is drawn fully faded. */
+  staleAfterYears: 40,
   /** One hue per faction, keyed by faction letter. */
   factions: {
     A: '#e8b04a',

@@ -4,16 +4,22 @@ import * as THREE from 'three';
 /**
  * Round, anti-aliased points with per-point colour and constant screen size
  * (a vector look that does not blur when zooming). One draw call for all stars.
- * @param {{ positions: Float32Array, colors: Float32Array, sizes: Float32Array, opacity?: number }} opts
+ * Shapes: 'disc' (filled), 'ring' (outline), 'diamond' (filled rhombus).
+ * @typedef {'disc' | 'ring' | 'diamond'} PointShape
+ * @param {{ positions: Float32Array, colors: Float32Array, sizes: Float32Array, opacity?: number, shape?: PointShape }} opts
  */
-export function createStarPoints({ positions, colors, sizes, opacity = 1 }) {
+export function createStarPoints({ positions, colors, sizes, opacity = 1, shape = 'disc' }) {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
   const material = new THREE.ShaderMaterial({
-    uniforms: { pixelRatio: { value: Math.min(window.devicePixelRatio, 2) }, opacity: { value: opacity } },
+    uniforms: {
+      pixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+      opacity: { value: opacity },
+      shape: { value: { disc: 0, ring: 1, diamond: 2 }[shape] },
+    },
     vertexShader: /* glsl */ `
       attribute float size;
       attribute vec3 color;
@@ -26,11 +32,14 @@ export function createStarPoints({ positions, colors, sizes, opacity = 1 }) {
       }`,
     fragmentShader: /* glsl */ `
       uniform float opacity;
+      uniform int shape;
       varying vec3 vColor;
       void main() {
-        float r = length(gl_PointCoord - 0.5) * 2.0;
+        vec2 c = gl_PointCoord - 0.5;
+        float r = shape == 2 ? (abs(c.x) + abs(c.y)) * 2.0 : length(c) * 2.0;
         float edge = fwidth(r);
         float alpha = 1.0 - smoothstep(1.0 - edge, 1.0, r);
+        if (shape == 1) alpha *= smoothstep(0.62 - edge, 0.62, r);
         if (alpha <= 0.0) discard;
         gl_FragColor = vec4(vColor, alpha * opacity);
       }`,

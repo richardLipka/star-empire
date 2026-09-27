@@ -1,0 +1,27 @@
+import { createSimulation } from '../src/sim/simulation.js';
+import { MODULES, DATA } from '../src/app/modules.js';
+import { sandboxScenario } from '../src/app/scenarios.js';
+
+export const catalog = DATA.catalog;
+export const sys = (name) => {
+  const s = catalog.systems.find((x) => x.name === name);
+  if (!s) throw new Error(`no ${name}`);
+  return s.id;
+};
+
+/** New sandbox game; `act` runs a world action with the context. */
+export function sandbox(seed = 'm3') {
+  const sim = createSimulation({ modules: MODULES, data: DATA, seed });
+  sandboxScenario(sim.world, sim.ctx);
+  return { sim, world: sim.world, ctx: sim.ctx, act: (fn) => fn(sim.world, sim.ctx) };
+}
+
+/** Advance until `predicate()` is true; returns the time it became true (to the step). */
+export function runUntil(sim, predicate, { step = 0.01, max = 500 } = {}) {
+  const end = sim.world.time + max;
+  while (sim.world.time < end) {
+    if (predicate()) return sim.world.time;
+    sim.advanceBy(step);
+  }
+  throw new Error('condition never met');
+}

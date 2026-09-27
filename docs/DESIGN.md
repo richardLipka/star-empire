@@ -52,6 +52,13 @@ The pace is a slower strategy game in the spirit of *Master of Orion*, but with 
 - **Empire-wide directives** are sent to each system separately and arrive at different times. The UI shows the arrival front spreading through the empire.
 - Directives carry an issue timestamp. If two arrive out of order, the newer issue time wins.
 
+### How it is implemented (M3)
+
+- `src/info/network.js` builds one empire's communication graph: relay-to-system radio links within range (delay = distance), local hand-over between a docked fleet and its system (no delay), and ansible links between ansible fleets and the hub at the capital (no delay). Wormholes are deliberately absent.
+- Messages move hop by hop (`info/hop` events). At each node the route is recomputed from the current network, so a message waits (`stalled`) at a system whose relay is down, and continues when the relay is rebuilt or an ansible fleet docks there. A message addressed to a fleet that cannot be reached is lost.
+- The capital's knowledge (`src/info/knowledge.js`) keeps, per system and fleet, the newest report by `validAt`. The UI draws either this knowledge or the truth through `src/perspective/picture.js`, never the world directly.
+- Couriers load the latest status and any waiting messages at departure and release them at arrival, which is how news crosses a wormhole.
+
 ### Channels
 
 | Channel | Speed | Content |

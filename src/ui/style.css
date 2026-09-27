@@ -81,3 +81,35 @@ dl.kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .credits { margin-top: 22px; font-size: 10px; }
 .credits a, .sidepanel a { color: var(--text-dim); }
 .credits a:hover, .sidepanel a:hover { color: var(--accent); }
+
+.star-label.fresh { color: var(--accent); }
+.star-label.stale { color: #7d8a94; }
+.star-label.overdue { color: var(--warn); }
+.fleet-label { color: #8ff0c0; font-size: 9.5px; padding: 6px 0 0 9px; }
+
+.map-overlay {
+  position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 6px;
+  background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--panel-edge);
+  padding: 8px; border-radius: 2px; max-width: calc(100% - 24px);
+}
+.map-overlay.top-left { top: 10px; left: 10px; }
+.map-overlay.bottom-left { bottom: 10px; left: 10px; width: 470px; }
+.overlay-title { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.2em; }
+.legend { display: flex; flex-direction: column; gap: 3px; font-size: 10px; }
+.legend-row { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.swatch.diamond { border-radius: 0; transform: rotate(45deg) scale(0.8); }
+.swatch.ring { background: transparent; border: 2px solid; width: 10px; height: 10px; }
+.swatch-bar { width: 70px; height: 6px; display: inline-block; }
+.dispatch-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 10.5px; }
+.dispatch-list .when { color: var(--accent); margin-right: 8px; font-variant-numeric: tabular-nums; }
+.tools { display: flex; flex-direction: column; gap: 6px; }
+.tools .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tools select, .tools label { font: inherit; color: var(--text); }
+.tools select { background: var(--bg); border: 1px solid var(--line-strong); padding: 2px 4px; }
+.fleet-row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 3px 0; border-bottom: 1px solid var(--panel-edge); }
+.warn { color: var(--warn); }
+@media (max-width: 720px) {
+  .map-overlay.bottom-left { display: none; }
+  .map-overlay.top-left { font-size: 10px; }
+}
