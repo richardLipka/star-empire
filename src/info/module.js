@@ -14,7 +14,7 @@ import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './know
  * @typedef {object} Message
  * @property {string} id
  * @property {string} empire
- * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint'} kind
+ * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint' | 'intercept'} kind
  * @property {string} origin     node where it was created
  * @property {string} target     system or fleet id
  * @property {number} createdAt
@@ -25,6 +25,7 @@ import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './know
  * @property {Hop[]} hops        hops taken so far (the last may be in progress)
  * @property {import('./knowledge.js').Via} via
  * @property {{ nodes: string[], delay: number } | null} planned  route as planned at sending
+ * @property {number} cipher     encryption level at its origin (security)
  */
 
 /** @typedef {{ messages: Record<string, Message>, knowledge: Record<string, import('./knowledge.js').Knowledge>, reporting: Record<string, boolean>, delivered: number, lost: number, pauseOnDispatch: string | null }} InfoState */
@@ -184,15 +185,29 @@ function buildNetwork(world, ctx, empire) {
  * @param {{ empire: string, kind: Message['kind'], origin: string, target: string, payload?: any, validAt?: number, via?: import('./knowledge.js').Via }} p
  */
 export function send(world, ctx, { empire, kind, origin, target, payload = null, validAt = ctx.now, via = 'relay' }) {
+  const msg = createMessage(world, ctx, { empire, kind, origin, target, payload, validAt, via });
+  ctx.notify('info/sent', { message: msg.id });
+  advance(world, ctx, msg);
+  return msg;
+}
+
+/**
+ * Create a message without sending it: it waits at `origin` ('stalled') or is
+ * handed to a courier ('carried'), which releases it where it lands.
+ * @param {import('../sim/world.js').World} world
+ * @param {import('../sim/module.js').SimContext} ctx
+ * @param {{ empire: string, kind: Message['kind'], origin: string, target: string, payload?: any, validAt?: number, via?: import('./knowledge.js').Via }} p
+ * @param {'transit' | 'stalled' | 'carried'} [status]
+ */
+export function createMessage(world, ctx, { empire, kind, origin, target, payload = null, validAt = ctx.now, via = 'relay' }, status = 'transit') {
   const route = truthNetwork(world, ctx, empire).route(origin, target);
   /** @type {Message} */
   const msg = {
     id: ctx.newId('msg'), empire, kind, origin, target, createdAt: ctx.now, validAt, payload,
-    at: origin, status: 'transit', hops: [], via, planned: route ? { nodes: route.nodes, delay: route.delay } : null,
+    at: origin, status, hops: [], via, planned: route ? { nodes: route.nodes, delay: route.delay } : null,
+    cipher: empireState(world).presence[origin]?.capabilities?.cipher ?? 0,
   };
   infoState(world).messages[msg.id] = msg;
-  ctx.notify('info/sent', { message: msg.id });
-  advance(world, ctx, msg);
   return msg;
 }
 
@@ -215,6 +230,8 @@ function advance(world, ctx, msg) {
   msg.status = 'transit';
   msg.hops.push({ ...hop, departAt: ctx.now, arriveAt: ctx.now + hop.delay, fromPos: net.posOf(hop.from), toPos: net.posOf(hop.to) });
   ctx.scheduleIn(hop.delay, 'info/hop', { message: msg.id });
+  // Radio beams spill and can be overheard (security module); local and ansible hand-overs cannot.
+  if (hop.kind === 'radio') ctx.notify('info/hopStarted', { message: msg.id, hop: msg.hops.length - 1 });
 }
 
 /** @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx @param {Message} msg @param {string} reason */
@@ -274,7 +291,7 @@ export function systemSnapshot(world, system) {
  * @param {{ validAt: number, receivedAt: number, via: import('./knowledge.js').Via, hops: number }} entry
  * @param {ReturnType<typeof systemSnapshot>} data
  */
-function absorbSystemReport(world, ctx, empire, system, entry, data) {
+export function absorbSystemReport(world, ctx, empire, system, entry, data) {
   const k = knowledgeOf(world, empire);
   if (!recordEntry(k.systems, system, { ...entry, data })) return; // older than what we have
   recordExplored(k, system, entry.validAt);

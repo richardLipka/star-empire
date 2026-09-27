@@ -84,7 +84,9 @@
     "overdue": "opožděné",
     "symbols": "Symboly",
     "galacticCentre": "▸ střed Galaxie",
-    "ring": "{n} sv. r."
+    "ring": "{n} sv. r.",
+    "security": "Bezpečnost",
+    "securityTitle": "Naše spoje relé v dosahu rozptylu cizích systémů (mohou být odposlouchávány)"
   },
   "symbol": {
     "fleetKnown": "flotila, poloha známá",
@@ -95,7 +97,8 @@
     "report": "hlášení na cestě",
     "order": "rozkaz na cestě",
     "wormhole": "ústí červí díry",
-    "held": "držený systém (kroužek)"
+    "held": "držený systém (kroužek)",
+    "exposed": "odhalený spoj relé"
   },
   "status": {
     "capital": "Hlavní město",
@@ -176,7 +179,10 @@
     "stars": "Hvězdy ({count})",
     "survey": "Průzkum",
     "measure": "Měření: {from} → {to}",
-    "credits": "Data hvězd: {source}, autor {author}, {license}."
+    "credits": "Data hvězd: {source}, autor {author}, {license}.",
+    "overheard": "Zachycený cizí provoz",
+    "overheardRead": "{count} (přečteno {read})",
+    "exposed": "Naše odhalené spoje"
   },
   "control": {
     "click": "Klik",
@@ -223,7 +229,8 @@
       "relay": "relé",
       "courier": "kurýra",
       "ansible": "ansible",
-      "truth": "skutečnost"
+      "truth": "skutečnost",
+      "intercept": "odposlech"
     }
   },
   "survey": {
@@ -327,6 +334,13 @@
         "many": "Průlom u {system}: {tech} (uzavřeno {count} konkurenční aplikace)",
         "other": "Průlom u {system}: {tech} (uzavřeno {count} konkurenčních aplikací)"
       }
+    },
+    "security": {
+      "overheard": "Zachycen šifrovaný provoz impéria {empire} mezi {from} a {to}",
+      "readTraffic": "Čteme provoz impéria {empire} mezi {from} a {to}",
+      "readFleet": "Zachyceno: flotila {fleet} impéria {empire} u {system}",
+      "readOrder": "Zachycen rozkaz impéria {empire} pro {system}: {directive}",
+      "stoleTech": "Ukradeno z provozu impéria {empire}: {tech}"
     }
   },
   "sandbox": {
@@ -414,7 +428,11 @@
       "system": "{system}",
       "region": "do {radius} sv. r. od {system}",
       "empire": "celé impérium"
-    }
+    },
+    "delivery": "Doručení",
+    "deliveryRelay": "relé (rychlostí světla, lze odposlechnout)",
+    "deliveryCourier": "kurýrní loď (pomalejší, nelze odposlechnout)",
+    "byCourier": "kurýrem"
   },
   "category": {
     "expansion": "Expanze",
@@ -680,7 +698,8 @@
     "unit": {
       "ly": "sv. r.",
       "deg": "°",
-      "factor": ""
+      "factor": "",
+      "level": ""
     },
     "implemented": "ve hře",
     "notYet": "přijde s modulem {module} ({milestone})",
@@ -710,7 +729,17 @@
       "wormhole": "Červí díry",
       "relic": "Relikty",
       "aliens": "Mimozemšťané",
-      "ansible": "Ansible"
+      "ansible": "Ansible",
+      "crypto": {
+        "cipher": "Síla šifry",
+        "decrypt": "Úroveň dešifrování"
+      },
+      "intercept": {
+        "range": "Dosah naslouchání"
+      },
+      "beam": {
+        "spill": "Rozptyl svazků našich relé"
+      }
     },
     "module": {
       "fleet": "flotily",
@@ -723,7 +752,8 @@
       "colonies": "kolonie",
       "governance": "správa",
       "diplomacy": "diplomacie",
-      "events": "události"
+      "events": "události",
+      "security": "bezpečnost"
     },
     "condition": {
       "relic": "nalezený mimozemský relikt",

@@ -50,6 +50,34 @@
       "milestone": "M12"
     },
     {
+      "id": "crypto.cipher",
+      "module": "security",
+      "milestone": "M12.1",
+      "implemented": true,
+      "unit": "level"
+    },
+    {
+      "id": "crypto.decrypt",
+      "module": "security",
+      "milestone": "M12.1",
+      "implemented": true,
+      "unit": "level"
+    },
+    {
+      "id": "intercept.range",
+      "module": "security",
+      "milestone": "M12.1",
+      "implemented": true,
+      "unit": "ly"
+    },
+    {
+      "id": "beam.spill",
+      "module": "security",
+      "milestone": "M12.1",
+      "implemented": true,
+      "unit": "factor"
+    },
+    {
       "id": "ship",
       "module": "fleetDesign",
       "implemented": false,

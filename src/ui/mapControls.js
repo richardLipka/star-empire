@@ -8,6 +8,7 @@ import { t } from '../i18n/index.js';
  * @property {'knowledge' | 'truth'} mode
  * @property {boolean} network
  * @property {boolean} ranges
+ * @property {boolean} security   mark our relay links exposed to foreign listeners
  * @property {'spectral' | 'status' | 'age'} colourBy
  * @property {Set<string> | null} highlight   legend filter: only these keys at full brightness
  *
@@ -32,6 +33,7 @@ export function mountMapControls(container, { state, empire, legend, onChange })
     button(t('map.truth'), () => state.mode === 'truth', () => (state.mode = 'truth'), t('map.truthTitle')),
     button(t('map.network'), () => state.network, () => (state.network = !state.network), t('map.networkTitle')),
     button(t('map.ranges'), () => state.ranges, () => (state.ranges = !state.ranges), t('map.rangesTitle')),
+    button(t('map.security'), () => state.security, () => (state.security = !state.security), t('map.securityTitle')),
     ...COLOUR_MODES.map((key) => button(t(`map.${key}`), () => state.colourBy === key, () => { state.colourBy = key; state.highlight = null; }, t('map.colourTitle', { mode: t(`map.${key}`) }))),
   ];
   const list = h('div.legend');
@@ -39,8 +41,8 @@ export function mountMapControls(container, { state, empire, legend, onChange })
 
   container.append(h('div.map-overlay.top-left', {},
     h('div.btn-group', {}, buttons[0].b, buttons[1].b),
-    h('div.btn-group', {}, buttons[2].b, buttons[3].b),
-    h('div.btn-group', {}, h('span.dim.small', {}, t('map.colour')), ...buttons.slice(4).map((x) => x.b)),
+    h('div.btn-group', {}, buttons[2].b, buttons[3].b, buttons[4].b),
+    h('div.btn-group', {}, h('span.dim.small', {}, t('map.colour')), ...buttons.slice(5).map((x) => x.b)),
     list,
     hint,
     symbols(),
@@ -96,5 +98,6 @@ function symbols() {
     row(h('span.swatch', { style: `background:${theme.info.order}` }), t('symbol.order')),
     row(h('span.swatch.ring', { style: `border-color:${theme.info.wormhole}` }), t('symbol.wormhole')),
     row(h('span.swatch.ring', { style: `border-color:${theme.factions.A}` }), t('symbol.held')),
+    row(h('span.swatch-bar', { style: `background:${theme.info.overdue};height:2px` }), t('symbol.exposed')),
   );
 }

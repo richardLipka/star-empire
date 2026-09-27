@@ -84,7 +84,9 @@
     "overdue": "overdue",
     "symbols": "Symbols",
     "galacticCentre": "▸ galactic centre",
-    "ring": "{n} ly"
+    "ring": "{n} ly",
+    "security": "Security",
+    "securityTitle": "Our relay links within the beam spill of foreign systems (they may be overheard)"
   },
   "symbol": {
     "fleetKnown": "fleet, position known",
@@ -95,7 +97,8 @@
     "report": "report in flight",
     "order": "order in flight",
     "wormhole": "wormhole mouth",
-    "held": "held system (ring)"
+    "held": "held system (ring)",
+    "exposed": "exposed relay link"
   },
   "status": {
     "capital": "Capital",
@@ -176,7 +179,10 @@
     "stars": "Stars ({count})",
     "survey": "Survey",
     "measure": "Measure: {from} → {to}",
-    "credits": "Star data: {source} by {author}, {license}."
+    "credits": "Star data: {source} by {author}, {license}.",
+    "overheard": "Foreign traffic overheard",
+    "overheardRead": "{count} ({read} read)",
+    "exposed": "Our links exposed"
   },
   "control": {
     "click": "Click",
@@ -221,7 +227,8 @@
       "relay": "relay",
       "courier": "courier",
       "ansible": "ansible",
-      "truth": "truth"
+      "truth": "truth",
+      "intercept": "interception"
     }
   },
   "survey": {
@@ -323,6 +330,13 @@
         "one": "Breakthrough at {system}: {tech} ({count} rival application closed off)",
         "other": "Breakthrough at {system}: {tech} ({count} rival applications closed off)"
       }
+    },
+    "security": {
+      "overheard": "Encrypted traffic of Empire {empire} overheard between {from} and {to}",
+      "readTraffic": "Reading Empire {empire} traffic between {from} and {to}",
+      "readFleet": "Intercepted: Empire {empire} fleet {fleet} at {system}",
+      "readOrder": "Intercepted order of Empire {empire} to {system}: {directive}",
+      "stoleTech": "Stolen from Empire {empire} traffic: {tech}"
     }
   },
   "sandbox": {
@@ -406,7 +420,11 @@
       "system": "{system}",
       "region": "within {radius} ly of {system}",
       "empire": "whole empire"
-    }
+    },
+    "delivery": "Delivery",
+    "deliveryRelay": "relay (light speed, can be overheard)",
+    "deliveryCourier": "courier ship (slower, cannot be overheard)",
+    "byCourier": "by courier"
   },
   "category": {
     "expansion": "Expansion",
@@ -672,7 +690,8 @@
     "unit": {
       "ly": "ly",
       "deg": "°",
-      "factor": ""
+      "factor": "",
+      "level": ""
     },
     "implemented": "in the game",
     "notYet": "arrives with {module} ({milestone})",
@@ -702,7 +721,17 @@
       "wormhole": "Wormholes",
       "relic": "Relics",
       "aliens": "Aliens",
-      "ansible": "Ansible"
+      "ansible": "Ansible",
+      "crypto": {
+        "cipher": "Cipher strength",
+        "decrypt": "Decryption level"
+      },
+      "intercept": {
+        "range": "Listening reach"
+      },
+      "beam": {
+        "spill": "Beam spill of our relays"
+      }
     },
     "module": {
       "fleet": "fleets",
@@ -715,7 +744,8 @@
       "colonies": "colonies",
       "governance": "governance",
       "diplomacy": "diplomacy",
-      "events": "events"
+      "events": "events",
+      "security": "security"
     },
     "condition": {
       "relic": "an alien relic found",

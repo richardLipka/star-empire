@@ -4,6 +4,7 @@ import { t } from '../../i18n/index.js';
 import { fmtDuration } from '../../i18n/format.js';
 import { infoState } from '../../info/module.js';
 import { countStatuses } from '../../perspective/starStatus.js';
+import { securityPicture } from '../../perspective/security.js';
 
 /**
  * Empire summary shown when nothing is selected.
@@ -23,7 +24,17 @@ export function renderSummary(c) {
     [t('panel.foreign'), String(counts.foreign ?? 0)],
     [t('panel.plumes'), String(pic.sightings.filter((s) => !s.own).length)],
     [t('panel.ordersInFlight'), String(pic.messages.filter((m) => m.kind === 'directive' || m.kind === 'fleetOrder' || m.kind === 'note').length)],
+    ...securityRows(c, pic),
   ])];
+}
+
+/** @param {import('./context.js').PanelContext} c @param {import('../../perspective/picture.js').Picture} pic @returns {[string, string][]} */
+function securityRows(c, pic) {
+  const sec = securityPicture(c.game.world, c.game.sim.ctx, pic);
+  return [
+    [t('panel.overheard'), t('panel.overheardRead', { count: sec.overheard, read: sec.read })],
+    [t('panel.exposed'), String(sec.exposed.length)],
+  ];
 }
 
 /**

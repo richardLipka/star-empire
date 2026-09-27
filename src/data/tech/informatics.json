@@ -48,12 +48,15 @@
       "kind": "application",
       "tier": 3,
       "requires": [
-        "inf.pattern"
+        "inf.pattern",
+        "inf.ciphers"
       ],
       "effects": [
         {
-          "kind": "unlock",
-          "target": "espionage.cryptanalysis"
+          "kind": "modifier",
+          "target": "crypto.decrypt",
+          "op": "add",
+          "value": 1
         }
       ]
     },
@@ -113,6 +116,87 @@
           "target": "research.rate",
           "op": "mul",
           "value": 1.25
+        }
+      ]
+    },
+    {
+      "id": "inf.ciphers",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "crypto.cipher",
+          "op": "add",
+          "value": 1
+        },
+        {
+          "kind": "modifier",
+          "target": "crypto.decrypt",
+          "op": "add",
+          "value": 1
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "inf.keys",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "inf.ciphers",
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "crypto.cipher",
+          "op": "add",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "inf.lattice",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "inf.ciphers",
+        "inf.pattern"
+      ],
+      "effects": []
+    },
+    {
+      "id": "inf.lattice-ciphers",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "inf.lattice"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "crypto.cipher",
+          "op": "add",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "inf.codebreakers",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "inf.beta",
+        "inf.crypto"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "crypto.decrypt",
+          "op": "add",
+          "value": 2
         }
       ]
     }

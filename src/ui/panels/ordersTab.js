@@ -18,6 +18,7 @@ const draft = {
   priority: 'normal',
   when: 'always',
   expires: 'never',
+  delivery: /** @type {'relay' | 'courier'} */ ('relay'),
   instant: false,
 };
 
@@ -57,6 +58,9 @@ export function renderComposer(c, rerender) {
     h('div.dim.small', {}, t('orders.target')),
     target,
     ...paramRows,
+    h('label.param', {}, h('span', {}, t('orders.delivery')), h('select', { onchange: (/** @type {Event} */ e) => (draft.delivery = /** @type {any} */ (/** @type {HTMLSelectElement} */ (e.target).value)) },
+      h('option', { value: 'relay', selected: draft.delivery === 'relay' }, t('orders.deliveryRelay')),
+      h('option', { value: 'courier', selected: draft.delivery === 'courier' }, t('orders.deliveryCourier')))),
     h('label', {}, h('input', { type: 'checkbox', checked: draft.instant, onchange: (/** @type {Event} */ e) => (draft.instant = /** @type {HTMLInputElement} */ (e.target).checked) }), ` ${t('orders.instant')}`),
     h('div.row', {}, h('button.btn.primary', { disabled: !ready, onclick: () => issue(c, selected, measure) }, t('orders.issue'))),
   ];
@@ -115,7 +119,7 @@ function issue(c, selected, measure) {
     return;
   }
   c.act((w, x) => {
-    const r = issueDirective(w, x, { empire: c.empire, target, ...common, expiresIn: draft.expires === 'never' ? null : Number(draft.expires) });
+    const r = issueDirective(w, x, { empire: c.empire, target, ...common, expiresIn: draft.expires === 'never' ? null : Number(draft.expires), delivery: draft.delivery });
     const arrivals = r.targets.map((tg) => tg.plannedArrival).filter((a) => a != null);
     const unreachable = r.targets.length - arrivals.length;
     const last = arrivals.length ? fmtYearShort(Math.max(.../** @type {number[]} */ (arrivals))) : '—';
@@ -143,7 +147,7 @@ export function renderOrderList(c) {
         h('span.spacer'),
         o.revokedAt == null ? h('button.btn.small', { onclick: () => c.act((w, x) => revokeDirective(w, x, { empire: c.empire, id: o.id }), t('orders.revoked')) }, t('orders.revoke')) : null,
       ),
-      h('div.dim.small', {}, `${targetDesc} · ${t('orders.issuedAt', { year: fmtYearShort(o.issuedAt) })}`),
+      h('div.dim.small', {}, `${targetDesc} · ${t('orders.issuedAt', { year: fmtYearShort(o.issuedAt) })}${o.delivery === 'courier' ? ` · ${t('orders.byCourier')}` : ''}`),
       h('div.dim.small', {}, paramSummary(o.type, o.params, c.name)),
       h('div.chips', {}, ...chips),
       o.targetStatus.length > 1 ? h('details.small', {}, h('summary', {}, `${o.targetStatus.length} ×`),

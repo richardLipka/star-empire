@@ -127,6 +127,22 @@
     "ansible": {
       "name": "Pár ansiblů",
       "desc": "Dvě zařízení, která spolu mluví okamžitě, na jakoukoli vzdálenost."
+    },
+    "tight-beams": {
+      "name": "Kázeň úzkých svazků",
+      "desc": "Užší svazky, menší rozptyl: odposlech je o polovinu těžší."
+    },
+    "intercept": {
+      "name": "Odposlech rozptylu svazků",
+      "desc": "Zachycování okrajů cizích svazků: dosah naslouchání +1,5 sv. r."
+    },
+    "listening": {
+      "name": "Hlubinná naslouchací pole",
+      "desc": "Uši široké kilometry: dosah naslouchání +3 sv. r."
+    },
+    "quantum-keys": {
+      "name": "Kanály s kvantovými klíči",
+      "desc": "Klíče, které prozradí každého odposlouchávajícího: síla šifry +2."
     }
   },
   "inf": {
@@ -148,7 +164,7 @@
     },
     "crypto": {
       "name": "Kryptoanalýza",
-      "desc": "Čtení provozu cizích impérií."
+      "desc": "Čtení provozu cizích impérií: dešifrování +1."
     },
     "governors": {
       "name": "Simulovaní guvernéři",
@@ -165,6 +181,26 @@
     "oracle": {
       "name": "Strojová orákula",
       "desc": "Mysli, které odpovídají na otázky, jež nikdo nepoložil: výzkum +25 %."
+    },
+    "ciphers": {
+      "name": "Klasické šifry",
+      "desc": "Každá zpráva odchází zašifrovaná; nejslabší kódy přečte každé impérium."
+    },
+    "keys": {
+      "name": "Protokoly distribuce klíčů",
+      "desc": "Čerstvé klíče vozí lodě: síla šifry +1."
+    },
+    "lattice": {
+      "name": "Mřížková kryptografie",
+      "desc": "Úlohy těžké i pro mysli mnohem větší než naše."
+    },
+    "lattice-ciphers": {
+      "name": "Relé zapečetěná mřížkou",
+      "desc": "Provoz relé zapečetěný v mřížkách: síla šifry +2."
+    },
+    "codebreakers": {
+      "name": "Luštitelé úrovně beta",
+      "desc": "Simulované mysli, které cizí tajemství nikdy neomrzí: dešifrování +2."
     }
   },
   "pla": {
@@ -245,6 +281,10 @@
     "plague": {
       "name": "Obrana proti nanomoru",
       "desc": "Přežít hnilobu, která žere stroje v těle i mimo ně."
+    },
+    "agents": {
+      "name": "Agentské sítě",
+      "desc": "Lidé u cizích dvorů, desítky let od domova."
     }
   },
   "kin": {

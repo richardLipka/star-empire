@@ -34,6 +34,8 @@ export const researchModule = defineModule({
     labs: {},
     /** @type {Record<string, Record<string, boolean>>} empire → condition → met */
     conditions: {},
+    /** @type {Record<string, number>} system → when the capital last sent it missing blueprints */
+    supplied: {},
   }),
 
   tick(world, dt, ctx) {
@@ -79,6 +81,7 @@ export const researchModule = defineModule({
       learn(world, ctx, system, f.blueprints, []);
     },
     'info/delivered'(world, { message }, ctx) {
+      if (message.kind === 'report') catchUp(world, ctx, message);
       if (message.kind !== 'blueprint') return;
       const lab = labs(world)[message.target];
       if (!lab || lab.empire !== message.empire) return; // not ours any more
@@ -213,6 +216,30 @@ function applyCapabilities(world, ctx, system) {
     bump(world, NETWORK);
     ctx.notify('info/networkChanged', { empire: p.empire });
   }
+}
+
+/**
+ * A report reaching the capital shows what that system knows. If it lacks
+ * technologies the capital knows (a new outpost, or one that missed a
+ * broadcast), the capital sends them, unless an earlier batch may still be
+ * on its way (one light round trip).
+ * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
+ * @param {import('../info/module.js').Message} message
+ */
+function catchUp(world, ctx, message) {
+  const capital = empireState(world).empires[message.empire].capital;
+  const { system, data } = message.payload ?? {};
+  if (message.target !== capital || !system || system === capital || data?.owner !== message.empire || !data.research) return;
+  const lab = labs(world)[capital];
+  if (!lab) return;
+  const has = new Set(data.research.known);
+  const missing = Object.keys(lab.known).filter((id) => !has.has(id));
+  if (!missing.length) return;
+  const st = world.state.research.supplied;
+  const roundTrip = 2 * (ctx.now - message.validAt) + 1;
+  if (st[system] !== undefined && ctx.now - st[system] < roundTrip) return;
+  st[system] = ctx.now;
+  send(world, ctx, { empire: message.empire, kind: 'blueprint', origin: capital, target: system, payload: { techs: missing, blocked: Object.keys(lab.blocked), origin: capital, how: 'research', discoveredAt: ctx.now, pass: false } });
 }
 
 /**

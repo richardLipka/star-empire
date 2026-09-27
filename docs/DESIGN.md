@@ -63,9 +63,9 @@ The pace is a slower strategy game in the spirit of *Master of Orion*, but with 
 
 | Channel | Speed | Content |
 |---|---|---|
-| Relay message | c | Detailed reports and directives, system to system. |
+| Relay message | c | Detailed reports and directives, system to system. Beams spill: foreign systems near the path can overhear them, and read them if their decryption beats the cipher. |
 | Detection | c | Braking plumes, sensor-net contacts, battles, colony emissions. Coarse. |
-| Courier ship | ship speed | Anything. The only information that can pass through a wormhole. |
+| Courier ship | ship speed | Anything. The only information that can pass through a wormhole, and it cannot be overheard. |
 | Ansible (rare) | instant | Paired device giving direct control of a fleet or system. |
 
 ## 4. Directives (the player's orders)
@@ -207,6 +207,7 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 | `sim/` | World container, module registry, main loop, save/load. |
 | `info/` | Relay messages, relay network and chain routing, system mailboxes, light-speed propagation, KnowledgeBase, exploration records, overdue-report tracking. |
 | `detection/` | Drive-plume sightings (and later sensor nets), reported to the capital like any message. |
+| `security/` | Interception of relay traffic by foreign listening posts; ciphers vs decryption; stolen blueprints and orders ([SECURITY.md](SECURITY.md)). |
 | `perspective/` | Read-only views for the UI: what an empire knows (`knowledgePicture`) or the truth (`truthPicture`), star status classification, shared descriptions. |
 | `empire/` | Empire state, capital, presence and relays, exploration records (later: loyalty and secession, Legacy score). |
 | `governors/` | Directive catalogue, issuing and revoking, governors' books, behaviours (explore, settle, send fleet, courier runs, standing settings). |

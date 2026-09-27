@@ -14,7 +14,7 @@ export default [
   },
   {
     // The simulation must stay headless: no DOM, no rendering.
-    files: ['src/{core,sim,galaxy,fleet,empire,info,detection,events,perspective,app,governors,research}/**/*.js'],
+    files: ['src/{core,sim,galaxy,fleet,empire,info,detection,events,perspective,app,governors,research,security}/**/*.js'],
     languageOptions: { globals: {} },
     rules: {
       'no-restricted-imports': ['error', {

@@ -19,7 +19,7 @@ Ten areas, in display order (`src/data/tech/areas.json`):
 | Wormhole utilisation | `wor` | Finding, holding open and making wormholes |
 | Exotic and alien | `xen` | Relics, alien minds, physics nobody taught us |
 
-The content (87 technologies) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
+The content (97 technologies, including cryptography and interception since M12.1; see [SECURITY.md](SECURITY.md)) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
 
 ## How research works
 
@@ -55,6 +55,8 @@ Effects are applied per system to `presence.capabilities` (`src/research/effects
 | `sensor.range`, `sensor.angle` | detection | this system sees plumes farther and in a wider cone |
 | `plume.visibility` | detection | fleets launched here are seen from less far |
 | `research.rate` | research | faster progress here |
+| `crypto.cipher`, `crypto.decrypt` | security | cipher level of messages sent from here; decryption level of this listening post |
+| `intercept.range`, `beam.spill` | security | how far this system listens; how much this relay's beam spills |
 
 Other targets are declared now and take effect when their module arrives (`src/data/tech/targets.json`, `implemented: false`):
 - `ship.*` — fleet design, M9;
@@ -131,6 +133,25 @@ The layout (`layout.js`) is a pure function and tested (no overlaps, correct col
 - **Directive:** `research.focus`, now implemented, with options `none` plus the ten areas.
 - **Save version 4.** Research records are created lazily for systems in older saves.
 - **Tests:** `tests/research.test.js` (catalogue rules, capabilities, breakthroughs and closing off, stalling, conditions, rates, blueprint travel, relay and drive effects, acquisition, settlers carrying blueprints, the research picture, orders and determinism), `tests/researchLayout.test.js`, and research coverage in `tests/i18n.test.js`.
+
+## The tree grows with the game
+
+**Standing rule: every new module extends the research tree.** When a module is implemented:
+
+1. Mark its targets in `targets.json` as `implemented: true` and consume them (usually through `presence.capabilities` in `effects.js`).
+2. Add the technologies it needs, as theories and applications. Prefer prerequisites from other areas where they make sense. M12.1 (security), for example, added ciphers and codebreakers to informatics and listening arrays to communication.
+3. Update the effect table above and the module's own document.
+
+Planned additions:
+
+| Module | Technologies to add |
+|---|---|
+| M5 colonies | yields, habitat growth, food chains, longevity for population |
+| M8 planets | institutes, terraforming stages, orbital industry |
+| M9 / M10 fleets and combat | hull classes, armour, point defence, battle computers, salvage and reverse engineering |
+| M13 governance | charters and consensus effects on loyalty, simulated governors |
+| M14 diplomacy | agents, embassies, trade protocols, counter-intelligence |
+| M16 events | relic studies per relic type, alien contact lines, wormhole engineering, ansible construction |
 
 ## Ideas for later
 

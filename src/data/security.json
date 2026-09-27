@@ -1,0 +1,5 @@
+{
+  "note": "Interception of relay traffic. A radio hop can be overheard by any foreign-held system within the beam spill of its path: spillLy x the sender's beam.spill factor, plus the listener's intercept.range. A listener reads the content if its decryption level >= the cipher level of the message's origin; otherwise it only learns that traffic passed between two systems. Couriers and ansibles cannot be intercepted.",
+  "spillLy": 1.0,
+  "memory": 200
+}

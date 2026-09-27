@@ -2,7 +2,7 @@
 
 Implementation is step by step.
 
-**Status:** M0–M4 and M12 (research) done, with the M3.1 quality pass and internationalization. Next: see "Suggested next steps" below. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
+**Status:** M0–M4, M12 (research) and M12.1 (communication security) done, with the M3.1 quality pass and internationalization. Next: see "Suggested next steps" below. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
 
 ## Target directory layout
 
@@ -119,6 +119,12 @@ star-empire/
 | M16 | `events/` | Wormhole discovery and knowledge (basic wormholes exist since M3), alien relics and technology, unique weapons, ansible rarity and construction. First alien powers enter the game here. |
 | M17 | Game shape | Full Legacy scoring, hall of records, full Chronicle, onboarding scenario, balancing. |
 
+### M12.1: Communication security ✔
+- Interception of radio hops by foreign systems within the beam spill; cipher vs decryption levels; traffic analysis reveals foreign systems; read reports, fleet movements and orders; stolen blueprints. See [SECURITY.md](SECURITY.md).
+- Orders by courier (slower, cannot be overheard); ten new technologies (ciphers, cryptanalysis, codebreakers, quantum keys, tight beams, listening arrays, agents).
+- Security map layer (exposed links) and counts; the capital sends missing blueprints to systems that lack them.
+- **Tests (134).**
+
 ## Suggested next steps (after M4)
 
 In this order, because each one makes the next meaningful:
@@ -140,3 +146,4 @@ In this order, because each one makes the next meaningful:
 - Content lives in `src/data/*.json`, not in code.
 - One milestone at a time: finish, test, commit, then move on.
 - Commits carry no AI co-author trailers.
+- Every new module extends the research tree (see RESEARCH.md, "The tree grows with the game").

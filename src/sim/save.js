@@ -44,6 +44,17 @@ const migrations = {
     for (const b of Object.values(w.state.governors?.books ?? {})) /** @type {any} */ (b).settings.researchFocus ??= 'none';
     return { ...w, version: 4 }; // research records are created lazily for existing systems
   },
+  /** v4 → v5: security (interception). Old messages count as unencrypted. */
+  4: (w) => {
+    for (const m of Object.values(w.state.info.messages)) /** @type {any} */ (m).cipher ??= 0;
+    if (w.state.research) w.state.research.supplied ??= {};
+    for (const recs of Object.values(w.state.governors?.issued ?? {})) for (const r of Object.values(recs)) /** @type {any} */ (r).delivery ??= 'relay';
+    if (!w.modules.includes('security')) {
+      w.modules.push('security');
+      w.state.security = { intercepts: {}, links: {} };
+    }
+    return { ...w, version: 5 };
+  },
 };
 
 /**

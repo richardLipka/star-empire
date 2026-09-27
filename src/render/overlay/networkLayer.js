@@ -8,8 +8,10 @@ import { factionColor } from './common.js';
 export function createNetworkLayer(/** @type {(id: string) => THREE.Vector3} */ S) {
   const group = new THREE.Group();
   const links = createSegments({ color: theme.accent, opacity: 0.35 });
+  const exposed = createSegments({ color: theme.info.overdue, opacity: 0.9 });
   const ranges = new THREE.Group();
-  group.add(ranges, links.object);
+  group.add(ranges, links.object, exposed.object);
+  let exposedKey = '';
   let linksKey = '';
   let rangesKey = '';
 
@@ -33,8 +35,17 @@ export function createNetworkLayer(/** @type {(id: string) => THREE.Vector3} */ 
 
   return {
     object: group,
-    /** @param {import('../../perspective/picture.js').Picture} pic @param {{ network: boolean, ranges: boolean }} opts */
+    /**
+     * @param {import('../../perspective/picture.js').Picture} pic
+     * @param {{ network: boolean, ranges: boolean, security?: boolean, exposed?: { a: string, b: string }[] }} opts
+     */
     update(pic, opts) {
+      exposed.object.visible = !!opts.security;
+      const ek = (opts.exposed ?? []).map((e) => e.a + e.b).join();
+      if (opts.security && ek !== exposedKey) {
+        exposedKey = ek;
+        exposed.set((opts.exposed ?? []).flatMap((e) => [S(e.a), S(e.b)]));
+      }
       const color = factionColor(pic.empire);
       links.object.visible = opts.network;
       const lk = pic.links.map(([a, b]) => a + b).join();

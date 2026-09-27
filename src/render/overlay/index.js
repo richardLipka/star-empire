@@ -10,7 +10,7 @@ import { createWormholeLayer } from './wormholeLayer.js';
 
 /**
  * @typedef {'spectral' | 'status' | 'age'} ColourBy
- * @typedef {{ network: boolean, ranges: boolean, colourBy: ColourBy, labelMode: 'auto' | 'all' | 'none', focus: THREE.Vector3 }} OverlayOptions
+ * @typedef {{ network: boolean, ranges: boolean, security?: boolean, exposed?: { a: string, b: string }[], colourBy: ColourBy, labelMode: 'auto' | 'all' | 'none', focus: THREE.Vector3 }} OverlayOptions
  */
 
 /**

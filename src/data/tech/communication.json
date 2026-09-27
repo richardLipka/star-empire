@@ -134,6 +134,73 @@
           "target": "ansible.build"
         }
       ]
+    },
+    {
+      "id": "com.tight-beams",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "com.optics"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "beam.spill",
+          "op": "mul",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "com.intercept",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "com.optics",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "intercept.range",
+          "op": "add",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "id": "com.listening",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "com.intercept",
+        "com.neutrino"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "intercept.range",
+          "op": "add",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "com.quantum-keys",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "com.neutrino",
+        "inf.lattice"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "crypto.cipher",
+          "op": "add",
+          "value": 2
+        }
+      ]
     }
   ]
 }

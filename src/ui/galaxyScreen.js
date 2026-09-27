@@ -10,6 +10,7 @@ import { annotations, legendItems } from './mapAnnotations.js';
 import { isCatalogueDesignation } from '../galaxy/index.js';
 import { knowledgePicture, truthPicture } from '../perspective/picture.js';
 import { classifySystems } from '../perspective/starStatus.js';
+import { securityPicture } from '../perspective/security.js';
 import { knowledgeOf } from '../info/module.js';
 import { t } from '../i18n/index.js';
 import { fmtLy } from '../i18n/format.js';
@@ -36,7 +37,9 @@ const PANEL_EVERY = 0.5;
 export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catalog, game, toast }) {
   const selection = { selected: /** @type {string | null} */ (null), measure: /** @type {string | null} */ (null) };
   /** @type {import('./mapControls.js').MapState} */
-  const map = { mode: 'knowledge', network: true, ranges: false, colourBy: 'status', highlight: null };
+  const map = { mode: 'knowledge', network: true, ranges: false, security: false, colourBy: 'status', highlight: null };
+  /** @type {{ a: string, b: string }[]} */
+  let exposed = [];
 
   const getPicture = () => (map.mode === 'truth' ? truthPicture : knowledgePicture)(game.world, game.sim.ctx, EMPIRE);
   let picture = getPicture();
@@ -72,6 +75,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
   /** Recompute everything derived from the picture. */
   function restyle() {
     statuses = classifySystems(picture, catalog.systems);
+    exposed = map.security ? securityPicture(game.world, game.sim.ctx, picture).exposed : [];
     const look = starAppearance({ mode: map.colourBy, systems: catalog.systems, statuses, pic: picture, highlight: map.highlight });
     view.setStarAppearance(look.colors, look.sizes);
     view.setAnnotations(annotations(map.colourBy, catalog.systems, statuses, picture));
@@ -80,7 +84,8 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
 
   function redraw() {
     picture = getPicture();
-    overlay.update(picture, { ...map, labelMode: view.getLabelMode(), focus: view.getFocus() });
+    exposed = map.security ? securityPicture(game.world, game.sim.ctx, picture).exposed : [];
+    overlay.update(picture, { ...map, exposed, labelMode: view.getLabelMode(), focus: view.getFocus() });
     restyle();
     panel.refresh();
     dispatches.render();
@@ -122,7 +127,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
     /** Every animation frame. @param {number} dt */
     frame(dt) {
       picture = getPicture();
-      overlay.update(picture, { ...map, labelMode: view.getLabelMode(), focus: view.getFocus() });
+      overlay.update(picture, { ...map, exposed, labelMode: view.getLabelMode(), focus: view.getFocus() });
       sinceStyle += dt;
       sincePanel += dt;
       if (sinceStyle > RESTYLE_EVERY) {

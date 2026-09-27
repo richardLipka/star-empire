@@ -127,6 +127,22 @@
     "ansible": {
       "name": "Ansible pair",
       "desc": "Two devices that speak instantly, at any distance."
+    },
+    "tight-beams": {
+      "name": "Tight-beam discipline",
+      "desc": "Narrower beams, less spill: half as easy to overhear."
+    },
+    "intercept": {
+      "name": "Beam-spill interception",
+      "desc": "Catching the edges of other empires' beams: listening reach +1.5 ly."
+    },
+    "listening": {
+      "name": "Deep listening arrays",
+      "desc": "Kilometre-wide ears: listening reach +3 ly."
+    },
+    "quantum-keys": {
+      "name": "Quantum-keyed channels",
+      "desc": "Keys that reveal any eavesdropper: cipher strength +2."
     }
   },
   "inf": {
@@ -148,7 +164,7 @@
     },
     "crypto": {
       "name": "Cryptanalysis",
-      "desc": "Reading other empires' traffic."
+      "desc": "Reading other empires' traffic: decryption +1."
     },
     "governors": {
       "name": "Simulated governors",
@@ -165,6 +181,26 @@
     "oracle": {
       "name": "Machine oracles",
       "desc": "Minds that answer questions nobody asked: research +25 %."
+    },
+    "ciphers": {
+      "name": "Classical ciphers",
+      "desc": "Every message leaves encrypted; every empire can read the weakest codes."
+    },
+    "keys": {
+      "name": "Key distribution protocols",
+      "desc": "Fresh keys carried by ships: cipher strength +1."
+    },
+    "lattice": {
+      "name": "Lattice cryptography",
+      "desc": "Problems hard even for minds far larger than ours."
+    },
+    "lattice-ciphers": {
+      "name": "Lattice-sealed relays",
+      "desc": "Relay traffic sealed in lattices: cipher strength +2."
+    },
+    "codebreakers": {
+      "name": "Beta-level codebreakers",
+      "desc": "Simulated minds that never tire of other people's secrets: decryption +2."
     }
   },
   "pla": {
@@ -245,6 +281,10 @@
     "plague": {
       "name": "Nanotech plague defence",
       "desc": "Surviving the rot that eats machines inside and outside the body."
+    },
+    "agents": {
+      "name": "Agent networks",
+      "desc": "People in other empires' courts, decades from home."
     }
   },
   "kin": {

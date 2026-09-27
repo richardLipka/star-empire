@@ -7,7 +7,7 @@ import { researchPicture } from '../src/perspective/research.js';
 import { imposeDirective } from '../src/governors/module.js';
 import { issueDirective } from '../src/governors/issue.js';
 import { DRIVE_TIERS, START_DRIVE, driveFor } from '../src/fleet/drives.js';
-import { empireState } from '../src/empire/module.js';
+import { empireState, establishPresence } from '../src/empire/module.js';
 import { fleetState } from '../src/fleet/module.js';
 import { knowledgeOf, truthNetwork } from '../src/info/module.js';
 import { distance } from '../src/core/vec3.js';
@@ -227,6 +227,18 @@ describe('blueprints travel', () => {
     expect('com.long-relay' in lab.known).toBe(true);
     expect('com.long-relay' in lab.blocked).toBe(false);
     expect(knowledgeOf(world, 'A').dispatches.at(-1)).toMatchObject({ key: 'research.acquired', params: { tech: 'com.long-relay', how: 'purchase' } });
+  });
+
+  it('an outpost the capital did not know of catches up once its first report arrives', () => {
+    const { sim, world, act } = quiet('b6');
+    const post = sys('Lacaille 8760');
+    act((w, c) => establishPresence(w, c, { empire: 'A', system: post }));
+    act((w, c) => acquireTech(w, c, { empire: 'A', system: 'sol', tech: 'com.intercept', how: 'purchase' }));
+    const d = light('sol', post);
+    sim.advanceTo(d + 0.5);
+    expect('com.intercept' in labs(world)[post].known).toBe(false); // the broadcast went only to known systems
+    sim.advanceTo(3 * d + 2); // first report home, then the missing blueprints out
+    expect('com.intercept' in labs(world)[post].known).toBe(true);
   });
 
   it('settlers carry the blueprints of the system they left', () => {

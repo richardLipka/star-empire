@@ -7,13 +7,14 @@ import { infoModule } from '../info/module.js';
 import { detectionModule } from '../detection/module.js';
 import { governorsModule } from '../governors/module.js';
 import { researchModule } from '../research/module.js';
+import { securityModule } from '../security/module.js';
 
 /**
  * The ordered list of simulation modules in this build of the game.
  * New gameplay modules are registered here, after their dependencies.
  * @type {import('../sim/module.js').SimModule[]}
  */
-export const MODULES = [galaxyModule, empireModule, wormholeModule, fleetModule, infoModule, detectionModule, governorsModule, researchModule];
+export const MODULES = [galaxyModule, empireModule, wormholeModule, fleetModule, infoModule, detectionModule, governorsModule, researchModule, securityModule];
 
 /** Static content handed to every module as `ctx.data`. */
 export const DATA = { catalog };

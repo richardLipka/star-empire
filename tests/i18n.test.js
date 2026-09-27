@@ -85,6 +85,8 @@ describe('everything the game shows has a text', () => {
     for (const c of CONDITIONS) need(`research.condition.${c}`);
     for (const s of ['known', 'reported', 'available', 'needsCondition', 'blocked', 'locked']) need(`research.state.${s}`);
     for (const h of ['research', 'purchase', 'reverse', 'espionage']) need(`research.via.${h}`);
+    for (const k of ['overheard', 'readTraffic', 'readFleet', 'readOrder', 'stoleTech']) need(`dispatch.security.${k}`);
+    need('intel.via.intercept');
   });
 
   it('every error the simulation can raise', () => {

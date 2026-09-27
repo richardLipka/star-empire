@@ -58,6 +58,7 @@ export function describeDispatch(d, name) {
     if (SYSTEM_PARAMS.includes(k) && typeof v === 'string' && v) params[k] = name(v);
     else if (k === 'tech') params[k] = t(`tech.${v}.name`);
     else if (k === 'how') params[k] = t(`research.via.${v}`);
+    else if (k === 'directive') params[k] = t(`directive.${v}.name`);
     else params[k] = v;
   }
   // Breakthroughs that closed off rival applications say how many (with plural forms).

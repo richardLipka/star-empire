@@ -122,6 +122,21 @@
           "target": "population.plagueResistance"
         }
       ]
+    },
+    {
+      "id": "soc.agents",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.legitimacy",
+        "inf.crypto"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "espionage.agents"
+        }
+      ]
     }
   ]
 }

@@ -2,7 +2,9 @@
 import { distance } from '../core/vec3.js';
 import { GameError } from '../core/errors.js';
 import { empireState } from '../empire/module.js';
-import { knowledgeOf, send } from '../info/module.js';
+import { knowledgeOf, send, createMessage } from '../info/module.js';
+import { createFleet, launchFleet } from '../fleet/module.js';
+import { driveFor } from '../fleet/drives.js';
 import { directiveDef, normalizeParams } from './catalog.js';
 
 /**
@@ -22,6 +24,7 @@ import { directiveDef, normalizeParams } from './catalog.js';
  * @property {Target} target
  * @property {{ system: string, plannedArrival: number | null }[]} targets
  * @property {number | null} revokedAt
+ * @property {'relay' | 'courier'} delivery  by light through relays, or by courier ship (slower, cannot be overheard)
  */
 
 /** @param {import('../sim/world.js').World} world @param {string} empire @returns {Record<string, IssuedDirective>} */
@@ -44,24 +47,46 @@ export function resolveTargets(world, ctx, empire, target) {
 /**
  * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
  * @param {{ empire: string, type: string, target: Target, params?: Record<string, any>,
- *           priority?: IssuedDirective['priority'], when?: IssuedDirective['when'], expiresIn?: number | null }} p
+ *           priority?: IssuedDirective['priority'], when?: IssuedDirective['when'], expiresIn?: number | null,
+ *           delivery?: IssuedDirective['delivery'] }} p
  * @returns {IssuedDirective}
  */
-export function issueDirective(world, ctx, { empire, type, target, params = {}, priority = 'normal', when = 'always', expiresIn = null }) {
+export function issueDirective(world, ctx, { empire, type, target, params = {}, priority = 'normal', when = 'always', expiresIn = null, delivery = 'relay' }) {
   directiveDef(type);
   const normalized = normalizeParams(type, params);
   const systems = resolveTargets(world, ctx, empire, target);
   if (!systems.length) throw new GameError('noTargets');
   const capital = empireState(world).empires[empire].capital;
   const directive = { id: ctx.newId('dir'), type, params: normalized, priority, when, expiresAt: expiresIn ? ctx.now + expiresIn : null, issuedAt: ctx.now };
+  const payload = { type: 'directive', directive };
   const targets = systems.map((system) => {
-    const msg = send(world, ctx, { empire, kind: 'directive', origin: capital, target: system, payload: { type: 'directive', directive } });
+    if (delivery === 'courier' && system !== capital) return { system, plannedArrival: byCourier(world, ctx, empire, system, payload) };
+    const msg = send(world, ctx, { empire, kind: 'directive', origin: capital, target: system, payload });
     return { system, plannedArrival: msg.planned ? ctx.now + msg.planned.delay : null };
   });
   /** @type {IssuedDirective} */
-  const record = { ...directive, empire, target, targets, revokedAt: null };
+  const record = { ...directive, empire, target, targets, revokedAt: null, delivery };
   issuedBy(world, empire)[directive.id] = record;
   return record;
+}
+
+/**
+ * Carry an order to a system in a courier ship from the capital: slower than
+ * light through relays, but nothing on the way can overhear it. The courier
+ * then flies home and is disbanded. Returns the planned arrival.
+ * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
+ * @param {string} empire @param {string} system @param {any} payload
+ */
+function byCourier(world, ctx, empire, system, payload) {
+  const capital = empireState(world).empires[empire].capital;
+  const f = createFleet(world, ctx, {
+    empire, at: capital, drive: driveFor(empireState(world).presence[capital]), courier: true, role: 'courier',
+    mission: { kind: 'courier', target: system, home: capital, returning: false },
+  });
+  const msg = createMessage(world, ctx, { empire, kind: 'directive', origin: capital, target: system, payload, via: 'courier' }, 'carried');
+  f.cargo.messages.push(msg.id);
+  launchFleet(world, ctx, { fleet: f.id, to: system });
+  return f.legs.length ? f.legs[f.legs.length - 1].arriveAt : ctx.now;
 }
 
 /**
@@ -74,8 +99,10 @@ export function revokeDirective(world, ctx, { empire, id }) {
   if (!record || record.revokedAt != null) return;
   record.revokedAt = ctx.now;
   const capital = empireState(world).empires[empire].capital;
+  const payload = { type: 'revoke', id, directiveType: record.type };
   for (const { system } of record.targets) {
-    send(world, ctx, { empire, kind: 'directive', origin: capital, target: system, payload: { type: 'revoke', id, directiveType: record.type } });
+    if (record.delivery === 'courier' && system !== capital) byCourier(world, ctx, empire, system, payload);
+    else send(world, ctx, { empire, kind: 'directive', origin: capital, target: system, payload });
   }
 }
 
