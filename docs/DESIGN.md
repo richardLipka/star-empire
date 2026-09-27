@@ -216,16 +216,43 @@ export default {
 
 ## 10. Technology
 
-- Plain **JavaScript** ES modules, JSDoc with `// @ts-check`.
-- **Vite** builds static files. No server: the game runs from GitHub Pages or locally.
-- **Three.js** for 3D (`Line2` for vector lines, `CSS2DRenderer` for labels).
-- **Vitest** for headless simulation tests.
-- Saves in IndexedDB or localStorage, plus JSON export and import.
-- **Style:** modernist and vector-based. Dark background, one accent hue per faction, monospace labels, thin strokes. Information age is shown by desaturation and dashes.
+### Libraries
+
+| Need | Choice | Why |
+|---|---|---|
+| 3D (galaxy, systems, battle replay) | **Three.js** | The standard WebGL library for the web: mature, well documented, tree-shakable, and has the add-ons this style needs. Babylon.js is heavier and aimed at game-engine features we don't use; raw WebGL or regl would mean writing that plumbing ourselves. |
+| Camera | `three/addons` **OrbitControls** | Orbit, zoom and pan around a selected star. |
+| Text labels | `three/addons` **CSS2DRenderer** | Crisp DOM text that follows 3D points, styled with CSS. |
+| Thick and dashed vector lines (later) | `three/addons` **Line2 / LineMaterial** | Constant-pixel-width and dashed lines for paths, uncertainty and info age. |
+| Stars | Custom `THREE.Points` shader | One draw call for thousands of stars, drawn as crisp anti-aliased discs. |
+| 2D screens (planet, production chains, tech tree, battle plans) | **Plain SVG** | Vector by nature, stylable with CSS, no dependency. If layouts get hard, add **d3-hierarchy** or **d3-force** for layout only. |
+| UI panels | **Plain DOM modules** | Small, explicit components. No framework until the UI proves it needs one. |
+| Build and dev server | **Vite** | Static output for GitHub Pages; fast dev reload. |
+| Tests | **Vitest** | Same module system as Vite; runs the simulation headless in Node. |
+| Quality | **ESLint** + **TypeScript checker on JSDoc** (`npm run typecheck`) | Type safety without a TypeScript build step. ESLint also enforces the layering rule below. |
+
+### Layering
+
+```
+core/  ←  sim/  ←  gameplay modules (galaxy/, fleet/, info/, empire/, ...)
+                          ↑ read-only
+                   render/ + ui/   (presentation)
+                          ↑
+                       main.js     (wires everything together)
+```
+
+- `core/`, `sim/` and gameplay modules are **headless**: no DOM, no Three.js. ESLint rejects such imports.
+- Presentation reads simulation state and sends commands. It never mutates the world directly.
+- `main.js` is the only place that knows about every layer.
+
+### Other
+
+- Saves in localStorage (IndexedDB later if saves grow), plus JSON export and import.
+- **Style:** modernist and vector-based. Dark background, one accent hue per faction, monospace labels, thin strokes. Information age is shown by desaturation and dashes. All colours live in `src/render/theme.js`.
 
 ## 11. Data and licensing
 
-- Star data comes from the **HYG Database** by David Nash / astronexus (<https://github.com/astronexus/HYG-Database>), which is licensed **CC BY-SA**. The exact version is recorded when the data file is built.
+- Star data comes from the **HYG Database** by David Nash / astronexus (<https://github.com/astronexus/HYG-Database>), which is licensed **CC BY-SA 4.0**. We use HYG v4.1; the build script records the version in the data file.
 - `tools/build-star-catalog.js` produces `src/data/stars.json`. That file is a derivative work, so it ships under the same CC BY-SA license, with attribution in `src/data/README.md`, the main README and the in-game credits screen.
 - Game code is licensed separately (license still to be chosen).
 

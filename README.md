@@ -9,8 +9,19 @@ Browser game in plain JavaScript (Vite + Three.js), no server.
 - [Design and architecture](docs/DESIGN.md)
 - [Implementation roadmap](docs/ROADMAP.md)
 
-Status: design phase. Next step: M0 scaffolding.
+## Development
+
+Requires Node.js 22.12 or newer.
+
+```sh
+npm install
+npm run dev        # dev server with hot reload
+npm run check      # lint + typecheck + tests
+npm run build      # static build in dist/
+```
+
+Every push to `main` runs the checks and deploys the build to GitHub Pages (`.github/workflows/pages.yml`).
 
 ## Credits
 
-Star data: [HYG Database](https://github.com/astronexus/HYG-Database) by David Nash (astronexus), licensed under CC BY-SA. The derived catalogue in `src/data/` is distributed under the same license.
+Star data: [HYG Database](https://github.com/astronexus/HYG-Database) by David Nash (astronexus), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The derived catalogue in `src/data/` is distributed under the same license.
