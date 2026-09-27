@@ -196,23 +196,29 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 
 ## 9. Module contract
 
+Implemented in `src/sim/module.js` and `src/sim/simulation.js`. A module is a plain object:
+
 ```js
-export default {
+export const colonyModule = defineModule({
   id: 'colony',
-  initState(world, rng) {},       // add its slice to world state
-  tick(world, dt, ctx) {},        // fixed-step update (growth, economy, loyalty)
-  handlers: {                     // discrete events from the scheduler
-    'colony/founded': (world, ev, ctx) => {},
+  dependsOn: ['galaxy'],               // must be registered earlier in src/app/modules.js
+  initState(world, ctx) { return {} }, // becomes world.state.colony (new game only)
+  start(world, ctx) {},                // after every initState: schedule first events
+  tick(world, dt, ctx) {},             // fixed step (one month by default): growth, economy, loyalty
+  handlers: {                          // scheduled events; keys must start with 'colony/'
+    'colony/founded'(world, payload, ctx) {},
   },
-  directives: {                   // executed when a directive arrives at a system
-    'expansion/colonize': { validate(world, d, system) {}, execute(world, d, system, ctx) {} },
+  listeners: {                         // notifications from any module, e.g. ctx.notify('fleet/arrived', ...)
+    'fleet/arrived'(world, payload, ctx) {},
   },
-};
+});
 ```
 
-- World state is plain JSON-serializable objects.
-- All randomness goes through the seeded RNG: the same seed and the same directives always produce the same game.
-- Modules communicate only through events and directives.
+`ctx` provides `now`, the seeded `rng`, `scheduleAt` / `scheduleIn`, `notify` (to other modules and the UI), `requestPause` (auto-pause), `newId`, and static `data` such as the star catalogue.
+
+- World state is plain JSON. Static content (the star catalogue, content tables) lives in `ctx.data`, not in saves.
+- Events at the same instant run in scheduling order, and events run before a tick at the same instant. Results do not depend on frame rate or step size: the tests check that the same seed gives the same state hash, and that a game saved and reloaded continues identically.
+- Directive handling (§4) will be added to the contract in M4.
 
 ## 10. Technology
 

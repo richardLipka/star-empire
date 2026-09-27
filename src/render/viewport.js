@@ -28,6 +28,8 @@ export function createViewport(container) {
 
   /** @type {View | null} */
   let view = null;
+  /** @type {((dtReal: number) => void)[]} */
+  const frameHooks = [];
   let last = performance.now();
 
   function size() {
@@ -45,6 +47,7 @@ export function createViewport(container) {
   function frame(now) {
     const dt = Math.min((now - last) / 1000, 0.25);
     last = now;
+    for (const hook of frameHooks) hook(dt);
     if (view) {
       view.update?.(dt);
       renderer.render(view.scene, view.camera);
@@ -64,6 +67,10 @@ export function createViewport(container) {
       view?.dispose?.();
       view = next;
       size();
+    },
+    /** Run `fn` every animation frame, before the view renders. @param {(dtReal: number) => void} fn */
+    onFrame(fn) {
+      frameHooks.push(fn);
     },
     size: () => ({ width: container.clientWidth, height: container.clientHeight }),
   };

@@ -6,9 +6,33 @@ import { createShell } from './ui/shell.js';
 import { createViewport } from './render/viewport.js';
 import { createReferencePlane } from './render/referencePlane.js';
 import { theme } from './render/theme.js';
+import { createGameHost } from './app/gameHost.js';
+import { MODULES } from './app/modules.js';
+import { mountTimeControls } from './ui/timeControls.js';
+import { mountSavePanel } from './ui/savePanel.js';
+import { createToast } from './ui/toast.js';
 
 const shell = createShell(/** @type {HTMLElement} */ (document.getElementById('app')));
 const viewport = createViewport(shell.viewport);
+const toast = createToast();
+
+const game = createGameHost({ modules: MODULES });
+game.newGame(Date.now() % 1e9);
+
+const time = mountTimeControls(shell.timeSlot, game.clock, () => game.world.time);
+mountSavePanel(shell.toolsSlot, { getWorld: () => game.world, loadWorld: game.loadWorld, toast });
+game.bus.on('clock/changed', time.render);
+game.bus.on('game/loaded', time.render);
+
+let sinceUi = 0;
+viewport.onFrame((dt) => {
+  game.clock.frame(dt);
+  sinceUi += dt;
+  if (sinceUi > 0.1) {
+    sinceUi = 0;
+    time.render();
+  }
+});
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(theme.bg);
@@ -28,4 +52,4 @@ viewport.setView({
   update: () => controls.update(),
 });
 
-shell.side.innerHTML = '<h2>Sol</h2><p class="hint">Scaffolding (M0). The galaxy arrives in M2.</p>';
+shell.side.innerHTML = '<h2>Sol</h2><p class="hint">Simulation core (M1): time runs, saves and loads. The galaxy arrives in M2.</p>';
