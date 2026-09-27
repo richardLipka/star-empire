@@ -7,6 +7,10 @@ import { toScene } from './coords.js';
 import { createReferencePlane } from './referencePlane.js';
 import { createStarPoints } from './starPoints.js';
 import { createRingMarker } from './marker.js';
+import { magnitudeSize } from './starAppearance.js';
+
+/** Extra text after a star's name, and whether to show its label regardless of the label mode. */
+/** @typedef {{ suffix: string, cls: string, force: boolean }} Annotation */
 
 /** @typedef {'auto' | 'all' | 'none'} LabelMode */
 
@@ -18,8 +22,6 @@ const LOCAL_LABEL_LY = 9;
 /** In 'auto' label mode, named stars at least this bright are always labelled. */
 const BRIGHT_ABSMAG = 1.5;
 
-/** Point size in pixels from absolute magnitude: brighter stars are larger. */
-const starSize = (/** @type {number} */ absmag) => (Number.isFinite(absmag) ? Math.min(9, Math.max(2.5, 9 - 0.45 * absmag)) : 3);
 
 /**
  * The 3D star map: stars, drop lines to the galactic plane, labels, selection
@@ -36,7 +38,8 @@ const starSize = (/** @type {number} */ absmag) => (Number.isFinite(absmag) ? Ma
  *   setMeasure(id: string | null): void,
  *   setLabelMode(mode: LabelMode): void,
  *   focus(id: string): void,
- *   setAnnotations(a: Map<string, { suffix: string, cls: string }>): void,
+ *   setAnnotations(a: Map<string, Annotation>): void,
+ *   setStarAppearance(colors: THREE.Color[], sizes: number[]): void,
  * }}
  */
 export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect, onMeasure }) {
@@ -72,7 +75,7 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     const primary = s.stars[0];
     color.set(theme.spectral[/** @type {keyof typeof theme.spectral} */ (primary.cls)] ?? theme.spectral['?']);
     color.toArray(colors, i * 3);
-    sizes[i] = starSize(Math.min(...s.stars.map((x) => x.absmag)));
+    sizes[i] = magnitudeSize(Math.min(...s.stars.map((x) => x.absmag)));
     feet.set([p.x, 0, p.z], i * 3);
     (p.y >= 0 ? above : below).push(p.x, p.y, p.z, p.x, 0, p.z);
   });
@@ -115,7 +118,7 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     return obj;
   });
 
-  /** @type {Map<string, { suffix: string, cls: string }>} */
+  /** @type {Map<string, Annotation>} */
   let annotations = new Map();
 
   /** @type {number} */ let selected = -1;
@@ -130,14 +133,14 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     systems.forEach((s, i) => {
       const el = labels[i].element;
       const note = annotations.get(s.id);
-      const forced = i === selected || i === measured || i === hovered || i === solIndex || !!note;
+      const forced = i === selected || i === measured || i === hovered || i === solIndex || !!note?.force;
       const local = scenePos[i].distanceTo(labelCentre) <= LOCAL_LABEL_LY;
       const auto = local || (brightest[i] <= BRIGHT_ABSMAG && !isMinorName(s.name, s));
       labels[i].visible = forced || labelMode === 'all' || (labelMode === 'auto' && auto);
       el.classList.toggle('selected', i === selected || i === measured);
       const text = note?.suffix ? `${s.name} · ${note.suffix}` : s.name;
       if (el.textContent !== text) el.textContent = text;
-      for (const c of ['fresh', 'stale', 'overdue']) el.classList.toggle(c, note?.cls === c);
+      for (const c of ['fresh', 'stale', 'overdue', 'foreign']) el.classList.toggle(c, note?.cls === c);
     });
   }
 
@@ -276,10 +279,18 @@ export function createGalaxyView({ catalog, inputElement, isMinorName, onSelect,
     focus(id) {
       focusIndex(systems.indexOf(catalog.get(id)));
     },
+    setStarAppearance(nextColors, nextSizes) {
+      const colorAttr = /** @type {THREE.BufferAttribute} */ (stars.geometry.getAttribute('color'));
+      const sizeAttr = /** @type {THREE.BufferAttribute} */ (stars.geometry.getAttribute('size'));
+      nextColors.forEach((c, i) => c.toArray(colorAttr.array, i * 3));
+      /** @type {Float32Array} */ (sizeAttr.array).set(nextSizes);
+      colorAttr.needsUpdate = true;
+      sizeAttr.needsUpdate = true;
+    },
     setAnnotations(next) {
       const changed = next.size !== annotations.size || [...next].some(([k, v]) => {
         const old = annotations.get(k);
-        return !old || old.suffix !== v.suffix || old.cls !== v.cls;
+        return !old || old.suffix !== v.suffix || old.cls !== v.cls || old.force !== v.force;
       });
       annotations = next;
       if (changed) refreshLabels();

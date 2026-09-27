@@ -1,19 +1,25 @@
 // @ts-check
 import { h } from './dom.js';
 import { createGalaxyView } from '../render/galaxyView.js';
-import { createInfoOverlay } from '../render/infoOverlay.js';
-import { createSystemPanel } from './systemPanel.js';
-import { mountOverlayControls } from './overlayControls.js';
+import { createInfoOverlay } from '../render/overlay/index.js';
+import { starAppearance } from '../render/starAppearance.js';
+import { createSidePanel } from './sidePanel.js';
+import { mountMapControls } from './mapControls.js';
 import { mountDispatchLog } from './dispatchLog.js';
+import { annotations, legendItems } from './mapAnnotations.js';
 import { isCatalogueDesignation } from '../galaxy/index.js';
 import { knowledgePicture, truthPicture } from '../perspective/picture.js';
+import { classifySystems } from '../perspective/starStatus.js';
 import { knowledgeOf } from '../info/module.js';
 
 const EMPIRE = 'A';
+/** Seconds between restyling all stars and labels (moving objects update every frame). */
+const RESTYLE_EVERY = 0.25;
+const PANEL_EVERY = 0.5;
 
 /**
- * The main screen: 3D galaxy map with the information overlay, plus the side
- * panel. Owns selection and overlay state.
+ * The main screen: 3D galaxy map with the information overlay, map controls,
+ * dispatch log and side panel. Owns selection and map state.
  * @param {object} deps
  * @param {ReturnType<typeof import('../render/viewport.js').createViewport>} deps.viewport
  * @param {HTMLElement} deps.viewportEl
@@ -24,42 +30,54 @@ const EMPIRE = 'A';
  * @param {(msg: string) => void} deps.toast
  */
 export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catalog, game, toast }) {
-  const state = { selected: /** @type {string | null} */ (null), measure: /** @type {string | null} */ (null) };
-  const overlayState = { mode: /** @type {'knowledge' | 'truth'} */ ('knowledge'), network: true, ranges: false, age: true };
+  const selection = { selected: /** @type {string | null} */ (null), measure: /** @type {string | null} */ (null) };
+  /** @type {import('./mapControls.js').MapState} */
+  const map = { mode: 'knowledge', network: true, ranges: false, colourBy: 'status', highlight: null };
 
-  const getPicture = () => overlayState.mode === 'truth'
-    ? truthPicture(game.world, game.sim.ctx, EMPIRE)
-    : knowledgePicture(game.world, game.sim.ctx, EMPIRE);
+  const getPicture = () => (map.mode === 'truth' ? truthPicture : knowledgePicture)(game.world, game.sim.ctx, EMPIRE);
+  let picture = getPicture();
+  let statuses = classifySystems(picture, catalog.systems);
 
-  const panel = createSystemPanel(side, { catalog, game, getPicture, toast });
-
+  const panel = createSidePanel(side, { catalog, game, getPicture: () => picture, getStatuses: () => statuses, empire: EMPIRE, toast });
   const view = createGalaxyView({
     catalog,
     inputElement: viewport.inputElement,
     isMinorName: (name) => isCatalogueDesignation(name),
     onSelect(id) {
-      state.selected = id;
-      state.measure = null;
-      update();
+      selection.selected = id;
+      selection.measure = null;
+      updateSelection();
     },
     onMeasure(id) {
-      state.measure = id;
-      update();
+      selection.measure = id;
+      updateSelection();
     },
   });
-  const overlay = createInfoOverlay({ scene: view.scene, catalog, setAnnotations: view.setAnnotations });
-
-  mountOverlayControls(viewportEl, { state: overlayState, onChange: () => { drawOverlay(); panel.refresh(); } });
+  const overlay = createInfoOverlay({ scene: view.scene, catalog });
+  const controls = mountMapControls(viewportEl, { state: map, legend: () => legendItems(map.colourBy, catalog.systems, statuses), onChange: redraw });
   const dispatches = mountDispatchLog(viewportEl, { getDispatches: () => knowledgeOf(game.world, EMPIRE).dispatches });
 
-  function update() {
-    view.select(state.selected);
-    view.setMeasure(state.measure);
-    panel.render(state.selected, state.measure);
+  function updateSelection() {
+    view.select(selection.selected);
+    view.setMeasure(selection.measure);
+    panel.render(selection.selected, selection.measure);
   }
 
-  function drawOverlay() {
-    overlay.update(getPicture(), overlayState);
+  /** Recompute everything derived from the picture. */
+  function restyle() {
+    statuses = classifySystems(picture, catalog.systems);
+    const look = starAppearance({ mode: map.colourBy, systems: catalog.systems, statuses, pic: picture, highlight: map.highlight });
+    view.setStarAppearance(look.colors, look.sizes);
+    view.setAnnotations(annotations(map.colourBy, catalog.systems, statuses, picture));
+    controls.renderLegend();
+  }
+
+  function redraw() {
+    picture = getPicture();
+    overlay.update(picture, map);
+    restyle();
+    panel.refresh();
+    dispatches.render();
   }
 
   /** @type {import('../render/galaxyView.js').LabelMode[]} */
@@ -77,33 +95,40 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      state.selected = null;
-      state.measure = null;
-      update();
+      selection.selected = null;
+      selection.measure = null;
+      updateSelection();
     }
   });
 
   viewport.setView(view);
-  update();
+  updateSelection();
+  redraw();
 
+  let sinceStyle = 0;
   let sincePanel = 0;
   return {
-    refresh: update,
-    /** Called every animation frame. @param {number} dt */
+    refresh: () => {
+      updateSelection();
+      redraw();
+    },
+    /** Every animation frame. @param {number} dt */
     frame(dt) {
-      drawOverlay();
+      picture = getPicture();
+      overlay.update(picture, map);
+      sinceStyle += dt;
       sincePanel += dt;
-      if (sincePanel > 0.5) {
+      if (sinceStyle > RESTYLE_EVERY) {
+        sinceStyle = 0;
+        restyle();
+      }
+      if (sincePanel > PANEL_EVERY) {
         sincePanel = 0;
         panel.refresh();
         dispatches.render();
       }
     },
-    /** After any world change from the UI. */
-    changed() {
-      drawOverlay();
-      panel.refresh();
-      dispatches.render();
-    },
+    /** After a world change from the UI. */
+    changed: redraw,
   };
 }

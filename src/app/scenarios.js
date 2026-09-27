@@ -1,7 +1,8 @@
 // @ts-check
-import { createEmpire, establishPresence, empireState } from '../empire/module.js';
+import { createEmpire, establishPresence, empireState, markExplored } from '../empire/module.js';
 import { knowledgeOf, truthNetwork, systemSnapshot } from '../info/module.js';
-import { recordEntry } from '../info/knowledge.js';
+import { recordEntry, recordExplored } from '../info/knowledge.js';
+import { distance } from '../core/vec3.js';
 
 /**
  * Starting situations. A scenario runs once on a new game, after every
@@ -12,13 +13,17 @@ import { recordEntry } from '../info/knowledge.js';
  *   already in flight and knowledge ages are realistic at the start.
  */
 
-/** Outposts of the M3 sandbox: a relay chain, a far chain, and one isolated outpost. */
+/** Outposts of Empire A in the sandbox: a relay chain, a far chain, and one isolated outpost. */
 export const SANDBOX_OUTPOSTS = [
   'Alpha Centauri', 'Tau Ceti', '61 Cygni', 'Altair', 'Vega', 'Fomalhaut', 'Deneb Algedi', 'Arcturus',
 ];
+/** Empire B, a human rival next door, unknown to A at the start. */
+export const SANDBOX_RIVAL = { capital: 'Epsilon Indi', outposts: ['Gl 832'] };
+/** Early probes have visited every system this close to a capital (ly). */
+export const PROBED_RADIUS = 9;
 
 /**
- * Sandbox for the information layer: Empire A at Sol with relay outposts.
+ * Sandbox for the information layer.
  * The capital starts with the last reports that had arrived by year 0; the
  * isolated outpost is known only from its century-old founding records.
  * @type {Scenario}
@@ -32,14 +37,26 @@ export function sandboxScenario(world, ctx) {
   };
   createEmpire(world, ctx, { id: 'A', capital: 'sol' });
   for (const name of SANDBOX_OUTPOSTS) establishPresence(world, ctx, { empire: 'A', system: byName(name) });
+  createEmpire(world, ctx, { id: 'B', capital: byName(SANDBOX_RIVAL.capital) });
+  for (const name of SANDBOX_RIVAL.outposts) establishPresence(world, ctx, { empire: 'B', system: byName(name) });
 
-  const k = knowledgeOf(world, 'A');
-  const net = truthNetwork(world, ctx, 'A');
-  for (const [system, p] of Object.entries(empireState(world).presence)) {
-    if (p.empire !== 'A' || system === 'sol') continue;
-    const route = net.route(system, 'sol');
-    const age = route ? route.delay : 100;
-    recordEntry(k.systems, system, { validAt: -age, receivedAt: route ? 0 : -1, via: route ? 'relay' : 'courier', hops: route ? route.hops.length : 0, data: systemSnapshot(world, system) });
+  for (const empire of ['A', 'B']) {
+    const emp = empireState(world).empires[empire];
+    const k = knowledgeOf(world, empire);
+    const home = catalog.get(emp.capital).pos;
+    for (const s of catalog.systems) {
+      if (distance(s.pos, home) > PROBED_RADIUS) continue;
+      markExplored(world, empire, s.id, -50);
+      recordExplored(k, s.id, -50);
+    }
+    const net = truthNetwork(world, ctx, empire);
+    for (const [system, p] of Object.entries(empireState(world).presence)) {
+      if (p.empire !== empire || system === emp.capital) continue;
+      const route = net.route(system, emp.capital);
+      const age = route ? route.delay : 100;
+      recordEntry(k.systems, system, { validAt: -age, receivedAt: route ? 0 : -1, via: route ? 'relay' : 'courier', hops: route ? route.hops.length : 0, data: systemSnapshot(world, system) });
+      recordExplored(k, system, -age);
+    }
   }
 }
 

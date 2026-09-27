@@ -6,13 +6,22 @@
  * @typedef {'capital' | 'relay' | 'courier' | 'ansible'} Via
  * @typedef {{ validAt: number, receivedAt: number, via: Via, hops: number, data: any }} Entry
  * @typedef {{ id: string, kind: string, subject: string, text: string, validAt: number, receivedAt: number, via: Via, hops: number }} Dispatch
- * @typedef {{ systems: Record<string, Entry>, fleets: Record<string, Entry>, dispatches: Dispatch[] }} Knowledge
+ * @typedef {object} Knowledge
+ * @property {Record<string, Entry>} systems      latest report per system
+ * @property {Record<string, Entry>} fleets       latest report per own fleet
+ * @property {Record<string, number>} explored    systems known to have been visited → time of the visit
+ * @property {Dispatch[]} dispatches              notable news, in order of arrival
  */
 
 const MAX_DISPATCHES = 200;
 
 /** @returns {Knowledge} */
-export const emptyKnowledge = () => ({ systems: {}, fleets: {}, dispatches: [] });
+export const emptyKnowledge = () => ({ systems: {}, fleets: {}, explored: {}, dispatches: [] });
+
+/** @param {Knowledge} k @param {string} system @param {number} validAt */
+export function recordExplored(k, system, validAt) {
+  if (k.explored[system] === undefined || k.explored[system] > validAt) k.explored[system] = validAt;
+}
 
 /**
  * Keep the newer of the stored and incoming entry.

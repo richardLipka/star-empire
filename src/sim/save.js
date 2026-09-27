@@ -7,7 +7,19 @@ const FORMAT = 'star-empire-save';
  * Upgrades from an older world version to the next one, keyed by the old version.
  * @type {Record<number, (world: any) => any>}
  */
-const migrations = {};
+const migrations = {
+  /** v1 → v2: exploration records and drive-plume detection. */
+  1: (w) => {
+    w.state.empire.explored ??= {};
+    for (const k of Object.values(w.state.info?.knowledge ?? {})) /** @type {any} */ (k).explored ??= {};
+    if (w.state.info) w.state.info.pauseOnDispatch = w.state.info.pauseOnDispatch ? 'A' : null;
+    if (w.modules.includes('info') && !w.modules.includes('detection')) {
+      w.modules.splice(w.modules.indexOf('info') + 1, 0, 'detection');
+      w.state.detection = { sightings: {} };
+    }
+    return { ...w, version: 2 };
+  },
+};
 
 /**
  * @param {import('./world.js').World} world

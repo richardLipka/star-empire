@@ -17,11 +17,22 @@ export const theme = {
   info: {
     stale: '#3b4650',      // oldest information fades to this
     overdue: '#d9694a',    // reports missing
-    report: '#7fc8d8',     // routine reports in flight
+    report: '#a9bccd',     // reports in flight
     order: '#e8b04a',      // directives and fleet orders
     note: '#c9d4dc',
     wormhole: '#c77dff',
     ansible: '#8ff0c0',
+    plume: '#ff8a3d',      // drive plumes
+  },
+  /** Star colours in the "Status" view. */
+  status: {
+    capital: '#ffd27a',
+    relay: '#e8b04a',
+    outpost: '#b98f4a',
+    relayDown: '#d9694a',
+    foreign: '#5fb3c9',
+    explored: '#d8e2ea',
+    unexplored: '#3e4a55',
   },
   /** Information older than this (years) is drawn fully faded. */
   staleAfterYears: 40,

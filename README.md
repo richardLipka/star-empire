@@ -10,7 +10,7 @@ Browser game in plain JavaScript (Vite + Three.js), no server.
 - [Implementation roadmap](docs/ROADMAP.md)
 - [Game data and licences](src/data/README.md)
 
-Current state (M3): a 3D map of the real stars within 50 light-years of Sol. Empire A's relay network carries reports and orders at light speed, hop by hop. The map shows what the capital knows and how old it is (or, in sandbox mode, the truth), fleets with predicted paths, ansible fleets, wormholes and couriers. Sandbox tools let you destroy relays, send notes, order fleets and open wormholes.
+Current state (M3.1): a 3D map of the real stars within 50 light-years of Sol. Empire A's relay network carries reports and orders at light speed, hop by hop. The map shows what the capital knows and how old it is (or, in sandbox mode, the truth). Stars can be coloured by spectral class, by status (unexplored, explored, outpost, relay, capital, foreign) or by information age. Fleets are shown with how their position is known (live, confirmed, expected, unconfirmed). Drive plumes are detected only when the exhaust points at an observer. Ansible fleets, wormholes and couriers work, and a rival Empire B lives next door. Sandbox tools let you destroy relays, send notes, order fleets, open wormholes and launch rival fleets.
 
 ## Development
 

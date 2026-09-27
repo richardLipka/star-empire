@@ -4,7 +4,7 @@ import { hashUnit } from '../core/rng.js';
 import { empireState } from '../empire/module.js';
 import { fleetState, fleetPosition } from '../fleet/module.js';
 import { createNetwork, isFleetNode } from './network.js';
-import { emptyKnowledge, recordEntry, logDispatch } from './knowledge.js';
+import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './knowledge.js';
 
 /**
  * Messages at light speed, relay routing, and what each capital knows.
@@ -13,7 +13,7 @@ import { emptyKnowledge, recordEntry, logDispatch } from './knowledge.js';
  * @typedef {object} Message
  * @property {string} id
  * @property {string} empire
- * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note'} kind
+ * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting'} kind
  * @property {string} origin     node where it was created
  * @property {string} target     system or fleet id
  * @property {number} createdAt
@@ -26,7 +26,8 @@ import { emptyKnowledge, recordEntry, logDispatch } from './knowledge.js';
  * @property {{ nodes: string[], delay: number } | null} planned  route as planned at sending
  */
 
-/** @typedef {{ messages: Record<string, Message>, knowledge: Record<string, import('./knowledge.js').Knowledge>, reporting: Record<string, boolean>, delivered: number, lost: number, pauseOnDispatch: boolean }} InfoState */
+/** @typedef {{ messages: Record<string, Message>, knowledge: Record<string, import('./knowledge.js').Knowledge>, reporting: Record<string, boolean>, delivered: number, lost: number, pauseOnDispatch: string | null }} InfoState */
+/* pauseOnDispatch: the empire (the player's) whose dispatches pause the clock, or null. */
 
 /** @param {import('../sim/world.js').World} world @returns {InfoState} */
 export const infoState = (world) => world.state.info;
@@ -37,13 +38,13 @@ const MISSED = 'missed';
 export const infoModule = defineModule({
   id: 'info',
   dependsOn: ['galaxy', 'empire', 'wormholes', 'fleet'],
-  initState: () => /** @type {InfoState} */ ({ messages: {}, knowledge: {}, reporting: {}, delivered: 0, lost: 0, pauseOnDispatch: false }),
+  initState: () => /** @type {InfoState} */ ({ messages: {}, knowledge: {}, reporting: {}, delivered: 0, lost: 0, pauseOnDispatch: null }),
 
   tick(world, _dt, ctx) {
     // The capital knows its own system and anything linked by ansible without delay.
     for (const emp of Object.values(empireState(world).empires)) {
+      absorbSystemReport(world, ctx, emp.id, emp.capital, { validAt: ctx.now, receivedAt: ctx.now, via: 'capital', hops: 0 }, systemSnapshot(world, emp.capital));
       const k = knowledgeOf(world, emp.id);
-      recordEntry(k.systems, emp.capital, { validAt: ctx.now, receivedAt: ctx.now, via: 'capital', hops: 0, data: systemSnapshot(world, emp.capital) });
       for (const f of Object.values(fleetState(world).fleets)) {
         if (f.empire !== emp.id) continue;
         const instant = f.ansible || f.at === emp.capital;
@@ -104,6 +105,16 @@ export const infoModule = defineModule({
     },
   },
 });
+
+/**
+ * Log notable news at an empire's capital (and auto-pause if the player asked for it).
+ * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
+ * @param {string} empire @param {import('./knowledge.js').Dispatch} d
+ */
+export function recordDispatch(world, ctx, empire, d) {
+  logDispatch(knowledgeOf(world, empire), d);
+  if (infoState(world).pauseOnDispatch === empire) ctx.requestPause(d.text);
+}
 
 /** @param {import('../sim/world.js').World} world @param {string} empire */
 export function knowledgeOf(world, empire) {
@@ -184,18 +195,17 @@ function deliver(world, ctx, msg) {
   const k = knowledgeOf(world, msg.empire);
   const hops = msg.hops.filter((h) => h.kind === 'radio').length;
   const entry = { validAt: msg.validAt, receivedAt: ctx.now, via: msg.via, hops };
-  const dispatch = (/** @type {string} */ subject, /** @type {string} */ text) => {
-    logDispatch(k, { id: msg.id, kind: msg.kind, subject, text, validAt: msg.validAt, receivedAt: ctx.now, via: msg.via, hops });
-    if (st.pauseOnDispatch) ctx.requestPause(text);
-  };
+  const dispatch = (/** @type {string} */ subject, /** @type {string} */ text) =>
+    recordDispatch(world, ctx, msg.empire, { id: msg.id, kind: msg.kind, subject, text, validAt: msg.validAt, receivedAt: ctx.now, via: msg.via, hops });
 
   if (msg.target === emp.capital) {
     if (msg.kind === 'report') {
-      recordEntry(k.systems, msg.payload.system, { ...entry, data: msg.payload.data });
+      absorbSystemReport(world, ctx, msg.empire, msg.payload.system, entry, msg.payload.data);
     } else if (msg.kind === 'fleetReport') {
       recordEntry(k.fleets, msg.payload.fleet.id, { ...entry, data: msg.payload.fleet });
       dispatch(msg.payload.fleet.id, `${msg.payload.fleet.name} ${msg.payload.event} ${msg.payload.systemName}`);
       recordEntry(k.systems, msg.payload.system, { ...entry, data: msg.payload.systemData });
+      recordExplored(k, msg.payload.system, msg.validAt);
     } else if (msg.kind === 'note') {
       dispatch(msg.origin, msg.payload?.text ?? 'message');
     }
@@ -204,13 +214,47 @@ function deliver(world, ctx, msg) {
 }
 
 /**
- * Status of a system as its governor would report it.
+ * Status of a system as its governor would report it, including every fleet
+ * docked there (foreign ones too: they are in plain sight).
  * @param {import('../sim/world.js').World} world @param {string} system
  */
 export function systemSnapshot(world, system) {
   const p = empireState(world).presence[system];
-  const docked = Object.values(fleetState(world).fleets).filter((f) => f.status === 'docked' && f.at === system).map((f) => f.id);
+  const docked = Object.values(fleetState(world).fleets)
+    .filter((f) => f.status === 'docked' && f.at === system)
+    .map((f) => ({ id: f.id, empire: f.empire }));
   return { owner: p?.empire ?? null, relay: p?.relay ?? 'none', docked };
+}
+
+/**
+ * Take in a system report: the system itself, its exploration, and the fleets
+ * seen docked there. Own fleets are refreshed; foreign fleets are recorded as
+ * seen, and marked gone when a newer report no longer lists them.
+ * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
+ * @param {string} empire @param {string} system
+ * @param {{ validAt: number, receivedAt: number, via: import('./knowledge.js').Via, hops: number }} entry
+ * @param {ReturnType<typeof systemSnapshot>} data
+ */
+function absorbSystemReport(world, ctx, empire, system, entry, data) {
+  const k = knowledgeOf(world, empire);
+  if (!recordEntry(k.systems, system, { ...entry, data })) return; // older than what we have
+  recordExplored(k, system, entry.validAt);
+  const listed = new Set(data.docked.map((d) => d.id));
+  for (const d of data.docked) {
+    const old = k.fleets[d.id];
+    if (d.empire === empire) {
+      if (old) recordEntry(k.fleets, d.id, { ...entry, data: { ...old.data, status: 'docked', at: system, dest: null, legs: [] } });
+      continue;
+    }
+    if (!old || old.data.status !== 'docked' || old.data.at !== system) {
+      recordDispatch(world, ctx, empire, { id: `${d.id}@${system}`, kind: 'report', subject: system, text: `Empire ${d.empire} fleet present at ${ctx.data.catalog.get(system).name}`, validAt: entry.validAt, receivedAt: entry.receivedAt, via: entry.via, hops: entry.hops });
+    }
+    recordEntry(k.fleets, d.id, { ...entry, data: { id: d.id, name: `Empire ${d.empire} fleet`, empire: d.empire, status: 'docked', at: system, dest: null, legs: [], ansible: false, courier: false } });
+  }
+  for (const [id, e] of Object.entries(k.fleets)) {
+    if (e.data.empire === empire || listed.has(id) || e.data.status !== 'docked' || e.data.at !== system) continue;
+    recordEntry(k.fleets, id, { ...entry, data: { ...e.data, status: 'gone' } });
+  }
 }
 
 /** @param {import('../fleet/module.js').Fleet} f */

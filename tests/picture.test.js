@@ -68,7 +68,7 @@ describe('knowledge picture', () => {
     const f = Object.values(fleetState(world).fleets)[0];
     expect(kf.age).toBeCloseTo(world.time - launch, 6);
     expect(distance(kf.pos, fleetPosition(f, world.time, pos))).toBeLessThan(1e-9); // no redirect: the prediction holds
-    expect(kf.live).toBe(false);
+    expect(kf.certainty).toBe('expected');
   });
 
   it('shows own orders on their planned way, not other traffic', () => {

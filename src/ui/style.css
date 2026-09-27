@@ -113,3 +113,23 @@ dl.kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
   .map-overlay.bottom-left { display: none; }
   .map-overlay.top-left { font-size: 10px; }
 }
+
+.legend-row { display: flex; align-items: center; gap: 6px; background: none; border: 0; color: var(--text); font: inherit; font-size: 10.5px; padding: 1px 0; cursor: pointer; text-align: left; }
+.legend-row.static { cursor: default; }
+.legend-row .dim:last-child { margin-left: auto; padding-left: 10px; }
+.legend-row.off { opacity: 0.4; }
+.legend-row:not(.static):hover span:nth-child(2) { color: var(--accent); }
+.swatch.diamond.hollow { background: transparent; border: 1.5px solid; }
+.symbols summary { cursor: pointer; color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; }
+.symbols[open] { display: flex; flex-direction: column; gap: 2px; }
+.small { font-size: 10px; }
+.star-row { padding: 3px 0; }
+.certainty.expected, .certainty.unconfirmed { font-style: italic; }
+.certainty.unconfirmed { color: var(--warn); }
+.fleet-label.expected { color: #b9c9c0; font-style: italic; }
+.fleet-label.unconfirmed { color: var(--warn); font-style: italic; }
+.fleet-label.actual { color: var(--text); }
+.sighting-label { color: #ff8a3d; font-size: 9.5px; padding: 6px 0 0 9px; }
+.star-label.foreign { color: #5fb3c9; }
+.cls-O { background: #9bb0ff; } .cls-B { background: #aabfff; } .cls-A { background: #d5e0ff; } .cls-F { background: #f8f7ff; }
+.cls-G { background: #ffe9b0; } .cls-K { background: #ffc27a; } .cls-M { background: #ff9a6a; } .cls-D { background: #c8d4e0; } .cls-\? { background: #8a96a0; }

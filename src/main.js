@@ -29,10 +29,8 @@ const galaxy = mountGalaxyScreen({
   toast,
 });
 
-game.bus.on('clock/changed', (st) => {
-  time.render();
-  if (st.lastPause) toast(`Paused: ${st.lastPause}`);
-});
+game.bus.on('clock/changed', () => time.render());
+game.bus.on('clock/autoPaused', ({ reason }) => toast(`Paused: ${reason}`));
 game.bus.on('game/loaded', () => {
   time.render();
   galaxy.refresh();

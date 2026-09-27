@@ -132,7 +132,7 @@ describe('fleets', () => {
     expect(Object.keys(fleetState(world).fleets)).toHaveLength(0);
     sim.advanceTo(orderDelay + 0.01);
     const f = Object.values(fleetState(world).fleets)[0];
-    const leg = f.legs[0];
+    const leg = /** @type {any} */ (f.legs[0]);
     expect(leg.departAt).toBeCloseTo(orderDelay, 9);
 
     // The departure report reaches Sol one light delay after launch.

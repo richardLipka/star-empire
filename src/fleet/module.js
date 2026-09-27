@@ -4,6 +4,7 @@ import { planTrip } from './plan.js';
 import { brakeLeg, positionOnLegs, velocityOnLegs } from './legs.js';
 import { length, normalize } from '../core/vec3.js';
 import { wormholes } from '../events/wormholes.js';
+import { empireState, markExplored } from '../empire/module.js';
 
 /**
  * Fleets moving between systems at sublight speed.
@@ -32,7 +33,7 @@ export const fleetModule = defineModule({
     'info/delivered'(world, { message }, ctx) {
       const { kind, payload, target, empire } = message;
       if (kind === 'directive' && payload.type === 'dispatchFleet') {
-        const p = world.state.empire.presence[target];
+        const p = empireState(world).presence[target];
         if (!p || p.empire !== empire) return; // the outpost is gone: the order lapses
         const f = createFleet(world, ctx, { empire, at: target, drive: payload.drive, ansible: payload.ansible, courier: payload.courier });
         launchFleet(world, ctx, { fleet: f.id, to: payload.to });
@@ -53,6 +54,7 @@ export const fleetModule = defineModule({
       f.at = l.toSystem;
       f.dest = null;
       f.legs = [];
+      markExplored(world, f.empire, f.at, ctx.now);
       ctx.notify('fleet/arrived', { fleet: id, system: f.at });
       ctx.notify('info/networkChanged', { empire: f.empire });
     },
@@ -79,9 +81,9 @@ const posLookup = (ctx) => (/** @type {string} */ id) => ctx.data.catalog.get(id
  */
 export function createFleet(world, ctx, { empire, at, drive, ansible = false, courier = false, name }) {
   const id = ctx.newId('fleet');
-  const number = Object.keys(fleetState(world).fleets).length + 1;
+  const number = Object.values(fleetState(world).fleets).filter((x) => x.empire === empire).length + 1;
   /** @type {Fleet} */
-  const f = { id, empire, name: name ?? `F-${number}`, drive, ansible, courier, status: 'docked', at, dest: null, legs: [], trip: 0, cargo: { reports: [], messages: [] } };
+  const f = { id, empire, name: name ?? `${empire}-${number}`, drive, ansible, courier, status: 'docked', at, dest: null, legs: [], trip: 0, cargo: { reports: [], messages: [] } };
   fleetState(world).fleets[id] = f;
   ctx.notify('fleet/created', { fleet: id, system: at });
   if (ansible) ctx.notify('info/networkChanged', { empire });
@@ -149,4 +151,5 @@ function startTrip(world, ctx, f, legs, dest) {
   f.dest = dest;
   f.legs = legs;
   legs.forEach((leg, i) => ctx.scheduleAt(leg.arriveAt, 'fleet/legEnd', { fleet: f.id, trip: f.trip, leg: i }));
+  ctx.notify('fleet/tripStarted', { fleet: f.id, trip: f.trip });
 }

@@ -26,11 +26,26 @@ export const empireModule = defineModule({
     empires: {},
     /** @type {Record<string, Presence>} systemId → presence */
     presence: {},
+    /** @type {Record<string, Record<string, number>>} empire → systemId → time of first visit (truth) */
+    explored: {},
   }),
 });
 
-/** @param {import('../sim/world.js').World} world */
-export const empireState = (world) => /** @type {{ empires: Record<string, Empire>, presence: Record<string, Presence> }} */ (world.state.empire);
+/**
+ * @typedef {{ empires: Record<string, Empire>, presence: Record<string, Presence>, explored: Record<string, Record<string, number>> }} EmpireState
+ * @param {import('../sim/world.js').World} world
+ * @returns {EmpireState}
+ */
+export const empireState = (world) => world.state.empire;
+
+/**
+ * Record that an empire has been to a system (truth; the capital learns it by report).
+ * @param {import('../sim/world.js').World} world @param {string} empire @param {string} system @param {number} time
+ */
+export function markExplored(world, empire, system, time) {
+  const table = (empireState(world).explored[empire] ??= {});
+  if (table[system] === undefined) table[system] = time;
+}
 
 /**
  * @param {import('../sim/world.js').World} world
@@ -57,6 +72,7 @@ export function establishPresence(world, ctx, { empire, system, relay = true }) 
   const existing = st.presence[system];
   if (existing && existing.empire !== empire) throw new Error(`${system} is held by ${existing.empire}`);
   st.presence[system] = { empire, relay: relay ? 'ok' : 'none', since: ctx.now };
+  markExplored(world, empire, system, ctx.now);
   ctx.notify('empire/presenceChanged', { system, empire });
   ctx.notify('info/networkChanged', { empire });
 }

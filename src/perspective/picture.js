@@ -1,38 +1,66 @@
 // @ts-check
 import { empireState } from '../empire/module.js';
 import { fleetState, fleetPosition } from '../fleet/module.js';
-import { positionOnLegs } from '../fleet/legs.js';
+import { positionOnLegs, currentLeg } from '../fleet/legs.js';
 import { wormholes } from '../events/wormholes.js';
 import { infoState, knowledgeOf, truthNetwork } from '../info/module.js';
 import { createNetwork, isFleetNode } from '../info/network.js';
+import { sightingsOf, SIGHTING_MEMORY } from '../detection/module.js';
 import { distance, lerp } from '../core/vec3.js';
 
 /**
  * A "picture" is everything the map draws, as seen from one perspective:
  * - 'knowledge': what one empire's capital knows now (old, partial, predicted);
- * - 'truth': the real state (sandbox / end-of-game chronicle).
+ * - 'truth': the real state (sandbox, and later the end-of-game chronicle).
  * Pictures are plain data, so they are testable without a renderer.
  *
+ * Fleet certainty (knowledge perspective):
+ * - 'live'        ansible link, or at the capital: seen now;
+ * - 'confirmed'   docked, as reported by the system it reached;
+ * - 'expected'    in transit, position predicted from the departure report;
+ * - 'unconfirmed' past its planned arrival, but no arrival report yet;
+ * - 'actual'      truth perspective.
+ *
  * @typedef {import('../core/vec3.js').Vec3} Vec3
+ * @typedef {'live' | 'confirmed' | 'expected' | 'unconfirmed' | 'actual'} Certainty
  * @typedef {{ id: string, owner: string, relay: string, validAt: number, receivedAt: number, age: number, overdue: boolean, via: string, hops: number }} PicSystem
- * @typedef {{ id: string, name: string, empire: string, pos: Vec3, confirmedPos: Vec3, path: Vec3[], dest: string | null, status: 'docked' | 'transit' | 'unconfirmed',
- *             at: string | null, validAt: number, age: number, eta: number | null, ansible: boolean, courier: boolean, live: boolean, wormholeJumps: [Vec3, Vec3][] }} PicFleet
+ * @typedef {object} PicFleet
+ * @property {string} id
+ * @property {string} name
+ * @property {string} empire
+ * @property {Vec3} pos              known (live/confirmed/actual) or predicted (expected/unconfirmed) position
+ * @property {Vec3} confirmedPos     where it was when last reported
+ * @property {Vec3[]} path           remaining route from `pos`
+ * @property {[Vec3, Vec3][]} wormholeJumps
+ * @property {string | null} at      docked system
+ * @property {string | null} dest
+ * @property {number | null} eta
+ * @property {Certainty} certainty
+ * @property {number} validAt
+ * @property {number} age
+ * @property {boolean} ansible
+ * @property {boolean} courier
+ * @property {'accelerating' | 'braking' | null} burning   truth only: engines firing now
+ * @property {number | null} brakingSeenAt  knowledge: when its braking plume was seen (valid time)
  * @typedef {{ id: string, kind: string, pos: Vec3, fromPos: Vec3, toPos: Vec3, stalled: boolean }} PicMessage
+ * @typedef {{ id: string, pos: Vec3, motion: Vec3, phase: string, fleetEmpire: string, own: boolean, near: string | null, observer: string, emittedAt: number, receivedAt: number, age: number }} PicSighting
  * @typedef {object} Picture
  * @property {'knowledge' | 'truth'} mode
  * @property {string} empire
  * @property {number} now
  * @property {string} capital
  * @property {number} range
- * @property {PicSystem[]} systems
- * @property {string[]} relays
+ * @property {PicSystem[]} systems     systems known to be held (by anyone)
+ * @property {string[]} explored       systems known to have been visited
+ * @property {string[]} relays         own relays believed (or, in truth, known) to work
  * @property {[string, string, number][]} links
  * @property {PicFleet[]} fleets
  * @property {PicMessage[]} messages
+ * @property {PicSighting[]} sightings
  * @property {{ id: string, a: string, b: string }[]} wormholes
  */
 
-/** Reports older than this many report intervals past due are flagged overdue. */
+/** Reports this many intervals late are flagged overdue. */
 const OVERDUE_INTERVALS = 2;
 
 /** @param {{ data: Record<string, any> }} ctx */
@@ -55,33 +83,40 @@ export function knowledgePicture(world, ctx, empire) {
   const systems = [];
   for (const [id, e] of Object.entries(k.systems)) {
     if (!e.data.owner) continue;
-    const isCapital = id === emp.capital;
+    const ours = e.data.owner === empire;
     systems.push({
       id, owner: e.data.owner, relay: e.data.relay, validAt: e.validAt, receivedAt: e.receivedAt, age: now - e.validAt,
-      overdue: !isCapital && now - e.receivedAt > OVERDUE_INTERVALS * emp.reportInterval, via: e.via, hops: e.hops,
+      overdue: ours && id !== emp.capital && now - e.receivedAt > OVERDUE_INTERVALS * emp.reportInterval, via: e.via, hops: e.hops,
     });
   }
   const relays = systems.filter((s) => s.owner === empire && s.relay === 'ok').map((s) => s.id);
   const net = createNetwork({ capital: emp.capital, range: emp.relayRange, relays, fleets: [], posOf });
 
+  const sightings = sightingsOf(world, empire)
+    .filter((s) => now - s.emittedAt <= SIGHTING_MEMORY)
+    .map((s) => ({ id: s.id, pos: s.pos, motion: s.motion, phase: s.phase, fleetEmpire: s.fleetEmpire, own: s.fleetEmpire === empire, near: s.near, observer: s.observer, emittedAt: s.emittedAt, receivedAt: s.receivedAt, age: now - s.emittedAt }));
+
   /** @type {PicFleet[]} */
   const fleets = [];
   for (const [id, e] of Object.entries(k.fleets)) {
     const f = e.data;
+    if (f.status === 'gone') continue; // a foreign fleet that left: whereabouts unknown
     const age = now - e.validAt;
     const live = e.via === 'ansible' || (f.status === 'docked' && f.at === emp.capital);
+    const base = { id, name: f.name, empire: f.empire, validAt: e.validAt, age, ansible: f.ansible, courier: f.courier, burning: null };
     if (f.status === 'docked') {
       const p = posOf(f.at);
-      fleets.push({ id, name: f.name, empire: f.empire, pos: p, confirmedPos: p, path: [], dest: null, status: 'docked', at: f.at, validAt: e.validAt, age, eta: null, ansible: f.ansible, courier: f.courier, live, wormholeJumps: [] });
+      fleets.push({ ...base, pos: p, confirmedPos: p, path: [], wormholeJumps: [], at: f.at, dest: null, eta: null, certainty: live ? 'live' : 'confirmed', brakingSeenAt: null });
       continue;
     }
     const legs = f.legs;
     const eta = legs[legs.length - 1].arriveAt;
-    const predicted = positionOnLegs(legs, now);
+    const braking = sightings.find((s) => s.own && s.phase === 'braking' && s.near === f.dest && s.emittedAt >= legs[0].departAt);
     fleets.push({
-      id, name: f.name, empire: f.empire, pos: predicted, confirmedPos: positionOnLegs(legs, e.validAt), path: remainingPath(legs, now), dest: f.dest,
-      status: now >= eta ? 'unconfirmed' : 'transit', at: null, validAt: e.validAt, age, eta, ansible: f.ansible, courier: f.courier, live,
-      wormholeJumps: wormholeJumps(legs, now),
+      ...base, pos: positionOnLegs(legs, now), confirmedPos: positionOnLegs(legs, e.validAt), path: remainingPath(legs, now),
+      wormholeJumps: wormholeJumps(legs, now), at: null, dest: f.dest, eta,
+      certainty: live ? 'live' : now >= eta ? 'unconfirmed' : 'expected',
+      brakingSeenAt: braking ? braking.emittedAt : null,
     });
   }
 
@@ -97,12 +132,13 @@ export function knowledgePicture(world, ctx, empire) {
 
   return {
     mode: 'knowledge', empire, now, capital: emp.capital, range: emp.relayRange,
-    systems, relays, links: net.links(), fleets, messages, wormholes: wormholes(world).map(({ id, a, b }) => ({ id, a, b })),
+    systems, explored: Object.keys(k.explored), relays, links: net.links(), fleets, messages, sightings,
+    wormholes: wormholes(world).map(({ id, a, b }) => ({ id, a, b })),
   };
 }
 
 /**
- * The real state of the galaxy (all empires), drawn from `empire`'s side for range and capital.
+ * The real state of the galaxy (all empires). `empire` sets range, capital and exploration.
  * @param {import('../sim/world.js').World} world
  * @param {{ now: number, data: Record<string, any> }} ctx
  * @param {string} empire
@@ -116,12 +152,13 @@ export function truthPicture(world, ctx, empire) {
   const systems = Object.entries(es.presence).map(([id, p]) => ({ id, owner: p.empire, relay: p.relay, validAt: now, receivedAt: now, age: 0, overdue: false, via: 'truth', hops: 0 }));
   const net = truthNetwork(world, ctx, empire);
 
+  /** @type {PicFleet[]} */
   const fleets = Object.values(fleetState(world).fleets).map((f) => {
     const p = fleetPosition(f, now, posOf);
-    const eta = f.legs.length ? f.legs[f.legs.length - 1].arriveAt : null;
     return {
-      id: f.id, name: f.name, empire: f.empire, pos: p, confirmedPos: p, path: f.status === 'transit' ? remainingPath(f.legs, now) : [], dest: f.dest,
-      status: f.status, at: f.at, validAt: now, age: 0, eta, ansible: f.ansible, courier: f.courier, live: true, wormholeJumps: wormholeJumps(f.legs, now),
+      id: f.id, name: f.name, empire: f.empire, pos: p, confirmedPos: p, path: f.status === 'transit' ? remainingPath(f.legs, now) : [],
+      wormholeJumps: wormholeJumps(f.legs, now), at: f.at, dest: f.dest, eta: f.legs.length ? f.legs[f.legs.length - 1].arriveAt : null,
+      certainty: 'actual', validAt: now, age: 0, ansible: f.ansible, courier: f.courier, burning: burnPhase(f.legs, now), brakingSeenAt: null,
     };
   });
 
@@ -138,8 +175,24 @@ export function truthPicture(world, ctx, empire) {
 
   return {
     mode: 'truth', empire, now, capital: emp.capital, range: emp.relayRange,
-    systems, relays: [...net.relays], links: net.links(), fleets, messages, wormholes: wormholes(world).map(({ id, a, b }) => ({ id, a, b })),
+    systems, explored: Object.keys(es.explored[empire] ?? {}), relays: [...net.relays], links: net.links(), fleets, messages, sightings: [],
+    wormholes: wormholes(world).map(({ id, a, b }) => ({ id, a, b })),
   };
+}
+
+/**
+ * Engines firing at time `t`, if any.
+ * @param {import('../fleet/legs.js').Leg[]} legs @param {number} t
+ * @returns {'accelerating' | 'braking' | null}
+ */
+export function burnPhase(legs, t) {
+  const leg = currentLeg(legs, t);
+  if (!leg || leg.kind === 'wormhole') return null;
+  if (leg.kind === 'brake') return 'braking';
+  const dt = t - leg.departAt;
+  if (dt < leg.profile.burnTime) return 'accelerating';
+  if (dt >= leg.profile.brakeStart) return 'braking';
+  return null;
 }
 
 /**

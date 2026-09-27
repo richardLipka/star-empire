@@ -2,7 +2,7 @@
 
 Implementation is step by step.
 
-**Status:** M0–M3 done. Next: M4, the directives engine. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
+**Status:** M0–M3 done, plus the M3.1 quality pass (detection, rival, map views). Next: M4, the directives engine. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
 
 ## Target directory layout
 
@@ -13,18 +13,21 @@ star-empire/
 ├─ tools/
 │  └─ build-star-catalog.js  # HYG CSV → src/data/stars.json (run once, output committed)
 ├─ src/
-│  ├─ main.js              # bootstraps sim + UI
-│  ├─ core/                # clock, scheduler, rng, vec3, ids, events, serialize
-│  ├─ sim/                 # world, module registry, loop, save/load
-│  ├─ info/                # relays, mailboxes, messages, knowledge base, detection
-│  ├─ empire/              # empire, capital, governors, directives, loyalty, legacy
-│  ├─ galaxy/              # stars, interstellar movement
-│  ├─ colony/              # prototype colony model (later absorbed into planet/)
-│  ├─ fleet/               # ships, fleets, flight profiles, sealed orders
-│  ├─ system/  planet/  economy/  combat/  research/  diplomacy/  events/  ai/   # later milestones
-│  ├─ render/              # three.js scenes and vector style
-│  ├─ ui/                  # screens, directive menus, time controls, dispatches
-│  └─ data/                # stars.json (+ README with CC BY-SA attribution), content JSON
+│  ├─ main.js              # wires sim, rendering and UI together
+│  ├─ app/                 # game host, module list, scenarios
+│  ├─ core/                # scheduler, rng, vec3, ids, event bus, serialize, units, time
+│  ├─ sim/                 # world, module contract, simulation loop, clock, save/load
+│  ├─ galaxy/              # star catalogue, traits, spectral descriptions, measuring
+│  ├─ empire/              # empires, presence, relays, exploration (later: directives, loyalty)
+│  ├─ fleet/               # flight physics, legs, trip planning, fleets
+│  ├─ info/                # relay network, messages, knowledge, orders
+│  ├─ detection/           # drive-plume sightings (later: sensor nets)
+│  ├─ events/              # wormholes (later: relics, alien tech, ansible rarity)
+│  ├─ perspective/         # knowledge/truth pictures, star status, shared descriptions
+│  ├─ system/  planet/  economy/  combat/  research/  diplomacy/  ai/   # later milestones
+│  ├─ render/              # three.js: viewport, galaxy view, star appearance, overlay/ layers
+│  ├─ ui/                  # shell, galaxy screen, map controls, panels/, time, saves, dispatches
+│  └─ data/                # stars.json (+ README with CC BY-SA attribution), drives, sensors
 └─ tests/                  # mirrors src/, headless simulation tests
 ```
 
@@ -64,6 +67,16 @@ star-empire/
 - Sandbox scenario with 60 years of warm-up history: a three-hop chain to Deneb Algedi, Vega only via 61 Cygni or Altair, Arcturus beyond every relay.
 - **Tests (54):** light-delay timing, relay chains and hop timing, receive-without-relay, lost and rebuilt relays, fleet profiles and reports, ansible redirect and connection, wormholes and couriers, knowledge vs truth pictures, determinism with save/load.
 
+### M3.1: Quality pass ✔
+- Code review: side panel and map overlay split into small modules (`src/ui/panels/`, `src/render/overlay/`); lint rule keeps all simulation folders headless; per-empire pause-on-dispatch; fleet names per empire; save migration v1 → v2.
+- Drive-plume detection (`src/detection/`), pulled forward from M5: burns seen only inside the exhaust cone, light to the observer, then a relay report home.
+- Empire B in the sandbox (capital Epsilon Indi), unknown to A; sandbox tool to launch a B fleet.
+- Fleet certainty (live, confirmed, expected, unconfirmed, actual) in the map, labels and panel; arrival confirmed only by the destination's relay report. Routine reports refresh docked fleets and reveal foreign fleets at our systems.
+- Exploration records (truth and knowledge); survey shown only for explored systems.
+- Map colour modes (spectral class, status, info age) with legend counts, highlighting and a symbol key; spectral descriptions for every star.
+- Bugs fixed: luminosity class parsing ("III" read as supergiant), repeated pause toasts, docked-fleet reports ageing forever.
+- **Tests (68)**, including plume geometry, detection timing and warning, own-fleet certainty transitions, foreign fleets at our systems, status classification, spectral descriptions and save migration.
+
 ### M4: Directives engine, first slice (`empire/`, `ui/`)
 - Directive model: category, type, target (system, set of systems, region or cone, empire-wide), parameters, priority, expiry, issue time.
 - Data-driven directive definitions in `src/data/directives.json` feed the category and submenu UI.
@@ -74,7 +87,6 @@ star-empire/
 ### M5: Colonies and colony ships (`colony/`, `fleet/`)
 - Colony: population, industry, one abstract resource ("materiel"), growth driven by habitability. Centuries to self-sufficiency.
 - Colony ship with sealed orders (target plus fallback). Relativistic constant-acceleration profile using the starting drive (0.1 g, cruise 0.1 c); acceleration and cruise speed are parameters, ready for research later. Founds a colony on arrival.
-- Detection: braking plume visible to the destination and the forward cone; launch plume visible toward the origin. Each detection travels to observers at c.
 - Galaxy view: detected braking plumes as flashes (own fleets with predicted paths exist since M3).
 - Stats panel with running Legacy components (years, population, output, systems).
 - **v0.1 done:** the player sets directives and watches the empire spread through a delay they can feel.

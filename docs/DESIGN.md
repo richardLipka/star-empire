@@ -117,6 +117,26 @@ At cruise speed, high acceleration mostly shortens the *warning*, not the trip, 
 - **Launch burns** point the plume back toward the origin, so they are visible from the origin and systems behind it (usually your own space).
 - **Sensor nets:** installations at a system, or pickets placed in interstellar space, that detect coasting ships within a radius set by technology. Their detections also travel home at c.
 - **Flyby raids:** a fleet that never brakes is never seen by its target, but it passes through at 0.6 c with only seconds to fire and cannot stop or occupy. A fleet that brakes can take a system but announces itself months ahead.
+- **Docked fleets are in plain sight.** A system's routine report lists every fleet docked there, foreign ones included.
+
+### How detection is implemented
+
+- `src/detection/module.js` schedules an event at the start of every burn (launch and braking, plus the braking leg of a redirect). At that moment it tests every held system: visible if it lies within **25 ly** and within **35°** of the exhaust direction (values in `src/data/sensors.json`; sensor technology will raise them). The light reaches the observer at c, and the observer then sends a *sighting* report to its capital through the relay network, like any message.
+- A sighting records the burn position, direction of motion, phase, the drive's empire signature (identity only for own fleets) and the system the burn points at. Sensor nets for coasting ships are still to come (M11).
+
+### What the player sees about fleets
+
+The map and panels always say how a fleet's position is known:
+
+| Certainty | Meaning | Drawn as |
+|---|---|---|
+| live | ansible link, or at the capital | solid diamond |
+| confirmed | docked, reported by the system's relay | solid diamond |
+| expected | in transit, predicted from the departure report | hollow diamond on the planned route, grey dot and dotted line to where it was last reported |
+| unconfirmed | past its planned arrival, no arrival report yet | red hollow diamond |
+| actual | Truth view (sandbox) | solid diamond; orange streak while engines burn |
+
+An arrival is confirmed only when the relay of the system reached reports it, one light delay later. A fleet arriving where there is no relay stays unconfirmed unless it carries an ansible. A braking plume seen at the destination is shown as extra evidence ("braking seen"), but it is not a confirmation.
 
 ## 6. Loyalty, drift and dissolution
 
@@ -168,7 +188,9 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 |---|---|
 | `core/` | Game clock, discrete-event scheduler, seeded RNG, vector math, IDs, event bus, serialization. |
 | `sim/` | World container, module registry, main loop, save/load. |
-| `info/` | Relay messages, relay network and chain routing, system mailboxes, light-speed propagation, KnowledgeBase, detection (plumes, sensor nets), overdue-report tracking. |
+| `info/` | Relay messages, relay network and chain routing, system mailboxes, light-speed propagation, KnowledgeBase, exploration records, overdue-report tracking. |
+| `detection/` | Drive-plume sightings (and later sensor nets), reported to the capital like any message. |
+| `perspective/` | Read-only views for the UI: what an empire knows (`knowledgePicture`) or the truth (`truthPicture`), star status classification, shared descriptions. |
 | `empire/` | Empire state, capital, governors, **directives engine** (categories, targeting, interpretation), loyalty and secession, Legacy score. |
 
 ### Gameplay
@@ -194,7 +216,7 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 
 ### Screens
 
-- **Galaxy** (main): 3D map, time controls, report-age overlays, messages and detections in flight.
+- **Galaxy** (main): 3D map, time controls, messages and detections in flight. Stars can be coloured by **spectral class** (labels show spectral types), by **status** as the empire knows it (capital, outpost with relay, outpost without relay, relay down, foreign, explored, unexplored), or by **information age**. The legend shows counts and highlights categories when clicked. A panel describes each star (spectral type, colour, temperature, luminosity); survey results are shown only once a system has been explored.
 - **Dispatches**: inbox and outbox, each entry showing *when it happened* and *when it arrived*.
 - **Directives**: category → submenu → target → parameters, plus a list of directives in flight and their arrival fronts.
 - **System**, **Planet**, **Fleet** (design, sealed orders, battle plans).

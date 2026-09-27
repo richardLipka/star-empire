@@ -42,6 +42,7 @@ export function createClock(sim, { speedIndex = 4 } = {}) {
         state.paused = true;
         state.lastPause = result.paused;
         notify();
+        sim.bus.emit('clock/autoPaused', { reason: result.paused });
       }
     },
     /** @param {boolean} [paused] */
