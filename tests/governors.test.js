@@ -143,7 +143,7 @@ describe('standing settings', () => {
   it('not-yet-implemented orders are accepted and acknowledged, with no effect', () => {
     const { sim, world, ctx, act } = sandbox('noop');
     const aCen = sys('Alpha Centauri');
-    const d = act((w, c) => issueDirective(w, c, { empire: 'A', type: 'economy.focus', target: { kind: 'system', system: aCen }, params: { focus: 'mining' } }));
+    const d = act((w, c) => issueDirective(w, c, { empire: 'A', type: 'diplomacy.stance', target: { kind: 'system', system: aCen }, params: { stance: 'closed' } }));
     sim.advanceTo(light('sol', aCen) * 2 + 1.1);
     const o = status(world, ctx, d.id);
     expect(o.implemented).toBe(false);

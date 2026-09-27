@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sandbox, sys, catalog } from './helpers.js';
+import { sandbox, sys, catalog, runUntil } from './helpers.js';
 import { TECHS, AREAS, TARGETS, CONDITIONS, START_TECHS, RULES, tech, targetOf, leadsTo, influences } from '../src/research/catalog.js';
 import { capabilities } from '../src/research/effects.js';
 import { labs, frontier, acquireTech, grantCondition, breakthroughCost } from '../src/research/module.js';
@@ -15,6 +15,8 @@ import { createSimulation } from '../src/sim/simulation.js';
 import { MODULES, DATA } from '../src/app/modules.js';
 import { serializeWorld, deserializeWorld } from '../src/sim/save.js';
 import { stateHash } from '../src/core/serialize.js';
+import { colonyAt } from '../src/colony/module.js';
+import { research } from '../src/colony/model.js';
 
 const pos = (id) => catalog.get(id).pos;
 const light = (a, b) => distance(pos(a), pos(b));
@@ -119,9 +121,12 @@ describe('research at a system', () => {
     act((w, c) => imposeDirective(w, c, { system: 'sol', type: 'research.focus', params: { field: 'communication' } }));
     const lab = labs(world).sol;
     expect(breakthroughCost(lab, 'communication')).toBe(RULES.baseCost);
-    sim.advanceTo(RULES.baseCost / RULES.capitalRate - 0.2);
+    // Sol's billions do the work: points per year from its colony.
+    const rate = research(colonyAt(world, 'sol').population, 'balanced');
+    expect(rate).toBeGreaterThan(1);
+    sim.advanceTo(RULES.baseCost / rate - 0.2);
     expect('com.optics' in lab.known).toBe(false);
-    sim.advanceTo(RULES.baseCost / RULES.capitalRate + 0.2);
+    sim.advanceTo(RULES.baseCost / rate + 0.2);
     expect('com.optics' in lab.known).toBe(true); // the only candidate
     expect(breakthroughCost(lab, 'communication')).toBeCloseTo(RULES.baseCost * RULES.costGrowth, 9);
   });
@@ -182,9 +187,9 @@ describe('blueprints travel', () => {
     const tau = sys('Tau Ceti');
     const aCen = sys('Alpha Centauri');
     act((w, c) => imposeDirective(w, c, { system: tau, type: 'research.focus', params: { field: 'communication' } }));
-    const at = RULES.baseCost / RULES.outpostRate; // 32 years at an outpost
-    sim.advanceTo(at + 0.2);
-    expect('com.optics' in labs(world)[tau].known).toBe(true);
+    // A small colony researches slowly: decades for the first breakthrough.
+    const at = runUntil(sim, () => 'com.optics' in labs(world)[tau].known, { step: 0.05, max: 80 });
+    expect(at).toBeGreaterThan(RULES.baseCost / 0.6);
     expect('com.optics' in labs(world).sol.known).toBe(false);
     sim.advanceTo(at + light(tau, 'sol') + 0.2);
     expect('com.optics' in labs(world).sol.known).toBe(true);

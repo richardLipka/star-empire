@@ -214,7 +214,7 @@
     },
     "habitats": {
       "name": "Orbital habitats",
-      "desc": "Spinning cities where no world will have us."
+      "desc": "Spinning cities where no world will have us. Makes generation arks possible and doubles what an orbital base can hold."
     },
     "climate": {
       "name": "Climate dynamics",
@@ -226,11 +226,11 @@
     },
     "giants": {
       "name": "Gas giant skimming",
-      "desc": "Diving into giants for fuel and volatiles."
+      "desc": "Diving into giants for fuel and volatiles. Stations grow larger and busier."
     },
     "processors": {
       "name": "Atmosphere processors",
-      "desc": "Machines that slowly rewrite the air of a world."
+      "desc": "Machines that slowly rewrite the air of a world. Halves the time of terraforming."
     },
     "biosphere": {
       "name": "Engineered biospheres",
@@ -239,6 +239,42 @@
     "terraform": {
       "name": "Full terraforming",
       "desc": "Centuries of work to make a new Earth."
+    },
+    "life-support": {
+      "name": "Closed life support",
+      "desc": "Air, water and food recycled in sealed loops. Without it no dome or station feeds itself."
+    },
+    "hydroponics": {
+      "name": "Hydroponic farming",
+      "desc": "Crops under lamps, in water, in the dark between stars."
+    },
+    "domes": {
+      "name": "Pressure domes",
+      "desc": "Towns under glass on worlds that would kill us in a breath."
+    },
+    "shelters": {
+      "name": "Storm shelters",
+      "desc": "Deep vaults to wait out a flare, when there is warning."
+    },
+    "asteroid-mining": {
+      "name": "Asteroid mining",
+      "desc": "Ore without gravity wells to climb out of."
+    },
+    "flare-forecast": {
+      "name": "Flare forecasting",
+      "desc": "Reading a restless star well enough to hide in time."
+    },
+    "resilient-crops": {
+      "name": "Resilient crops",
+      "desc": "Many strains, no single blight. A harvest that fails only in part."
+    },
+    "automation": {
+      "name": "Industrial automation",
+      "desc": "Factories that need few hands, for colonies that have few."
+    },
+    "arcologies": {
+      "name": "Arcologies",
+      "desc": "Cities as single buildings, a world's capacity multiplied."
     }
   },
   "soc": {
@@ -256,7 +292,7 @@
     },
     "cryo": {
       "name": "Cryo-sleep cohorts",
-      "desc": "Crews and colonists sleep through the crossing."
+      "desc": "Colonists sleep through the crossing and wake as themselves: a settled society from the first day."
     },
     "missions": {
       "name": "Cultural missions",
@@ -268,7 +304,7 @@
     },
     "longevity": {
       "name": "Longevity treatments",
-      "desc": "Lives measured in centuries; memories that outlast empires."
+      "desc": "Lives measured in centuries; populations that grow while no one dies."
     },
     "neural": {
       "name": "Neural interfacing",
@@ -285,6 +321,30 @@
     "agents": {
       "name": "Agent networks",
       "desc": "People in other empires' courts, decades from home."
+    },
+    "nurseries": {
+      "name": "Machine nurseries",
+      "desc": "Frozen embryos, artificial wombs and machine teachers. The first generations are raised by things that are not people, and it shows."
+    },
+    "genetics": {
+      "name": "Population genetics",
+      "desc": "How small, closed peoples drift, sicken and survive."
+    },
+    "prion-therapy": {
+      "name": "Prion therapeutics",
+      "desc": "Against the slow folding sickness that haunts closed habitats."
+    },
+    "gene-banks": {
+      "name": "Gene banks",
+      "desc": "Diversity carried in ice to every new world."
+    },
+    "founding": {
+      "name": "Founding traditions",
+      "desc": "Stories, rites and charters that hold a young colony together."
+    },
+    "tutors": {
+      "name": "Tutor intelligences",
+      "desc": "Patient machine teachers who remember what the parents never knew."
     }
   },
   "kin": {

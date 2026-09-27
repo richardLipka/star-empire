@@ -55,6 +55,21 @@ const migrations = {
     }
     return { ...w, version: 5 };
   },
+  /** v5 → v6: colonies. Held systems get their people on the next tick (capitals an old people). */
+  5: (w) => {
+    if (!w.modules.includes('colony')) {
+      const at = w.modules.indexOf('governors'); // colonies run before governors (module order)
+      w.modules.splice(at < 0 ? w.modules.length : at, 0, 'colony');
+      w.state.colony = { colonies: {}, pending: {}, risks: true };
+    }
+    for (const b of Object.values(w.state.governors?.books ?? {})) {
+      const book = /** @type {any} */ (b);
+      book.settings.economyFocus ??= 'balanced';
+      book.settings.terraform ??= 'full';
+      book.memory.pendingSends ??= [];
+    }
+    return { ...w, version: 6 };
+  },
 };
 
 /**

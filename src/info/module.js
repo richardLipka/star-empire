@@ -14,7 +14,7 @@ import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './know
  * @typedef {object} Message
  * @property {string} id
  * @property {string} empire
- * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint' | 'intercept'} kind
+ * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint' | 'intercept' | 'colony'} kind
  * @property {string} origin     node where it was created
  * @property {string} target     system or fleet id
  * @property {number} createdAt

@@ -225,3 +225,19 @@ ul.plain { list-style: none; margin: 2px 0 6px; padding: 0; display: flex; flex-
   .research-left, .research-detail { max-height: 30vh; }
 }
 .research-left .row, .research-detail .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+/* Survey orrery (M5) */
+.orrery-wrap { margin: 6px 0; }
+svg.orrery { width: 100%; height: auto; display: block; }
+svg.orrery .hz { fill: rgba(143, 191, 106, 0.16); stroke: rgba(143, 191, 106, 0.45); stroke-width: 0.5; }
+svg.orrery .axis, svg.orrery .tick { stroke: var(--line); stroke-width: 0.6; }
+svg.orrery .tick-label { fill: var(--text-dim); font-size: 7px; text-anchor: middle; }
+svg.orrery .row-label { fill: var(--text-dim); font-size: 7px; }
+svg.orrery .star { fill: #ffe9a8; }
+svg.orrery .body { fill: var(--text-dim); }
+svg.orrery .body.gasGiant, svg.orrery .body.iceGiant { fill: #9fb3c8; }
+svg.orrery .body.belt { fill: var(--line-strong); }
+svg.orrery .body.hostile { fill: #b08a6a; }
+svg.orrery .body.terraformable { fill: #5fd4b3; }
+svg.orrery .body.habitable { fill: #8fdf6a; }
+svg.orrery .colony-ring { fill: none; stroke: var(--accent); stroke-width: 1; }

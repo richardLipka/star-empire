@@ -1,0 +1,75 @@
+{
+  "note": "Hand-authored star systems, loosely based on known exoplanets and debris discs (approximate, simplified). Other systems are generated from the star's spectral type (src/galaxy/planets.js). Orbits in AU around the primary star unless 'star' names another component index.",
+  "systems": {
+    "Sol": [
+      { "name": "Mercury", "type": "rocky", "orbit": 0.39, "site": "hostile" },
+      { "name": "Venus", "type": "rocky", "orbit": 0.72, "site": "terraformable", "quality": 0.2 },
+      { "name": "Earth", "type": "rocky", "orbit": 1.0, "site": "habitable", "quality": 1.0 },
+      { "name": "Mars", "type": "rocky", "orbit": 1.52, "site": "terraformable", "quality": 0.5 },
+      { "name": "Main belt", "type": "belt", "orbit": 2.7, "resources": 0.9 },
+      { "name": "Jupiter", "type": "gasGiant", "orbit": 5.2 },
+      { "name": "Saturn", "type": "gasGiant", "orbit": 9.5 },
+      { "name": "Uranus", "type": "iceGiant", "orbit": 19.2 },
+      { "name": "Neptune", "type": "iceGiant", "orbit": 30.1 },
+      { "name": "Kuiper belt", "type": "belt", "orbit": 45 }
+    ],
+    "Alpha Centauri": [
+      { "name": "Proxima b", "type": "rocky", "orbit": 0.049, "star": 2, "site": "terraformable", "quality": 0.45, "tidalLock": true },
+      { "name": "Proxima d", "type": "rocky", "orbit": 0.029, "star": 2, "site": "hostile", "tidalLock": true },
+      { "name": "Centauri belt", "type": "belt", "orbit": 3.0, "resources": 0.7 }
+    ],
+    "Tau Ceti": [
+      { "name": "Tau Ceti g", "type": "superEarth", "orbit": 0.133, "site": "hostile" },
+      { "name": "Tau Ceti h", "type": "superEarth", "orbit": 0.243, "site": "hostile" },
+      { "name": "Tau Ceti e", "type": "superEarth", "orbit": 0.538, "site": "terraformable", "quality": 0.4 },
+      { "name": "Tau Ceti f", "type": "superEarth", "orbit": 1.334, "site": "terraformable", "quality": 0.5 },
+      { "name": "Tau Ceti debris disc", "type": "belt", "orbit": 20, "resources": 0.8 }
+    ],
+    "Epsilon Eridani": [
+      { "name": "Inner belt", "type": "belt", "orbit": 3.0, "resources": 0.7 },
+      { "name": "Epsilon Eridani b", "type": "gasGiant", "orbit": 3.5 },
+      { "name": "Outer belt", "type": "belt", "orbit": 20, "resources": 0.6 }
+    ],
+    "Barnard's Star": [
+      { "name": "Barnard b", "type": "rocky", "orbit": 0.023, "site": "hostile", "tidalLock": true },
+      { "name": "Barnard c", "type": "rocky", "orbit": 0.027, "site": "hostile", "tidalLock": true },
+      { "name": "Barnard d", "type": "rocky", "orbit": 0.017, "site": "hostile", "tidalLock": true }
+    ],
+    "Lalande 21185": [
+      { "name": "Lalande b", "type": "superEarth", "orbit": 0.079, "site": "hostile", "tidalLock": true },
+      { "name": "Lalande c", "type": "iceGiant", "orbit": 2.9 }
+    ],
+    "Ross 128": [
+      { "name": "Ross 128 b", "type": "rocky", "orbit": 0.05, "site": "terraformable", "quality": 0.55, "tidalLock": true }
+    ],
+    "Luyten's Star": [
+      { "name": "Luyten b", "type": "superEarth", "orbit": 0.091, "site": "terraformable", "quality": 0.5, "tidalLock": true },
+      { "name": "Luyten c", "type": "superEarth", "orbit": 0.036, "site": "hostile", "tidalLock": true }
+    ],
+    "GJ 1061": [
+      { "name": "GJ 1061 b", "type": "rocky", "orbit": 0.021, "site": "hostile", "tidalLock": true },
+      { "name": "GJ 1061 c", "type": "rocky", "orbit": 0.035, "site": "terraformable", "quality": 0.45, "tidalLock": true },
+      { "name": "GJ 1061 d", "type": "rocky", "orbit": 0.054, "site": "terraformable", "quality": 0.35, "tidalLock": true }
+    ],
+    "Wolf 1061": [
+      { "name": "Wolf 1061 b", "type": "rocky", "orbit": 0.036, "site": "hostile", "tidalLock": true },
+      { "name": "Wolf 1061 c", "type": "superEarth", "orbit": 0.084, "site": "terraformable", "quality": 0.5, "tidalLock": true },
+      { "name": "Wolf 1061 d", "type": "superEarth", "orbit": 0.47, "site": "hostile" }
+    ],
+    "Epsilon Indi": [
+      { "name": "Epsilon Indi Ab", "type": "gasGiant", "orbit": 11.6 }
+    ],
+    "Gl 876": [
+      { "name": "Gl 876 d", "type": "superEarth", "orbit": 0.021, "site": "hostile", "tidalLock": true },
+      { "name": "Gl 876 c", "type": "gasGiant", "orbit": 0.13 },
+      { "name": "Gl 876 b", "type": "gasGiant", "orbit": 0.21 },
+      { "name": "Gl 876 e", "type": "iceGiant", "orbit": 0.33 }
+    ],
+    "Fomalhaut": [
+      { "name": "Fomalhaut ring", "type": "belt", "orbit": 140, "resources": 0.9 }
+    ],
+    "Vega": [
+      { "name": "Vega debris disc", "type": "belt", "orbit": 90, "resources": 0.8 }
+    ]
+  }
+}

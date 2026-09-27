@@ -1,10 +1,11 @@
 // @ts-check
 import { h, kv } from '../dom.js';
 import { t } from '../../i18n/index.js';
-import { fmtDuration } from '../../i18n/format.js';
+import { fmtDuration, fmtPeople } from '../../i18n/format.js';
 import { infoState } from '../../info/module.js';
 import { countStatuses } from '../../perspective/starStatus.js';
 import { securityPicture } from '../../perspective/security.js';
+import { colonyTotals } from '../../perspective/colony.js';
 
 /**
  * Empire summary shown when nothing is selected.
@@ -18,6 +19,7 @@ export function renderSummary(c) {
   return [kv([
     [t(truth ? 'panel.outposts' : 'panel.outpostsKnown'), String(own.length)],
     [t(truth ? 'panel.relaysWorking' : 'panel.relaysBelieved'), String(pic.relays.length)],
+    ...colonyRows(c, pic),
     [t('panel.overdue'), String(own.filter((s) => s.overdue).length)],
     [t('panel.oldestNews'), fmtDuration(own.reduce((m, s) => Math.max(m, s.age), 0))],
     [t('panel.explored'), String((counts.explored ?? 0) + own.length)],
@@ -26,6 +28,15 @@ export function renderSummary(c) {
     [t('panel.ordersInFlight'), String(pic.messages.filter((m) => m.kind === 'directive' || m.kind === 'fleetOrder' || m.kind === 'note').length)],
     ...securityRows(c, pic),
   ])];
+}
+
+/** @param {import('./context.js').PanelContext} c @param {import('../../perspective/picture.js').Picture} pic @returns {[string, string][]} */
+function colonyRows(c, pic) {
+  const totals = colonyTotals(c.game.world, pic);
+  return [
+    [t(pic.mode === 'truth' ? 'panel.population' : 'panel.populationKnown'), fmtPeople(totals.population)],
+    [t('panel.troubled'), String(totals.troubled)],
+  ];
 }
 
 /** @param {import('./context.js').PanelContext} c @param {import('../../perspective/picture.js').Picture} pic @returns {[string, string][]} */

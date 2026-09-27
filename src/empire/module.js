@@ -5,7 +5,8 @@ import { bump, NETWORK } from '../core/versions.js';
 
 /**
  * Empires and their presence in star systems. In M3 presence is only an
- * outpost with an optional relay station; colonies arrive in M5.
+ * outpost with an optional relay station; the people living there are the
+ * colony module's state (src/colony).
  *
  * @typedef {object} Empire
  * @property {string} id            faction letter (the display name is a translation)
@@ -79,6 +80,22 @@ export function establishPresence(world, ctx, { empire, system, relay = true }) 
   markExplored(world, empire, system, ctx.now);
   ctx.notify('empire/presenceChanged', { system, empire });
   ctx.notify('info/networkChanged', { empire });
+}
+
+/**
+ * An empire loses a system (its colony died out or was abandoned).
+ * @param {import('../sim/world.js').World} world
+ * @param {import('../sim/module.js').SimContext} ctx
+ * @param {{ system: string, reason: string }} opts
+ */
+export function abandonPresence(world, ctx, { system, reason }) {
+  const st = empireState(world);
+  const p = st.presence[system];
+  if (!p) return;
+  delete st.presence[system];
+  bump(world, NETWORK);
+  ctx.notify('empire/presenceLost', { system, empire: p.empire, reason });
+  ctx.notify('info/networkChanged', { empire: p.empire });
 }
 
 /**

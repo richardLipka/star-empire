@@ -27,6 +27,9 @@ export const fmtLy = (ly) => t('unit.ly', { n: nf({ minimumFractionDigits: 2, ma
 /** "53 %". @param {number} x fraction */
 export const fmtPercent = (x) => nf({ style: 'percent', maximumFractionDigits: 0 }).format(x);
 
+/** People, compactly (12 bn, 3.4 k) in the current language. @param {number} n */
+export const fmtPeople = (n) => nf({ notation: 'compact', maximumFractionDigits: n >= 1000 ? 1 : 0 }).format(Math.round(n));
+
 /** @param {number} x @param {number} [digits] */
 export const fmtNumber = (x, digits = 2) => nf({ maximumFractionDigits: digits }).format(x);
 

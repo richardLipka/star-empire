@@ -8,6 +8,8 @@ import { directiveDef, normalizeParams, CAPACITY, PRIORITY_RANK, ALL_DIRECTIVES 
 import { GameError } from '../core/errors.js';
 import { BEHAVIOURS, MISSIONS } from './behaviours/index.js';
 import { DEFAULT_SETTINGS, SETTINGS } from './behaviours/settings.js';
+import { spend } from '../colony/module.js';
+import { retryPendingSends } from './behaviours/fleetSend.js';
 
 /**
  * Governors: one per held system. They keep a book of standing directives
@@ -30,7 +32,7 @@ import { DEFAULT_SETTINGS, SETTINGS } from './behaviours/settings.js';
  * @property {string} empire
  * @property {Record<string, Directive>} directives   one per directive type; a newer order replaces an older one
  * @property {string[]} received                      ids of recently received orders (acknowledgements)
- * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number> }} memory
+ * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number>, pendingSends?: Directive[] }} memory
  * @property {typeof DEFAULT_SETTINGS} settings
  */
 
@@ -40,7 +42,7 @@ const ORDER = new Map(ALL_DIRECTIVES.map((d, i) => [d.id, i]));
 
 export const governorsModule = defineModule({
   id: 'governors',
-  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'detection'],
+  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'detection', 'colony'],
   initState: () => ({ /** @type {Record<string, Book>} */ books: {}, /** @type {Record<string, Record<string, any>>} */ issued: {} }),
 
   handlers: {
@@ -63,7 +65,7 @@ export const governorsModule = defineModule({
       if (existing && existing.empire === empire) return;
       books(world)[system] = {
         system, empire, directives: {}, received: [],
-        memory: { nextLaunchAt: ctx.now, relayLostAt: null, lastThreatAt: null, courierDue: {}, lastLaunch: {} },
+        memory: { nextLaunchAt: ctx.now, relayLostAt: null, lastThreatAt: null, courierDue: {}, lastLaunch: {}, pendingSends: [] },
         settings: { ...DEFAULT_SETTINGS },
       };
       if (!existing) ctx.scheduleIn(hashUnit(world.seed, `governor:${system}`) * THINK_EVERY, 'governors/think', { system });
@@ -164,6 +166,7 @@ function think(world, ctx, book) {
   }
   applySettings(world, ctx, book);
   repairRelay(world, ctx, book);
+  retryPendingSends(world, ctx, book);
 
   // Higher priority first; at equal priority, whichever launched least recently (fair rotation).
   const last = (/** @type {Directive} */ d) => book.memory.lastLaunch[d.type] ?? -Infinity;
@@ -180,9 +183,9 @@ function think(world, ctx, book) {
   for (const d of inForce) {
     const b = BEHAVIOURS[d.type];
     if (!b?.plan || !b.usesShipyard) continue;
-    const action = b.plan(world, ctx, book, d);
-    if (!action) continue;
-    action();
+    const proposal = b.plan(world, ctx, book, d);
+    if (!proposal || !spend(world, book.system, proposal.cost)) continue; // nothing to do, or not yet affordable
+    proposal.run();
     book.memory.lastLaunch[d.type] = ctx.now;
     book.memory.nextLaunchAt = ctx.now + CAPACITY.launchInterval[/** @type {'low' | 'normal' | 'high'} */ (d.params.frequency ?? 'normal')];
     return;

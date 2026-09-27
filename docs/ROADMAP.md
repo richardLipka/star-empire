@@ -88,11 +88,29 @@ star-empire/
 - Save migration v2 → v3.
 - **Tests (96)**, including delivery timing and acknowledgement, fronts and unreachable targets, replacement, revocation and expiry, reporting modes, relay repair policies, explore, settle (and failure), priorities and rotation, conditions, courier runs, determinism over 250 years, locale completeness and placeholder parity, and a hard-coded-text scan.
 
-### M5: Colonies and production (`colony/` → later `planet/`)
-- Turn outposts into colonies: population, industry, one abstract resource ("materiel"), growth driven by habitability (and food from habitable worlds).
-- Ships cost materiel and build time, replacing the placeholder shipyard interval. Settlers carry colonists; a colony needs a population to grow.
-- Economy › production focus and Military › warships become effective.
-- Stats panel with running Legacy components (years, population, output, systems).
+### M5: Colonies and production (`colony/`) ✔
+- See [COLONIES.md](COLONIES.md).
+- **Star systems for every star** (`galaxy/planets.js`):
+  - known systems are hand-authored (`data/systems.json`); the rest are generated from the spectral class;
+  - bolometric habitable zones; habitable worlds rare and never around giants; tidal locking for close-in worlds of red dwarfs.
+- **Colonies in every held system:**
+  - site choice from habitable world (large bonus) to terraformable, domed hostile world and orbital base (always possible);
+  - logistic growth, food, materiel, research output (it replaces the fixed research rates);
+  - terraforming.
+- **Disasters** (prions, stellar flares by star class, crop and life-support failures, unrest). Small young colonies are fragile, and a colony can die out and lose its system.
+- **Colonisation modes:**
+  - embryo ships at the start, raising strange, unstable societies;
+  - generation arks;
+  - cryo sleepers.
+- **Ships cost materiel.** The shipyard builds what it can pay for, and fleet orders wait for materiel. *Economy › Production focus* and *Terraforming* are now in effect.
+- **15 new technologies and 6 remapped ones.**
+- **UI:** people section, survey orrery, population in the overview, colony dispatches, sandbox toggles.
+- Save migration v5 → v6.
+- **Tests (156).**
+- **Still open (moves to M6/M8/M17):**
+  - Military › warships;
+  - build times;
+  - the Legacy stats panel.
 
 ### M6: First rival and first drift (`ai/`, `empire/`)
 - Human Empire B starts at another star with the same rules and the same fog. Contested colony targets. Braking detections of each other's ships.
@@ -112,7 +130,7 @@ star-empire/
 | M9 | `fleet/` | Hulls and components, ship designer, fleet organization, full sealed-orders editor, acceleration choice with wear above 1 g. Economy › shipbuilding, Military and Logistics directives. |
 | M10 | `combat/` | Battle-plan editor, deterministic crossing simulation, flyby raids vs. braking assaults, battle reports home at c, vector replay. |
 | M11 | Detection depth | Sensor nets and pickets, relay destruction and rebuilding, Military › readiness and fortify directives. |
-| M12 ✔ | `research/` | Done early, see [RESEARCH.md](RESEARCH.md): 10 areas and 87 technologies as data. Breakthroughs reveal one of three candidates and close off applications. Blueprints travel by light and with ships. Effects on drives, relay range, sensors, plume visibility and research rate. Tech-web screen. |
+| M12 ✔ | `research/` | Done early, see [RESEARCH.md](RESEARCH.md): 10 areas and 87 technologies as data (112 since M5). Breakthroughs reveal one of three candidates and close off applications. Blueprints travel by light and with ships. Effects on drives, relay range, sensors, plume visibility and research rate. Tech-web screen. |
 | M13 | Governance depth | Governor traits, appointment by ship, influence missions, granting autonomy, reintegrating seceded worlds. |
 | M14 | `diplomacy/` | Factions, embassies, ambassador instructions, treaties taking effect on arrival. |
 | M15 | Trade and logistics | Cargo hauling of rare goods, recurring convoys (supplies, people, artefacts). |
@@ -125,15 +143,15 @@ star-empire/
 - Security map layer (exposed links) and counts; the capital sends missing blueprints to systems that lack them.
 - **Tests (134).**
 
-## Suggested next steps (after M4)
+## Suggested next steps (after M5)
 
 In this order, because each one makes the next meaningful:
 
-1. **M5 Colonies and production.** Outposts become colonies with population, industry and materiel. Ships get a real cost, which replaces the placeholder shipyard. Without this there is no economy for directives to steer, and expansion is free.
-2. **M6 Loyalty and drift, plus AI for Empire B.** Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
+1. ~~M5 Colonies and production~~ done.
+2. **M6 Loyalty and drift, plus AI for Empire B.** Colony instability (embryo societies first) is the natural seed for drift. Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
 3. **M9 Fleets (ship design and sealed orders), then M10 combat.** Once rivals expand, contested systems need warships and battle plans. Detection (M3.1) already gives the warning times.
 4. ~~M12 Research~~ done. What remains for research: real output from institutes (M8), and trade, espionage and salvage as channels for closed-off technologies (M10, M14).
-5. **M7 Star systems and M8 planets.** These give depth to the numbers M5 introduces (habitability, resources per body).
+5. **M7 Star systems and M8 planets.** Bodies already exist (M5). What remains: Kepler orbits and a 3D system view, installations per body, resources beyond materiel, food and colonists moving between systems.
 6. **Early infrastructure work (can start any time):**
    - a performance pass for many fleets: spatial index for detection, fewer notifications;
    - a first onboarding / tutorial scenario;

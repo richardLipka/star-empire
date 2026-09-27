@@ -25,6 +25,7 @@ export function renderGovernor(c, id) {
       [t('governor.posture'), t(`option.posture.${book.settings.posture}`)],
       [t('governor.reporting'), t(`option.mode.${book.settings.reporting}`)],
       [t('governor.relayRepair'), t(`option.repair.${book.settings.relayRepair}`)],
+      [t('governor.economyFocus'), t(`option.focus.${book.settings.economyFocus ?? 'balanced'}`)],
     ]));
     const list = Object.values(book.directives ?? {});
     nodes.push(h('div.dim.small', {}, t('governor.inForce')));

@@ -2,6 +2,7 @@
 import { createFleet, launchFleet, disbandFleet } from '../../fleet/module.js';
 import { driveFor } from '../../fleet/drives.js';
 import { empireState } from '../../empire/module.js';
+import { spend, shipCost } from '../../colony/module.js';
 
 /**
  * logistics.courier: every N years a courier takes this system's news and
@@ -17,6 +18,7 @@ export default {
   plan(world, ctx, book, d) {
     const due = book.memory.courierDue[d.id] ?? ctx.now;
     if (ctx.now < due || d.params.destination === book.system) return null;
+    if (!spend(world, book.system, shipCost(world, book.system, 'courier'))) return null; // try again next year
     book.memory.courierDue[d.id] = ctx.now + d.params.every;
     const f = createFleet(world, ctx, {
       empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), courier: true, role: 'courier',

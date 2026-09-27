@@ -7,6 +7,7 @@ import { sendNote } from '../../info/orders.js';
 import { orderDispatch } from '../../governors/issue.js';
 import { openWormhole } from '../../events/wormholes.js';
 import { createFleet, launchFleet } from '../../fleet/module.js';
+import { colonyAt } from '../../colony/module.js';
 
 /** Form state survives re-renders. */
 const form = { tier: 0, ansible: false, courier: false };
@@ -38,6 +39,13 @@ export function renderSandboxTools(c, id, target) {
   } else {
     rows.push(h('p.hint', {}, t('sandbox.heldBy', { empire: presence.empire })));
   }
+  const colony = colonyAt(c.game.world, id);
+  rows.push(h('div.row', {},
+    h('label', {}, h('input', {
+      type: 'checkbox', checked: c.game.world.state.colony.risks,
+      onchange: (/** @type {Event} */ e) => c.game.act((w) => (w.state.colony.risks = /** @type {HTMLInputElement} */ (e.target).checked)),
+    }), ` ${t('sandbox.disasters')}`),
+    colony ? h('button.btn', { onclick: () => c.act((w) => (colonyAt(w, id).materiel += 500), t('sandbox.supplied', { system: here })) }, t('sandbox.supply')) : null));
   if (!target || target === id) {
     rows.push(h('p.hint', {}, t('sandbox.pickTarget')));
     return h('div.tools', {}, ...rows);

@@ -12,6 +12,7 @@ import { renderSandboxTools } from './panels/sandboxTools.js';
 import { renderFleetList } from './panels/fleetList.js';
 import { renderMeasure } from './panels/measureSection.js';
 import { renderGovernor } from './panels/governorSection.js';
+import { renderColony } from './panels/colonySection.js';
 import { renderComposer, renderOrderList } from './panels/ordersTab.js';
 import { describeError } from './text/describe.js';
 
@@ -26,7 +27,7 @@ export function createSidePanel(root, deps) {
   /** @type {{ selected: string | null, measure: string | null }} */
   let current = { selected: null, measure: null };
   let tab = /** @type {'system' | 'orders'} */ ('system');
-  const live = { intel: h('div'), fleets: h('div'), summary: h('div'), governor: h('div'), orders: h('div') };
+  const live = { intel: h('div'), fleets: h('div'), summary: h('div'), governor: h('div'), colony: h('div'), orders: h('div') };
 
   /** @type {import('./panels/context.js').PanelContext} */
   const c = {
@@ -64,6 +65,7 @@ export function createSidePanel(root, deps) {
         h('h2', {}, s.name),
         h('p.hint', {}, s.id === 'sol' ? t('panel.seat', { empire: c.empire }) : t('panel.fromSol', { distance: fmtLy(fromSol), light: fmtDuration(fromSol), trip: fmtDuration(trip.totalTime) })),
         h('h3', {}, t('panel.intelligence')), live.intel,
+        h('h3', {}, t('panel.colony')), live.colony,
         h('h3', {}, t('panel.governor')), live.governor,
         ...renderStars(c, s),
         h('h3', {}, t('panel.sandbox')), renderSandboxTools(c, selected, measureId),
@@ -83,6 +85,7 @@ export function createSidePanel(root, deps) {
     if (current.selected) {
       live.intel.replaceChildren(...renderIntel(c, current.selected));
       live.governor.replaceChildren(...renderGovernor(c, current.selected));
+      live.colony.replaceChildren(...renderColony(c, current.selected));
     } else {
       live.summary.replaceChildren(...renderSummary(c));
     }

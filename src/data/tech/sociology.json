@@ -35,7 +35,7 @@
       "effects": [
         {
           "kind": "unlock",
-          "target": "ship.sleepers"
+          "target": "colony.mode.cryo"
         }
       ]
     },
@@ -78,8 +78,10 @@
       ],
       "effects": [
         {
-          "kind": "unlock",
-          "target": "population.longevity"
+          "kind": "modifier",
+          "target": "colony.growth",
+          "op": "mul",
+          "value": 1.25
         }
       ]
     },
@@ -135,6 +137,106 @@
         {
           "kind": "unlock",
           "target": "espionage.agents"
+        }
+      ]
+    },
+    {
+      "id": "soc.nurseries",
+      "kind": "application",
+      "tier": 1,
+      "requires": [],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "colony.mode.embryo"
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "soc.genetics",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "soc.biostasis"
+      ],
+      "effects": []
+    },
+    {
+      "id": "soc.prion-therapy",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.genetics",
+        "pla.survey"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.prion",
+          "op": "mul",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "soc.gene-banks",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.genetics"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.growth",
+          "op": "mul",
+          "value": 1.15
+        },
+        {
+          "kind": "modifier",
+          "target": "risk.prion",
+          "op": "mul",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "soc.founding",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "soc.legitimacy"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.unrest",
+          "op": "mul",
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "id": "soc.tutors",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.legitimacy",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.unrest",
+          "op": "mul",
+          "value": 0.6
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.growth",
+          "op": "mul",
+          "value": 1.1
         }
       ]
     }

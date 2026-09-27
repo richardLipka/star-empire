@@ -28,7 +28,8 @@
     "years": "{n} r.",
     "ly": "{n} sv. r.",
     "lsun": "{n} L☉",
-    "kelvin": "{min}–{max} K"
+    "kelvin": "{min}–{max} K",
+    "au": "{n} AU"
   },
   "save": {
     "save": "Uložit",
@@ -102,8 +103,8 @@
   },
   "status": {
     "capital": "Hlavní město",
-    "relay": "Základna s relé",
-    "outpost": "Základna bez relé",
+    "relay": "Kolonie s relé",
+    "outpost": "Kolonie bez relé",
     "relayDown": "Relé zničeno",
     "foreign": "Drží jiné impérium",
     "explored": "Prozkoumáno, prázdné",
@@ -111,7 +112,7 @@
     "short": {
       "capital": "hlavní město",
       "relay": "relé",
-      "outpost": "základna bez relé",
+      "outpost": "kolonie bez relé",
       "relayDown": "relé zničeno"
     }
   },
@@ -155,11 +156,11 @@
     "orders": "Rozkazy"
   },
   "panel": {
-    "overviewHint": "Sídlo u Slunce. {systems} systémů do {radius} sv. r. Pískoviště: základny s relé založené roku 2400, jedna mimo dosah všech relé; vedle sídlí impérium B, o kterém nevíte.",
+    "overviewHint": "Sídlo u Slunce. {systems} systémů do {radius} sv. r. Pískoviště: malé kolonie založené generačními archami před dvěma staletími, jedna mimo dosah všech relé; vedle sídlí impérium B, o kterém nevíte.",
     "seat": "Sídlo impéria {empire}.",
     "fromSol": "{distance} od Slunce · světlo {light} · let raným fúzním pohonem {trip}",
-    "outposts": "Základny",
-    "outpostsKnown": "Známé základny",
+    "outposts": "Držené soustavy",
+    "outpostsKnown": "Držené soustavy (známé)",
     "relaysWorking": "Funkční relé",
     "relaysBelieved": "Relé považovaná za funkční",
     "overdue": "Opožděné",
@@ -182,7 +183,11 @@
     "credits": "Data hvězd: {source}, autor {author}, {license}.",
     "overheard": "Zachycený cizí provoz",
     "overheardRead": "{count} (přečteno {read})",
-    "exposed": "Naše odhalené spoje"
+    "exposed": "Naše odhalené spoje",
+    "colony": "Lidé",
+    "population": "Obyvatelstvo",
+    "populationKnown": "Obyvatelstvo (podle hlášení)",
+    "troubled": "Kolonie v nesnázích"
   },
   "control": {
     "click": "Klik",
@@ -237,7 +242,28 @@
     "habitability": "Obyvatelnost",
     "resources": "Suroviny",
     "bodies": "Velká tělesa",
-    "unexplored": "Neprozkoumáno: známe jen to, co ukážou dalekohledy (hvězdy výše). Pošlete průzkumníka."
+    "unexplored": "Neprozkoumáno: známe jen to, co ukážou dalekohledy (hvězdy výše). Pošlete průzkumníka.",
+    "orrery": "Oběžné dráhy v logaritmickém měřítku",
+    "hz": "Obyvatelná zóna",
+    "hzRange": "{from}–{to} AU",
+    "type": {
+      "rocky": "kamenný svět",
+      "superEarth": "superzemě",
+      "ocean": "oceánský svět",
+      "ice": "ledový svět",
+      "gasGiant": "plynný obr",
+      "iceGiant": "ledový obr",
+      "belt": "pás"
+    },
+    "site": {
+      "habitable": "obyvatelný",
+      "terraformable": "terraformovatelný",
+      "hostile": "nehostinný (kopule)"
+    },
+    "tidalLock": "vázaná rotace",
+    "onlyHostile": "Žádný živý svět: kopule na nehostinné skále nebo orbitální základny.",
+    "onlyOrbital": "Není kde stát: jen orbitální základny.",
+    "giantStar": "Obří hvězda: co tu žilo, shořelo, když se nafoukla."
   },
   "measure": {
     "distance": "Vzdálenost",
@@ -305,7 +331,7 @@
     "fleet": {
       "departed": "{fleet} odletěla od {system}",
       "arrived": "{fleet} dorazila k {system}",
-      "settled": "{fleet} založila základnu u {system}",
+      "settled": "{fleet} založila kolonii v soustavě {system}",
       "settleFailed": "{fleet} našla {system} již obsazený"
     },
     "note": "Zpráva z {from}: {text}",
@@ -341,10 +367,30 @@
       "readFleet": "Zachyceno: flotila {fleet} impéria {empire} u {system}",
       "readOrder": "Zachycen rozkaz impéria {empire} pro {system}: {directive}",
       "stoleTech": "Ukradeno z provozu impéria {empire}: {tech}"
+    },
+    "colony": {
+      "prion": "Prionová nákaza v soustavě {system}: {lost} mrtvých ({percent} %)",
+      "radiation": "Hvězdná erupce v soustavě {system}: {lost} mrtvých ({percent} %)",
+      "cropFailure": {
+        "one": "Neúroda v soustavě {system}, hlad na {count} rok",
+        "few": "Neúroda v soustavě {system}, hlad na {count} roky",
+        "other": "Neúroda v soustavě {system}, hlad na {count} let",
+        "many": "Neúroda v soustavě {system}, hlad na {count} roku"
+      },
+      "recyclerFailure": {
+        "one": "Selhání podpory života v soustavě {system}, přídělový systém na {count} rok",
+        "few": "Selhání podpory života v soustavě {system}, přídělový systém na {count} roky",
+        "other": "Selhání podpory života v soustavě {system}, přídělový systém na {count} let",
+        "many": "Selhání podpory života v soustavě {system}, přídělový systém na {count} roku"
+      },
+      "unrest": "Nepokoje v soustavě {system}: práce stojí, {lost} mrtvých",
+      "strangeness": "Lid vychovaný stroji v soustavě {system} se stává podivným a neklidným: práce stojí, {lost} mrtvých",
+      "extinct": "Kolonie v soustavě {system} po {years} letech vymřela. Soustava je ztracena.",
+      "terraformed": "{system}: terraformace dokončena. Svět je otevřen nebi."
     }
   },
   "sandbox": {
-    "found": "Založit základnu",
+    "found": "Založit zde kolonii",
     "founded": "Základna založena u {system}",
     "destroyRelay": "Zničit relé",
     "destroyHint": "přijímá, nevysílá",
@@ -365,7 +411,10 @@
     "rivalTitle": "Soupeřova flotila odstartuje hned, neviditelná, dokud její vlečka nemíří na některý váš systém",
     "rivalLaunched": "Flotila impéria B odstartovala {from} → {to} (nikdo vám to neřekne)",
     "ansible": "ansible",
-    "courier": "kurýr"
+    "courier": "kurýr",
+    "disasters": "Katastrofy v koloniích",
+    "supply": "+500 materiálu",
+    "supplied": "Materiál doručen do soustavy {system}"
   },
   "governor": {
     "none": "Od tohoto guvernéra zatím nepřišlo hlášení.",
@@ -376,7 +425,8 @@
     "inForce": "Platné rozkazy",
     "noOrders": "Žádné trvalé rozkazy (platí výchozí).",
     "onTheWay": "Rozkazy na cestě sem",
-    "arrives": "dorazí {year}"
+    "arrives": "dorazí {year}",
+    "economyFocus": "Zaměření výroby"
   },
   "orders": {
     "compose": "Nová směrnice",
@@ -451,8 +501,8 @@
         "desc": "Vysílat průzkumníky k nejbližším neprozkoumaným systémům. Nesou modul relé, hlásí se z místa příletu a pak letí dál."
       },
       "settle": {
-        "name": "Osidlování",
-        "desc": "Vysílat osadnické lodě zakládat základny. „Nejobyvatelnější“ a „nejbohatší“ berou v úvahu jen prozkoumané systémy."
+        "name": "Osídlit",
+        "desc": "Vysílat kolonizační lodě. „Nejobyvatelnější“ a „nejbohatší“ berou v úvahu jen prozkoumané soustavy. Lodě stojí materiál: embryonální lodě jsou levné, ale vychovají podivné, nestálé společnosti; archy nesou tisíce lidí po staletí; kryospáči přiletí jako ustálený národ."
       }
     },
     "military": {
@@ -498,11 +548,11 @@
     "economy": {
       "focus": {
         "name": "Zaměření výroby",
-        "desc": "Čemu má hospodářství systému dávat přednost."
+        "desc": "Čemu dává hospodářství kolonie přednost: průmyslu, těžbě, zemědělství, výzkumu nebo stavbě lodí."
       },
       "terraform": {
         "name": "Terraformace",
-        "desc": "Program terraformace vhodných světů."
+        "desc": "Zda terraformovat vhodný svět, jakmile je zde technologie známa (výchozí je „plný program“)."
       }
     },
     "research": {
@@ -541,7 +591,8 @@
     "focus": "Zaměření",
     "program": "Program",
     "field": "Obor",
-    "stance": "Postoj"
+    "stance": "Postoj",
+    "vessel": "Kolonizační lodě"
   },
   "option": {
     "priority": {
@@ -633,7 +684,13 @@
       "hostile": "nepřátelský"
     },
     "yes": "ano",
-    "no": "ne"
+    "no": "ne",
+    "vessel": {
+      "auto": "nejlepší dostupné",
+      "embryo": "embryonální lodě",
+      "ark": "generační archy",
+      "cryo": "kryospánkové lodě"
+    }
   },
   "research": {
     "open": "Výzkum",
@@ -721,7 +778,10 @@
       },
       "ship": "Lodní systém",
       "weapon": "Zbraň",
-      "planet": "Planetární projekt",
+      "planet": {
+        "terraform": "Terraformace",
+        "processors": "Rychlejší terraformace"
+      },
       "population": "Obyvatelstvo",
       "loyalty": "Loajalita",
       "governor": "Guvernéři",
@@ -739,6 +799,30 @@
       },
       "beam": {
         "spill": "Rozptyl svazků našich relé"
+      },
+      "colony": {
+        "food": "Produkce potravin",
+        "closedFood": "Potraviny v uzavřených habitatech",
+        "growth": "Růst populace",
+        "industry": "Průmysl",
+        "capacity": {
+          "habitable": "Kapacita obyvatelných světů",
+          "terraformed": "Kapacita terraformovaných světů",
+          "terraformable": "Kapacita okrajových světů",
+          "hostile": "Kapacita kolonií pod kopulemi",
+          "orbital": "Kapacita orbitálních základen"
+        },
+        "mode": {
+          "embryo": "Embryonální lodě",
+          "ark": "Generační archy",
+          "cryo": "Kryospánkové lodě"
+        }
+      },
+      "risk": {
+        "prion": "Riziko prionových nákaz",
+        "radiation": "Škody hvězdných erupcí",
+        "crops": "Riziko neúrody a selhání recyklace",
+        "unrest": "Riziko nepokojů"
       }
     },
     "module": {
@@ -763,5 +847,54 @@
     "zoomOut": "Oddálit",
     "fit": "Celé",
     "focusSent": "Zaměření výzkumu {area} odesláno do {count} systémů."
+  },
+  "colony": {
+    "none": "Pokud víme, nikdo tu nežije.",
+    "asOf": "Podle hlášení z roku {year} (před {age}):",
+    "population": "Obyvatelstvo",
+    "ofCapacity": "{people} z {capacity}",
+    "where": "Žijí",
+    "site": {
+      "habitable": "na {body}, pod širým nebem",
+      "terraformed": "na {body}, terraformovaném",
+      "terraformable": "na {body}, pod kopulemi (terraformovatelný)",
+      "hostile": "na {body}, pod kopulemi",
+      "orbital": "na orbitální základně u {body}",
+      "deepOrbital": "na orbitální základně"
+    },
+    "origin": "Založili",
+    "mode": {
+      "embryo": "embryonální loď, {year}",
+      "ark": "generační archa, {year}",
+      "cryo": "kryospáči, {year}",
+      "old": "prastaré osídlení"
+    },
+    "society": "Společnost",
+    "societyKind": {
+      "embryo": "vychovaní stroji: podivní, nestálí",
+      "ark": "lid archy: semknutý, příbuzenský",
+      "settled": "ustálená",
+      "old": "stará a zavedená"
+    },
+    "food": "Potraviny",
+    "foodState": {
+      "surplus": "přebytek ({ratio} potřeby)",
+      "tight": "sotva stačí ({ratio})",
+      "starving": "hladomor ({ratio})"
+    },
+    "industry": "Průmysl",
+    "perYear": "{n} ročně",
+    "materiel": "Materiál ve skladech",
+    "research": "Výzkum",
+    "embryos": "Dosud zmrazená embrya",
+    "instability": "Nestálost",
+    "terraforming": "Terraformace",
+    "trouble": {
+      "famine": "Neúroda: hladomor.",
+      "rationing": "Selhává podpora života: přídělový systém.",
+      "unrest": "Nepokoje: práce stojí.",
+      "strangeness": "Vychovaní stroji jsou neklidní: práce stojí.",
+      "hunger": "Kolonie se neuživí."
+    }
   }
 }

@@ -1,20 +1,15 @@
 // @ts-check
-import { hashUnit } from '../core/rng.js';
+import { systemBodies } from './planets.js';
 
 /**
- * Placeholder traits for each system until the star-system module (M7)
- * generates real planets. Deterministic per game seed and system id; Sol is fixed.
+ * Summary of a system for survey displays and settlement choices, derived
+ * from its bodies (see planets.js).
  *
  * @typedef {object} SystemTraits
- * @property {number} habitability  0–1, best world in the system for people and food
- * @property {number} richness      0–1, mineral and volatile wealth
- * @property {number} planets       number of major bodies
+ * @property {number} habitability  0–1, the best place for people (habitable world 1×quality, terraformable less, domes and stations little)
+ * @property {number} richness      0–1, best mineral and volatile wealth
+ * @property {number} planets       number of bodies
  */
-
-/** Base habitability by the primary's spectral class. */
-const CLASS_HABITABILITY = { O: 0.02, B: 0.04, A: 0.2, F: 0.55, G: 0.75, K: 0.65, M: 0.35, D: 0.03, '?': 0.3 };
-/** Typical planet counts by class (M dwarfs and white dwarfs hold fewer large worlds here). */
-const CLASS_PLANETS = { O: 2, B: 3, A: 5, F: 7, G: 8, K: 7, M: 4, D: 2, '?': 4 };
 
 /**
  * @param {string | number} seed  game seed
@@ -22,17 +17,15 @@ const CLASS_PLANETS = { O: 2, B: 3, A: 5, F: 7, G: 8, K: 7, M: 4, D: 2, '?': 4 }
  * @returns {SystemTraits}
  */
 export function systemTraits(seed, system) {
-  if (system.id === 'sol') return { habitability: 1, richness: 0.7, planets: 8 };
-  const u = (/** @type {string} */ key) => hashUnit(seed, `${system.id}:${key}`);
-  const cls = system.stars[0]?.cls ?? '?';
-  const multiplePenalty = system.stars.length > 1 ? 0.85 : 1;
-  const base = CLASS_HABITABILITY[/** @type {keyof typeof CLASS_HABITABILITY} */ (cls)] ?? 0.3;
-  // Skewed: most systems are poor, a few are good.
-  const habitability = Math.min(1, base * multiplePenalty * (0.25 + 1.1 * u('hab') ** 1.6));
-  const richness = Math.min(1, 0.15 + 0.85 * u('rich') ** 1.3);
-  const typical = CLASS_PLANETS[/** @type {keyof typeof CLASS_PLANETS} */ (cls)] ?? 4;
-  const planets = Math.max(0, Math.round(typical * (0.3 + 1.2 * u('planets'))));
-  return { habitability: round2(habitability), richness: round2(richness), planets };
+  const { bodies } = systemBodies(seed, system);
+  let habitability = 0.03; // an orbital base is always possible
+  for (const b of bodies) {
+    if (b.site === 'habitable') habitability = Math.max(habitability, b.quality);
+    else if (b.site === 'terraformable') habitability = Math.max(habitability, 0.25 * b.quality + 0.1);
+    else if (b.site === 'hostile') habitability = Math.max(habitability, 0.08);
+  }
+  const richness = bodies.reduce((m, b) => Math.max(m, b.resources), 0.1);
+  return { habitability: round2(habitability), richness: round2(richness), planets: bodies.length };
 }
 
 const round2 = (/** @type {number} */ x) => Math.round(x * 100) / 100;

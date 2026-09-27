@@ -9,9 +9,13 @@ export const sys = (name) => {
   return s.id;
 };
 
-/** New sandbox game; `act` runs a world action with the context. */
-export function sandbox(seed = 'm3') {
+/**
+ * New sandbox game; `act` runs a world action with the context. Colony
+ * disasters are off unless asked for, so timing tests are not disturbed.
+ */
+export function sandbox(seed = 'm3', { risks = false } = {}) {
   const sim = createSimulation({ modules: MODULES, data: DATA, seed });
+  sim.world.state.colony.risks = risks;
   sandboxScenario(sim.world, sim.ctx);
   return { sim, world: sim.world, ctx: sim.ctx, act: (fn) => fn(sim.world, sim.ctx) };
 }

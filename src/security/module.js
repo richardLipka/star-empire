@@ -130,6 +130,11 @@ function absorb(world, ctx, empire, r) {
         if (c?.system && !ours(c.system)) absorbSystemReport(world, ctx, empire, c.system, entry, c.data);
         if (newLink) dispatch('security.readTraffic', {});
         break;
+      case 'colony':
+        // News of a colony carries a full system report.
+        if (c?.system && c.data && !ours(c.system)) absorbSystemReport(world, ctx, empire, c.system, entry, c.data);
+        if (newLink) dispatch('security.readTraffic', {});
+        break;
       case 'fleetReport':
         if (c?.fleet) recordEntry(k.fleets, c.fleet.id, { ...entry, data: c.fleet });
         if (c?.system && c.systemData && !ours(c.system)) absorbSystemReport(world, ctx, empire, c.system, entry, c.systemData);

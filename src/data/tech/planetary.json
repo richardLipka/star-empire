@@ -26,7 +26,13 @@
       "effects": [
         {
           "kind": "unlock",
-          "target": "planet.habitats"
+          "target": "colony.mode.ark"
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.orbital",
+          "op": "mul",
+          "value": 2
         }
       ]
     },
@@ -64,8 +70,16 @@
       ],
       "effects": [
         {
-          "kind": "unlock",
-          "target": "planet.gasMining"
+          "kind": "modifier",
+          "target": "colony.capacity.orbital",
+          "op": "mul",
+          "value": 1.5
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.industry",
+          "op": "mul",
+          "value": 1.1
         }
       ]
     },
@@ -81,6 +95,12 @@
         {
           "kind": "unlock",
           "target": "planet.processors"
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.terraformable",
+          "op": "mul",
+          "value": 1.5
         }
       ]
     },
@@ -106,6 +126,185 @@
         {
           "kind": "unlock",
           "target": "planet.terraform"
+        }
+      ]
+    },
+    {
+      "id": "pla.life-support",
+      "kind": "application",
+      "tier": 1,
+      "requires": [],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.closedFood",
+          "op": "add",
+          "value": 0.3
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "pla.hydroponics",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.survey",
+        "soc.biostasis"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.closedFood",
+          "op": "add",
+          "value": 0.15
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.food",
+          "op": "mul",
+          "value": 1.1
+        }
+      ]
+    },
+    {
+      "id": "pla.domes",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.hostile",
+          "op": "mul",
+          "value": 2
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.terraformable",
+          "op": "mul",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "id": "pla.shelters",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.radiation",
+          "op": "mul",
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "id": "pla.asteroid-mining",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.survey",
+        "eng.nozzle"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.industry",
+          "op": "mul",
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "id": "pla.flare-forecast",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.climate",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.radiation",
+          "op": "mul",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "pla.resilient-crops",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.climate",
+        "soc.genetics"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "risk.crops",
+          "op": "mul",
+          "value": 0.5
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.food",
+          "op": "mul",
+          "value": 1.1
+        }
+      ]
+    },
+    {
+      "id": "pla.automation",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.materials",
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.industry",
+          "op": "mul",
+          "value": 1.25
+        }
+      ]
+    },
+    {
+      "id": "pla.arcologies",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "pla.biosphere",
+        "pla.automation"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.habitable",
+          "op": "mul",
+          "value": 1.5
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.terraformed",
+          "op": "mul",
+          "value": 1.5
+        },
+        {
+          "kind": "modifier",
+          "target": "colony.capacity.hostile",
+          "op": "mul",
+          "value": 2
         }
       ]
     }

@@ -90,12 +90,6 @@
       "milestone": "M10"
     },
     {
-      "id": "planet",
-      "module": "planets",
-      "implemented": false,
-      "milestone": "M8"
-    },
-    {
       "id": "population",
       "module": "colonies",
       "implemented": false,
@@ -142,6 +136,138 @@
       "module": "events",
       "implemented": false,
       "milestone": "M16"
+    },
+    {
+      "id": "colony.food",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.closedFood",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.growth",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.industry",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.capacity.habitable",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.capacity.terraformed",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.capacity.terraformable",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.capacity.hostile",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.capacity.orbital",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.mode.embryo",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.mode.ark",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "colony.mode.cryo",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "risk.prion",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "risk.radiation",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "risk.crops",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "risk.unrest",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "planet.terraform",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "planet.processors",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M5"
+    },
+    {
+      "id": "planet",
+      "module": "planets",
+      "implemented": false,
+      "milestone": "M8"
     }
   ],
   "conditions": {

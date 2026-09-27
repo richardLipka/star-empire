@@ -3,6 +3,7 @@ import { createFleet, launchFleet } from '../../fleet/module.js';
 import { driveFor } from '../../fleet/drives.js';
 import { empireState } from '../../empire/module.js';
 import { candidates, isExplored } from '../targets.js';
+import { shipCost } from '../../colony/module.js';
 
 /**
  * expansion.explore: launch scouts to the nearest unexplored systems (within
@@ -17,13 +18,13 @@ export default {
   plan(world, ctx, book, d) {
     const next = pick(world, ctx, book.system, book.empire, /** @type {any} */ (d.params));
     if (!next) return null;
-    return () => {
+    return { cost: shipCost(world, book.system, 'scout'), run: () => {
       const f = createFleet(world, ctx, {
         empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), transmitter: true, role: 'scout',
         mission: { kind: 'explore', target: next, jumpsLeft: d.params.jumps - 1, maxRange: d.params.maxRange, toward: d.params.toward, directive: d.id },
       });
       launchFleet(world, ctx, { fleet: f.id, to: next });
-    };
+    } };
   },
   onArrive(world, ctx, fleet, system) {
     const m = fleet.mission;

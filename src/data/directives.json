@@ -119,6 +119,17 @@
               "id": "buildRelay",
               "type": "boolean",
               "default": true
+            },
+            {
+              "id": "vessel",
+              "type": "enum",
+              "options": [
+                "auto",
+                "embryo",
+                "ark",
+                "cryo"
+              ],
+              "default": "auto"
             }
           ]
         }
@@ -297,7 +308,7 @@
       "directives": [
         {
           "id": "economy.focus",
-          "implemented": false,
+          "implemented": true,
           "params": [
             {
               "id": "focus",
@@ -316,7 +327,7 @@
         },
         {
           "id": "economy.terraform",
-          "implemented": false,
+          "implemented": true,
           "params": [
             {
               "id": "program",
@@ -326,7 +337,7 @@
                 "survey",
                 "full"
               ],
-              "default": "survey"
+              "default": "full"
             }
           ]
         }
@@ -385,7 +396,7 @@
     }
   ],
   "capacity": {
-    "note": "Placeholder until the economy exists: one new ship per system per interval (years), by frequency.",
+    "note": "One new ship per system per interval (years), by frequency, if the system's materiel pays for it (src/data/colonies.json).",
     "launchInterval": {
       "low": 40,
       "normal": 20,

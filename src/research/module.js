@@ -7,6 +7,7 @@ import { send, recordDispatch, extendSystemSnapshot, knowledgeOf } from '../info
 import { TECHS, START_TECHS, RULES, tech } from './catalog.js';
 import { capabilities } from './effects.js';
 import { bump, NETWORK } from '../core/versions.js';
+import { researchOutput } from '../colony/module.js';
 
 /**
  * Research (see docs/RESEARCH.md).
@@ -28,7 +29,7 @@ import { bump, NETWORK } from '../core/versions.js';
 
 export const researchModule = defineModule({
   id: 'research',
-  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'governors'],
+  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'colony', 'governors'],
   initState: () => ({
     /** @type {Record<string, Lab>} system → its research record */
     labs: {},
@@ -52,7 +53,9 @@ export const researchModule = defineModule({
       const area = focusOf(world, system);
       if (area === 'none') continue;
       const emp = es.empires[lab.empire];
-      const rate = (system === emp.capital ? RULES.capitalRate : RULES.outpostRate) * (p.capabilities?.researchRate ?? 1);
+      // The colony's people do the work; without a colony module, fixed rates.
+      const base = researchOutput(world, system) ?? (system === emp.capital ? RULES.capitalRate : RULES.outpostRate);
+      const rate = base * (p.capabilities?.researchRate ?? 1);
       const cost = breakthroughCost(lab, area);
       lab.progress[area] = Math.min(cost, (lab.progress[area] ?? 0) + rate * dt);
       if (lab.progress[area] < cost) continue;

@@ -28,7 +28,8 @@
     "years": "{n} y",
     "ly": "{n} ly",
     "lsun": "{n} L☉",
-    "kelvin": "{min}–{max} K"
+    "kelvin": "{min}–{max} K",
+    "au": "{n} AU"
   },
   "save": {
     "save": "Save",
@@ -102,8 +103,8 @@
   },
   "status": {
     "capital": "Capital",
-    "relay": "Outpost with relay",
-    "outpost": "Outpost, no relay",
+    "relay": "Colony with relay",
+    "outpost": "Colony, no relay",
     "relayDown": "Relay down",
     "foreign": "Held by another empire",
     "explored": "Explored, empty",
@@ -111,7 +112,7 @@
     "short": {
       "capital": "capital",
       "relay": "relay",
-      "outpost": "outpost, no relay",
+      "outpost": "colony, no relay",
       "relayDown": "relay down"
     }
   },
@@ -155,11 +156,11 @@
     "orders": "Orders"
   },
   "panel": {
-    "overviewHint": "Seat at Sol. {systems} systems within {radius} ly. Sandbox: relay outposts founded in 2400, one beyond every relay's reach; Empire B next door, unknown to you.",
+    "overviewHint": "Seat at Sol. {systems} systems within {radius} ly. Sandbox: small colonies founded by generation arks two centuries ago, one beyond every relay's reach; Empire B next door, unknown to you.",
     "seat": "Seat of Empire {empire}.",
     "fromSol": "{distance} from Sol · light {light} · early fusion trip {trip}",
-    "outposts": "Outposts",
-    "outpostsKnown": "Outposts known",
+    "outposts": "Systems held",
+    "outpostsKnown": "Systems held (known)",
     "relaysWorking": "Relays working",
     "relaysBelieved": "Relays believed working",
     "overdue": "Overdue",
@@ -182,7 +183,11 @@
     "credits": "Star data: {source} by {author}, {license}.",
     "overheard": "Foreign traffic overheard",
     "overheardRead": "{count} ({read} read)",
-    "exposed": "Our links exposed"
+    "exposed": "Our links exposed",
+    "colony": "People",
+    "population": "Population",
+    "populationKnown": "Population (as reported)",
+    "troubled": "Colonies in trouble"
   },
   "control": {
     "click": "Click",
@@ -235,7 +240,28 @@
     "habitability": "Habitability",
     "resources": "Resources",
     "bodies": "Major bodies",
-    "unexplored": "Not explored: only what telescopes show (the stars above). Send a scout to survey it."
+    "unexplored": "Not explored: only what telescopes show (the stars above). Send a scout to survey it.",
+    "orrery": "Orbits on a logarithmic scale",
+    "hz": "Habitable zone",
+    "hzRange": "{from}–{to} AU",
+    "type": {
+      "rocky": "rocky world",
+      "superEarth": "super-Earth",
+      "ocean": "ocean world",
+      "ice": "ice world",
+      "gasGiant": "gas giant",
+      "iceGiant": "ice giant",
+      "belt": "belt"
+    },
+    "site": {
+      "habitable": "habitable",
+      "terraformable": "terraformable",
+      "hostile": "hostile (domes)"
+    },
+    "tidalLock": "tidally locked",
+    "onlyHostile": "No living world: domes on hostile rock, or orbital bases.",
+    "onlyOrbital": "Nothing to stand on: only orbital bases.",
+    "giantStar": "A giant star: whatever lived here burned when it swelled."
   },
   "measure": {
     "distance": "Distance",
@@ -303,7 +329,7 @@
     "fleet": {
       "departed": "{fleet} departed {system}",
       "arrived": "{fleet} arrived at {system}",
-      "settled": "{fleet} founded an outpost at {system}",
+      "settled": "{fleet} founded a colony at {system}",
       "settleFailed": "{fleet} found {system} already taken"
     },
     "note": "Note from {from}: {text}",
@@ -337,10 +363,26 @@
       "readFleet": "Intercepted: Empire {empire} fleet {fleet} at {system}",
       "readOrder": "Intercepted order of Empire {empire} to {system}: {directive}",
       "stoleTech": "Stolen from Empire {empire} traffic: {tech}"
+    },
+    "colony": {
+      "prion": "Prion outbreak at {system}: {lost} dead ({percent} %)",
+      "radiation": "Stellar flare at {system}: {lost} dead ({percent} %)",
+      "cropFailure": {
+        "one": "Crop failure at {system}, famine for {count} year",
+        "other": "Crop failure at {system}, famine for {count} years"
+      },
+      "recyclerFailure": {
+        "one": "Life-support failure at {system}, rationing for {count} year",
+        "other": "Life-support failure at {system}, rationing for {count} years"
+      },
+      "unrest": "Unrest at {system}: work stops, {lost} dead",
+      "strangeness": "The machine-raised people of {system} turn strange and restless: work stops, {lost} dead",
+      "extinct": "The colony at {system} has died out after {years} years. The system is lost.",
+      "terraformed": "{system}: terraforming complete. The world is open to the sky."
     }
   },
   "sandbox": {
-    "found": "Found outpost",
+    "found": "Found a colony here",
     "founded": "Outpost founded at {system}",
     "destroyRelay": "Destroy relay",
     "destroyHint": "receives, cannot send",
@@ -361,7 +403,10 @@
     "rivalTitle": "A rival fleet launches now, unseen until its plume points at one of your systems",
     "rivalLaunched": "Empire B fleet launched {from} → {to} (you will not be told)",
     "ansible": "ansible",
-    "courier": "courier"
+    "courier": "courier",
+    "disasters": "Colony disasters",
+    "supply": "+500 materiel",
+    "supplied": "Materiel delivered to {system}"
   },
   "governor": {
     "none": "No report of this governor yet.",
@@ -372,7 +417,8 @@
     "inForce": "Orders in force",
     "noOrders": "No standing orders (defaults apply).",
     "onTheWay": "Orders on the way here",
-    "arrives": "arrives {year}"
+    "arrives": "arrives {year}",
+    "economyFocus": "Production focus"
   },
   "orders": {
     "compose": "New directive",
@@ -444,7 +490,7 @@
       },
       "settle": {
         "name": "Settle",
-        "desc": "Send settler ships to found outposts. 'Most habitable' and 'richest' consider only surveyed systems."
+        "desc": "Send colony ships. 'Most habitable' and 'richest' consider only surveyed systems. Ships cost materiel: embryo ships are cheap but raise strange, unstable societies; arks carry thousands for centuries; cryo sleepers arrive as a settled people."
       }
     },
     "military": {
@@ -490,11 +536,11 @@
     "economy": {
       "focus": {
         "name": "Production focus",
-        "desc": "What the system's economy should favour."
+        "desc": "What the colony's economy favours: industry, mining, agriculture, research or shipbuilding."
       },
       "terraform": {
         "name": "Terraforming",
-        "desc": "Terraforming programme for suitable worlds."
+        "desc": "Whether to terraform a suitable world once the technology is known here ('full programme' is the default)."
       }
     },
     "research": {
@@ -533,7 +579,8 @@
     "focus": "Focus",
     "program": "Programme",
     "field": "Field",
-    "stance": "Stance"
+    "stance": "Stance",
+    "vessel": "Colony ships"
   },
   "option": {
     "priority": {
@@ -625,7 +672,13 @@
       "hostile": "hostile"
     },
     "yes": "yes",
-    "no": "no"
+    "no": "no",
+    "vessel": {
+      "auto": "best available",
+      "embryo": "embryo ships",
+      "ark": "generation arks",
+      "cryo": "cryo sleepers"
+    }
   },
   "research": {
     "open": "Research",
@@ -713,7 +766,10 @@
       },
       "ship": "Ship system",
       "weapon": "Weapon",
-      "planet": "Planetary project",
+      "planet": {
+        "terraform": "Terraforming",
+        "processors": "Faster terraforming"
+      },
       "population": "Population",
       "loyalty": "Loyalty",
       "governor": "Governors",
@@ -731,6 +787,30 @@
       },
       "beam": {
         "spill": "Beam spill of our relays"
+      },
+      "colony": {
+        "food": "Food production",
+        "closedFood": "Food in closed habitats",
+        "growth": "Population growth",
+        "industry": "Industry",
+        "capacity": {
+          "habitable": "Capacity of habitable worlds",
+          "terraformed": "Capacity of terraformed worlds",
+          "terraformable": "Capacity of marginal worlds",
+          "hostile": "Capacity of domed colonies",
+          "orbital": "Capacity of orbital bases"
+        },
+        "mode": {
+          "embryo": "Embryo ships",
+          "ark": "Generation arks",
+          "cryo": "Cryo sleeper ships"
+        }
+      },
+      "risk": {
+        "prion": "Risk of prion outbreaks",
+        "radiation": "Harm from stellar flares",
+        "crops": "Risk of crop and recycler failure",
+        "unrest": "Risk of unrest"
       }
     },
     "module": {
@@ -755,5 +835,54 @@
     "zoomOut": "Zoom out",
     "fit": "Fit",
     "focusSent": "Research focus {area} sent to {count} systems."
+  },
+  "colony": {
+    "none": "No one lives here that we know of.",
+    "asOf": "As reported in {year} ({age} ago):",
+    "population": "Population",
+    "ofCapacity": "{people} of {capacity}",
+    "where": "Living",
+    "site": {
+      "habitable": "on {body}, under open sky",
+      "terraformed": "on {body}, terraformed",
+      "terraformable": "on {body}, under domes (terraformable)",
+      "hostile": "on {body}, under domes",
+      "orbital": "in an orbital base near {body}",
+      "deepOrbital": "in an orbital base"
+    },
+    "origin": "Founded by",
+    "mode": {
+      "embryo": "embryo ship, {year}",
+      "ark": "generation ark, {year}",
+      "cryo": "cryo sleepers, {year}",
+      "old": "ancient settlement"
+    },
+    "society": "Society",
+    "societyKind": {
+      "embryo": "raised by machines: strange, unstable",
+      "ark": "ark people: close-knit, inbred",
+      "settled": "settled",
+      "old": "old and established"
+    },
+    "food": "Food",
+    "foodState": {
+      "surplus": "surplus ({ratio} of need)",
+      "tight": "barely enough ({ratio})",
+      "starving": "starving ({ratio})"
+    },
+    "industry": "Industry",
+    "perYear": "{n} per year",
+    "materiel": "Materiel in store",
+    "research": "Research",
+    "embryos": "Embryos still frozen",
+    "instability": "Instability",
+    "terraforming": "Terraforming",
+    "trouble": {
+      "famine": "Crop failure: famine.",
+      "rationing": "Life support failing: rationing.",
+      "unrest": "Unrest: work has stopped.",
+      "strangeness": "The machine-raised are restless: work has stopped.",
+      "hunger": "The colony cannot feed itself."
+    }
   }
 }

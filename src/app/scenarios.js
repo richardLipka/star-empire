@@ -3,7 +3,10 @@ import { createEmpire, establishPresence, empireState, markExplored } from '../e
 import { knowledgeOf, truthNetwork, systemSnapshot } from '../info/module.js';
 import { recordEntry, recordExplored } from '../info/knowledge.js';
 import { distance } from '../core/vec3.js';
+import { hashUnit } from '../core/rng.js';
 import { imposeDirective } from '../governors/module.js';
+import { colonies, setColony } from '../colony/module.js';
+import { capacity } from '../colony/model.js';
 
 /**
  * Starting situations. A scenario runs once on a new game, after every
@@ -41,6 +44,8 @@ export function sandboxScenario(world, ctx) {
   createEmpire(world, ctx, { id: 'B', capital: byName(SANDBOX_RIVAL.capital) });
   for (const name of SANDBOX_RIVAL.outposts) establishPresence(world, ctx, { empire: 'B', system: byName(name) });
 
+  settleSandbox(world);
+
   for (const empire of ['A', 'B']) {
     const emp = empireState(world).empires[empire];
     const k = knowledgeOf(world, empire);
@@ -59,6 +64,26 @@ export function sandboxScenario(world, ctx) {
       recordExplored(k, system, -age);
     }
     imposeDirective(world, ctx, { system: emp.capital, type: 'research.focus', params: { field: SANDBOX_RESEARCH[/** @type {'A' | 'B'} */ (empire)] } });
+  }
+}
+
+/**
+ * People: Sol's billions; the outposts were founded by generation arks a
+ * century or two ago and are still small; Empire B's capital is an old
+ * habitat people.
+ * @param {import('../sim/world.js').World} world
+ */
+function settleSandbox(world) {
+  const es = empireState(world);
+  for (const [system, c] of Object.entries(colonies(world))) {
+    const p = es.presence[system];
+    const cap = capacity(c.site, p.capabilities);
+    if (system === es.empires[p.empire].capital) {
+      setColony(world, system, { mode: 'old', society: 'old', founded: -5000, population: system === 'sol' ? 1e10 : 0.9 * cap });
+    } else {
+      const age = 120 + 100 * hashUnit(world.seed, `founded:${system}`);
+      setColony(world, system, { mode: 'ark', society: 'ark', founded: -age, population: Math.min(0.4 * cap, 20000), instability: 0.2, materiel: 60 });
+    }
   }
 }
 

@@ -19,12 +19,12 @@ Ten areas, in display order (`src/data/tech/areas.json`):
 | Wormhole utilisation | `wor` | Finding, holding open and making wormholes |
 | Exotic and alien | `xen` | Relics, alien minds, physics nobody taught us |
 
-The content (97 technologies, including cryptography and interception since M12.1; see [SECURITY.md](SECURITY.md)) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
+The content (112 technologies, including cryptography and interception since M12.1, see [SECURITY.md](SECURITY.md), and colony life since M5, see [COLONIES.md](COLONIES.md)) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
 
 ## How research works
 
 1. **Focus.** Each system researches the area its governor was told to (directive *Research › Research focus*, `research.focus`). The research screen sends this order to the whole empire or to the capital; like every order, it travels at light speed. With no focus, a system does not research.
-2. **Progress.** A system earns research points: 1 per year at the capital, 0.25 at an outpost, multiplied by its research-rate technologies. These are placeholders until the economy (M5) provides real output.
+2. **Progress.** A system earns research points from its people (M5, see [COLONIES.md](COLONIES.md)): `0.2 × log10(1 + population / 1000)` per year (about 1.4 for Sol's ten billion, 0.3 for a colony of 30,000), multiplied by its production focus and its research-rate technologies. `rules.capitalRate` and `outpostRate` remain only as a fallback for systems without a colony.
 3. **Breakthrough.** The cost grows with each technology of that area already known there: `baseCost × costGrowth^n`. When progress pays it:
    - up to **three candidates** are drawn from the *frontier*: technologies of the area not known and not closed off, whose prerequisites are known here and whose conditions are met. Lower tiers are likelier;
    - **one is revealed**;
@@ -57,12 +57,16 @@ Effects are applied per system to `presence.capabilities` (`src/research/effects
 | `research.rate` | research | faster progress here |
 | `crypto.cipher`, `crypto.decrypt` | security | cipher level of messages sent from here; decryption level of this listening post |
 | `intercept.range`, `beam.spill` | security | how far this system listens; how much this relay's beam spills |
+| `colony.capacity.<site>`, `colony.food`, `colony.closedFood`, `colony.growth`, `colony.industry` | colony | how many people a site holds, how well they eat, grow and work |
+| `colony.mode.embryo`, `.ark`, `.cryo` | colony, governors | which colony ships can be built here |
+| `risk.prion`, `risk.radiation`, `risk.crops`, `risk.unrest` | colony | chance (or harm) of each disaster |
+| `planet.terraform`, `planet.processors` | colony | terraforming, and at double speed |
 
 Other targets are declared now and take effect when their module arrives (`src/data/tech/targets.json`, `implemented: false`):
 - `ship.*` — fleet design, M9;
 - `weapon.*` — combat, M10;
-- `planet.*` — planets, M8;
-- `population.*` — colonies, M5;
+- other `planet.*` — planets, M8;
+- `population.*` — the nanotech plague, M16;
 - `loyalty.*` and `governor.*` — governance, M13;
 - `espionage.*` — diplomacy, M14;
 - `wormhole.*`, `relic.*`, `aliens.*` and `ansible.*` — events, M16.
@@ -146,7 +150,7 @@ Planned additions:
 
 | Module | Technologies to add |
 |---|---|
-| M5 colonies | yields, habitat growth, food chains, longevity for population |
+| ~~M5 colonies~~ | done: life support, hydroponics, domes, shelters, flare forecasting, resilient crops, automation, asteroid mining, arcologies, machine nurseries, population genetics, prion therapeutics, gene banks, founding traditions, tutor intelligences |
 | M8 planets | institutes, terraforming stages, orbital industry |
 | M9 / M10 fleets and combat | hull classes, armour, point defence, battle computers, salvage and reverse engineering |
 | M13 governance | charters and consensus effects on loyalty, simulated governors |
@@ -155,7 +159,7 @@ Planned additions:
 
 ## Ideas for later
 
-- Research institutes as buildings (M8) instead of a flat rate per outpost.
+- Research institutes as buildings (M8) on top of the population-based rate.
 - Espionage and trade as real channels for closed-off technologies, with their own delays.
 - Reverse engineering after battles: salvage from a destroyed foreign fleet reveals one of its technologies.
 - Alien relics (M16) granting `relic` at a specific system, so relic physics can only start there and spreads from there.

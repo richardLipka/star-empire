@@ -214,7 +214,7 @@
     },
     "habitats": {
       "name": "Orbitální habitaty",
-      "desc": "Rotující města tam, kde nás žádný svět nechce."
+      "desc": "Rotující města tam, kde nás žádný svět nechce. Umožní generační archy a zdvojnásobí, kolik lidí uživí orbitální základna."
     },
     "climate": {
       "name": "Dynamika klimatu",
@@ -226,11 +226,11 @@
     },
     "giants": {
       "name": "Těžba plynných obrů",
-      "desc": "Ponory do obrů pro palivo a těkavé látky."
+      "desc": "Ponory do obrů pro palivo a těkavé látky. Stanice rostou a mají více práce."
     },
     "processors": {
       "name": "Atmosférické procesory",
-      "desc": "Stroje, které pomalu přepisují vzduch světa."
+      "desc": "Stroje, které pomalu přepisují vzduch světa. Terraformace trvá poloviční dobu."
     },
     "biosphere": {
       "name": "Navržené biosféry",
@@ -239,6 +239,42 @@
     "terraform": {
       "name": "Plná terraformace",
       "desc": "Staletí práce na nové Zemi."
+    },
+    "life-support": {
+      "name": "Uzavřená podpora života",
+      "desc": "Vzduch, voda a jídlo v uzavřených cyklech. Bez ní se žádná kopule ani stanice neuživí."
+    },
+    "hydroponics": {
+      "name": "Hydroponie",
+      "desc": "Plodiny pod lampami, ve vodě, ve tmě mezi hvězdami."
+    },
+    "domes": {
+      "name": "Tlakové kopule",
+      "desc": "Města pod sklem na světech, které by nás zabily jediným nádechem."
+    },
+    "shelters": {
+      "name": "Úkryty před bouřemi",
+      "desc": "Hluboké trezory, kde přečkat erupci, pokud je varování."
+    },
+    "asteroid-mining": {
+      "name": "Těžba asteroidů",
+      "desc": "Ruda bez gravitační studny, ze které se musí stoupat."
+    },
+    "flare-forecast": {
+      "name": "Předpověď erupcí",
+      "desc": "Číst neklidnou hvězdu tak dobře, aby se dalo včas skrýt."
+    },
+    "resilient-crops": {
+      "name": "Odolné plodiny",
+      "desc": "Mnoho odrůd a žádná jediná plíseň. Úroda, která selže jen zčásti."
+    },
+    "automation": {
+      "name": "Průmyslová automatizace",
+      "desc": "Továrny, které potřebují málo rukou, pro kolonie, které jich mají málo."
+    },
+    "arcologies": {
+      "name": "Arkologie",
+      "desc": "Města jako jediné budovy; kapacita světa znásobená."
     }
   },
   "soc": {
@@ -255,8 +291,8 @@
       "desc": "Proč kolonie vzdálené desítky let stále poslouchají a kdy přestanou."
     },
     "cryo": {
-      "name": "Kohorty v kryospánku",
-      "desc": "Posádky a kolonisté prospí cestu."
+      "name": "Kryospánkové kohorty",
+      "desc": "Kolonisté prospí cestu a probudí se jako oni sami: ustálená společnost od prvního dne."
     },
     "missions": {
       "name": "Kulturní mise",
@@ -267,8 +303,8 @@
       "desc": "Psané svobody zpomalují odklon k nezávislosti."
     },
     "longevity": {
-      "name": "Léčba dlouhověkosti",
-      "desc": "Životy měřené staletími; vzpomínky, které přežijí impéria."
+      "name": "Prodlužování života",
+      "desc": "Životy měřené staletími; populace, které rostou, když nikdo neumírá."
     },
     "neural": {
       "name": "Neurální rozhraní",
@@ -285,6 +321,30 @@
     "agents": {
       "name": "Agentské sítě",
       "desc": "Lidé u cizích dvorů, desítky let od domova."
+    },
+    "nurseries": {
+      "name": "Strojové porodnice",
+      "desc": "Zmrazená embrya, umělé dělohy a strojoví učitelé. První generace vychovávají věci, které nejsou lidmi, a je to znát."
+    },
+    "genetics": {
+      "name": "Populační genetika",
+      "desc": "Jak se malé uzavřené národy odchylují, chřadnou a přežívají."
+    },
+    "prion-therapy": {
+      "name": "Léčba prionů",
+      "desc": "Proti pomalé nemoci špatně složených bílkovin, která straší v uzavřených habitatech."
+    },
+    "gene-banks": {
+      "name": "Genové banky",
+      "desc": "Rozmanitost převážená v ledu na každý nový svět."
+    },
+    "founding": {
+      "name": "Zakladatelské tradice",
+      "desc": "Příběhy, obřady a listiny, které drží mladou kolonii pohromadě."
+    },
+    "tutors": {
+      "name": "Učitelské inteligence",
+      "desc": "Trpěliví strojoví učitelé, kteří pamatují, co rodiče nikdy nevěděli."
     }
   },
   "kin": {

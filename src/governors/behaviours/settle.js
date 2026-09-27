@@ -5,10 +5,13 @@ import { empireState, establishPresence } from '../../empire/module.js';
 import { systemTraits } from '../../galaxy/traits.js';
 import { reportFleetEvent } from '../../info/module.js';
 import { candidates, isExplored } from '../targets.js';
+import { chooseMode, shipCost, prepareFounding } from '../../colony/module.js';
 
 /**
- * expansion.settle: send settler ships to found outposts. "Nearest" takes any
- * free system; "most habitable" and "richest" need a survey first (explored).
+ * expansion.settle: send colony ships. "Nearest" takes any free system; "most
+ * habitable" and "richest" need a survey first (explored). The vessel is the
+ * one asked for, or (auto) the best the system knows and can pay for: cryo
+ * sleepers, a generation ark, or embryos raised by machines on arrival.
  * A settler learns on arrival whether someone else got there first.
  * @type {import('./types.js').Behaviour}
  */
@@ -18,13 +21,15 @@ export default {
   plan(world, ctx, book, d) {
     const target = pick(world, ctx, book, d.params);
     if (!target) return null;
-    return () => {
+    const mode = chooseMode(world, book.system, d.params.vessel ?? 'auto');
+    if (!mode) return null; // no way to carry colonists known here
+    return { cost: shipCost(world, book.system, `settler:${mode}`), run: () => {
       const f = createFleet(world, ctx, {
         empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), transmitter: true, role: 'settler',
-        mission: { kind: 'settle', target, buildRelay: d.params.buildRelay, directive: d.id },
+        mission: { kind: 'settle', target, buildRelay: d.params.buildRelay, directive: d.id, mode },
       });
       launchFleet(world, ctx, { fleet: f.id, to: target });
-    };
+    } };
   },
   onArrive(world, ctx, fleet, system) {
     const m = fleet.mission;
@@ -37,6 +42,7 @@ export default {
       return;
     }
     reportFleetEvent(world, ctx, fleet, system, 'settled');
+    prepareFounding(world, system, { mode: m.mode ?? 'cryo' });
     establishPresence(world, ctx, { empire: fleet.empire, system, relay: m.buildRelay });
     disbandFleet(world, ctx, fleet.id);
   },
