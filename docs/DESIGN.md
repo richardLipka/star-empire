@@ -42,9 +42,11 @@ The pace is a slower strategy game in the spirit of *Master of Orion*, but with 
 
 ### Relay stations and messages
 
-- **Messages travel only between star systems**, at c, point to point.
+- **Messages travel only between star systems**, at c.
 - Every colonized system can have a **relay station**. A system with a working relay can **send**. Every system can always **receive**.
-- If a relay is destroyed, the system goes **silent**: it keeps receiving directives but cannot report until the relay is rebuilt. Silence is itself information. Each system has an expected report interval, and the UI flags "report overdue by N years".
+- **Relay range depends on technology**: about **20 ly** at the start, extended by research. A message for a system further away is **forwarded along a chain of relays**. Each hop moves at c, so the delay equals the length of the relay path, which can be longer than the straight-line distance. Messages are routed by the shortest path through the relay network the sender knows about.
+- The relay network is strategic infrastructure. A system beyond the range of every relay can hear only when some sender's range reaches it, and a system that cannot report back is effectively cut off, which speeds up its drift (§6). Destroying a relay can break chains and force longer routes.
+- If a relay is destroyed, the system goes **silent**: it keeps receiving directives but cannot report or forward until the relay is rebuilt. Silence is itself information. Each system has an expected report interval, and the UI flags "report overdue by N years".
 - **Fleets cannot receive messages in transit.** A fleet gets orders only while it is in a system, from that system's mailbox. It therefore departs with **sealed orders**: route, objective, battle plan, fallback behavior and what to do on arrival.
 - Fleets report through the relay of the system they are in. A fleet with no friendly relay stays silent until it reaches one, or until a battle is seen from afar.
 - **Empire-wide directives** are sent to each system separately and arrive at different times. The UI shows the arrival front spreading through the empire.
@@ -82,17 +84,24 @@ The player gives **general directives**, not micro-orders. Local governors (AI a
 
 ### Flight profile
 
-Ships accelerate at a constant **1–3 g** up to a cruise speed of about **0.6 c**, coast, then turn and brake at the same rate. Constant-acceleration motion is simulated with closed-form relativistic formulas (1 g ≈ 1.03 ly/yr²):
+Ships accelerate at a constant rate up to cruise speed, coast, then turn and brake at the same rate. Constant-acceleration motion is simulated with closed-form relativistic formulas (1 g ≈ 1.03 ly/yr²).
 
-| Acceleration | Burn time (Earth frame) | Burn distance | Warning at destination* |
-|---|---|---|---|
-| 1 g | 0.73 yr | 0.24 ly | ~6 months |
-| 2 g | 0.36 yr | 0.12 ly | ~3 months |
-| 3 g | 0.24 yr | 0.08 ly | ~2 months |
+**Both acceleration and cruise speed come from research:**
+
+- **Cruise speed** starts at **0.1 c** and rises with drive technology to a maximum of **0.6 c**.
+- **Acceleration** starts at **0.1 g** and rises with technology.
+- Above **1 g**, flights cause **wear**: component damage and higher maintenance for ships, and health, morale and loyalty costs for crews and passengers. Sleeper holds reduce the crew cost. Each fleet's sealed orders pick its acceleration, trading warning time and arrival speed against wear.
+
+| Tier | Burn time | Burn distance | Warning at destination* | Trip 4.4 / 10 / 20 ly |
+|---|---|---|---|---|
+| Start: 0.1 g, 0.1 c | 0.97 yr | 0.05 ly | ~11 months | 45 / 101 / 201 yr |
+| Mid: 0.3 g, 0.3 c | 1.02 yr | 0.16 ly | ~10 months | 16 / 34 / 68 yr |
+| Late: 1 g, 0.6 c | 0.73 yr | 0.24 ly | ~6 months | 8 / 17 / 34 yr |
+| Late, with wear: 3 g, 0.6 c | 0.24 yr | 0.08 ly | ~2 months | 7 / 17 / 34 yr |
 
 \*Braking time minus light-travel time of the braking-start flash: the only warning a system without a sensor net gets.
 
-Trip times at 1 g: Alpha Centauri (4.4 ly) about 8 years; 10 ly about 17 years; 50 ly about 84 years. Crew time dilation (γ = 1.25 at 0.6 c) is tracked as flavor: crews age less than the empire.
+At cruise speed, high acceleration mostly shortens the *warning*, not the trip, which is why it is a tactical choice. Crew time dilation (γ = 1.25 at 0.6 c) is tracked as flavor: crews age less than the empire.
 
 ### Detection rules
 
@@ -111,7 +120,13 @@ Every colony has a **loyalty** value that drifts over time:
 - **Stages:** Loyal → Restless → Autonomous (follows only some directives, pays reduced tribute) → **Seceded** (becomes an independent faction run by the AI).
 - **Player tools:** influence missions, garrisons, investment, appointing or replacing governors, and *granting autonomy*. Granting autonomy slows drift but loosens control. Seceded worlds can be won back by diplomacy or force.
 
-**Dissolution.** The empire *will* fall eventually, through secession cascades, war, internal decay or catastrophe. The game ends when the empire no longer functions as a state. A proposed rule: the capital system is lost or seceded, *or* the loyal population drops below a set fraction of its peak.
+**Losing the capital.** If the capital system is lost, the empire does not end, but it weakens:
+
+- Loyalty drops across the empire, and the drop reaches each system when news of the fall arrives there.
+- Directives lose authority until a new seat of government is proclaimed at another system, which then carries a legitimacy penalty.
+- Rebellions break out, and **rebel factions form**. A faction can hold several systems and is run by the AI.
+
+**Dissolution.** The empire *will* fall eventually, through secession cascades, war, internal decay or catastrophe. **The game ends when no system remains under the empire's control.** Until then even a rump state of one system keeps adding to the Legacy.
 
 **Score: the Legacy.** Throughout the game the empire's history is recorded:
 
@@ -125,9 +140,16 @@ The end screen is a **Chronicle**: a timeline of the empire "as it really happen
 ## 7. Units and scale
 
 - Distance in **light-years** at galactic scale and **AU** in systems. Time in **years**. **c = 1 ly/yr**, so light delay equals distance.
-- The universe uses real stars from the **HYG star catalogue** (license and attribution in §11). With 0.6 c ships the bubble fills quickly, so **pacing comes from colony development** (centuries to self-sufficiency) and from the size of the map. The proposed default is **50 ly around Sol**, with smaller maps for short games.
+- The universe uses real stars from the **HYG star catalogue** (license and attribution in §11). The map is **50 ly around Sol** at first (roughly 1,500–2,000 stars), and may grow later. The catalogue build script takes the radius as a parameter.
+- Pacing: early 0.1 c ships need about a century per 10 ly, so the first centuries are slow expansion. Later drives shrink distances, and then colony development (centuries to self-sufficiency) and drift set the pace.
 - Known exoplanets come from real data where available; everything else is generated procedurally from a seed per star.
-- **Time model:** a continuous, event-driven simulation presented at a *Master of Orion*-like pace. Time advances by chosen steps (1, 10 or 100 years, or "until the next dispatch") with automatic pause on important arrivals.
+- **Time model:** a **continuous, event-driven simulation** with pause and adjustable speed (from about 1 day/s up to decades per second). The game can auto-pause on important dispatches.
+
+### Starting situation and opponents
+
+- The player (Empire A) starts at **Sol**.
+- **Opponents at the start are human**: other human polities (Empires B, C and so on) with their own seats elsewhere in the bubble, plus rebel factions that form during the game.
+- **Aliens come later**, through the events module: relics first, then living alien powers.
 
 ## 8. Modules
 
@@ -139,7 +161,7 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 |---|---|
 | `core/` | Game clock, discrete-event scheduler, seeded RNG, vector math, IDs, event bus, serialization. |
 | `sim/` | World container, module registry, main loop, save/load. |
-| `info/` | Relay messages, system mailboxes, light-speed propagation, KnowledgeBase, detection (plumes, sensor nets), overdue-report tracking. |
+| `info/` | Relay messages, relay network and chain routing, system mailboxes, light-speed propagation, KnowledgeBase, detection (plumes, sensor nets), overdue-report tracking. |
 | `empire/` | Empire state, capital, governors, **directives engine** (categories, targeting, interpretation), loyalty and secession, Legacy score. |
 
 ### Gameplay
@@ -149,7 +171,7 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 3. **`planet/`: planet management.** Surface and orbital installations, population, habitability and terraforming, production chains.
 4. **`fleet/`: fleets and ship design.** Hulls and components, fleet composition, sealed orders, transit planning.
 5. **`combat/`: engagement planning.** Battles are decided in seconds at relativistic closing speeds. The player prepares formations, approach vectors, weapon schedules and point-defense priorities as part of a fleet's sealed orders. A deterministic high-resolution simulation resolves the crossing, and the report travels home at c.
-6. **`research/`: technology.** A tab of the Empire screen plus a galaxy overlay. Research happens at specific worlds, and **blueprints propagate at c** through relays before other colonies can use them.
+6. **`research/`: technology.** A tab of the Empire screen plus a galaxy overlay. Research happens at specific worlds, and **blueprints propagate at c** through relays before other colonies can use them. Key early lines are drive technology (acceleration and cruise speed), relay range and wear tolerance.
 7. **`diplomacy/`: ambassadors.** Written instructions (goals, concessions, red lines). The ambassador negotiates locally, and treaties take effect at each system when the news arrives there.
 8. **`economy/`: resources and trade.** A rich resource model per body. Habitable and terraformed worlds are the main source of food and population. Interstellar trade is slow, expensive cargo hauling, worth it only for rare goods.
 9. **`events/`: special events.** Wormholes (ships pass instantly, messages do not, so couriers become a faster-than-light channel), alien relics and technology, unique weapons, ansibles.
@@ -211,9 +233,12 @@ export default {
 
 - Orders are general directives, grouped by category, carried out by governors.
 - Colonies drift and can secede; the player can influence them.
-- Ships use 1–3 g constant acceleration to about 0.6 c. They are visible when braking, or to sensor nets.
-- Messages go only between systems. A destroyed relay stops sending but not receiving.
+- Ships use constant acceleration: 0.1 g at the start, higher with research, with wear above 1 g. Cruise speed runs from 0.1 c up to 0.6 c with research. Ships are visible when braking, or to sensor nets.
+- Messages go only between systems. Relay range starts at about 20 ly and grows with technology; relay chains forward messages further. A destroyed relay stops sending but not receiving.
 - No false reports.
-- Millennia-scale game with a slow, *Master of Orion*-like pace. Score is the Legacy until dissolution, with no victory points.
+- Millennia-scale game with a slow, *Master of Orion*-like pace in continuous time, with pause and speed-up.
+- Losing the capital weakens the empire and triggers rebel factions. The game ends when no system remains. Score is the Legacy, with no victory points.
+- Map: 50 ly around Sol to start.
+- Opponents: human polities at the start, aliens later.
 - Real stars from HYG, with attribution.
 - Factions named A, B, C for now.
