@@ -2,7 +2,7 @@
 
 Implementation is step by step.
 
-**Status:** M0 and M1 done. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
+**Status:** M0–M2 done. Next: M3, the information layer. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
 
 ## Target directory layout
 
@@ -50,6 +50,7 @@ star-empire/
 - Procedural per-system placeholders seeded by star ID: habitability, resource richness.
 - 3D galaxy view: vector star points by spectral class, labels, reference plane, drop lines, orbit camera, selection.
 - Measuring tool: distance, light delay, and trip time for the current drive technology.
+- *Done:* 846 systems (982 stars) within 50 ly, galactic coordinates, placeholder traits, relativistic flight model (`src/fleet/flight.js`) and drive tiers (`src/data/drives.json`).
 
 ### M3: Information layer (`info/`)
 - Relay stations per system (send and forward only while intact; receive always). Relay range from technology (20 ly at the start). Messages from system to system at c, routed along relay chains by shortest known path. A mailbox per system.

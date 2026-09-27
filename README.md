@@ -8,6 +8,9 @@ Browser game in plain JavaScript (Vite + Three.js), no server.
 
 - [Design and architecture](docs/DESIGN.md)
 - [Implementation roadmap](docs/ROADMAP.md)
+- [Game data and licences](src/data/README.md)
+
+Current state (M2): a 3D map of the real stars within 50 light-years of Sol, with game time, save/load, and a measuring tool for distance, light delay and trip times.
 
 ## Development
 
@@ -19,6 +22,8 @@ npm run dev        # dev server with hot reload
 npm run check      # lint + typecheck + tests
 npm run build      # static build in dist/
 ```
+
+`npm run catalog` rebuilds the star catalogue from HYG (add `-- --radius 80` for a larger map; behind a proxy set `NODE_USE_ENV_PROXY=1`).
 
 Every push to `main` runs the checks and deploys the build to GitHub Pages (`.github/workflows/pages.yml`).
 

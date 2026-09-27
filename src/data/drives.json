@@ -1,0 +1,10 @@
+{
+  "tiers": [
+    { "id": "fusion-1", "name": "Early fusion torch", "accelG": 0.1, "cruise": 0.1 },
+    { "id": "fusion-2", "name": "Advanced fusion torch", "accelG": 0.3, "cruise": 0.3 },
+    { "id": "antimatter-1", "name": "Antimatter drive", "accelG": 1, "cruise": 0.6 },
+    { "id": "antimatter-hard", "name": "Antimatter drive, hard burn", "accelG": 3, "cruise": 0.6 }
+  ],
+  "start": "fusion-1",
+  "wearAboveG": 1
+}

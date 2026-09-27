@@ -25,6 +25,7 @@ export function createReferencePlane({ radius, step = 10, spokes = 12 }) {
     el.className = 'ring-label';
     el.textContent = `${r} ly`;
     const label = new CSS2DObject(el);
+    label.center.set(0, 1);
     label.position.set(r, 0, 0);
     group.add(label);
   }
