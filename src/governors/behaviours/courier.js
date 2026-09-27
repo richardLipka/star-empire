@@ -1,6 +1,7 @@
 // @ts-check
 import { createFleet, launchFleet, disbandFleet } from '../../fleet/module.js';
-import { START_DRIVE } from '../../fleet/drives.js';
+import { driveFor } from '../../fleet/drives.js';
+import { empireState } from '../../empire/module.js';
 
 /**
  * logistics.courier: every N years a courier takes this system's news and
@@ -18,7 +19,7 @@ export default {
     if (ctx.now < due || d.params.destination === book.system) return null;
     book.memory.courierDue[d.id] = ctx.now + d.params.every;
     const f = createFleet(world, ctx, {
-      empire: book.empire, at: book.system, drive: START_DRIVE, courier: true, role: 'courier',
+      empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), courier: true, role: 'courier',
       mission: { kind: 'courier', target: d.params.destination, home: book.system, returning: false, directive: d.id },
     });
     launchFleet(world, ctx, { fleet: f.id, to: d.params.destination });

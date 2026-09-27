@@ -6,6 +6,7 @@ import { ALL_DIRECTIVES, CATEGORIES, COMMON_PARAMS } from '../src/governors/cata
 import { DRIVE_TIERS } from '../src/fleet/drives.js';
 import { STATUSES } from '../src/perspective/starStatus.js';
 import { SPECTRAL_CLASSES } from '../src/galaxy/spectral.js';
+import { AREAS, TECHS, TARGETS, CONDITIONS } from '../src/research/catalog.js';
 import { sandbox, sys } from './helpers.js';
 import { knowledgeOf } from '../src/info/module.js';
 import { sendNote } from '../src/info/orders.js';
@@ -77,6 +78,15 @@ describe('everything the game shows has a text', () => {
     for (const v of ['capital', 'relay', 'courier', 'ansible', 'truth']) need(`intel.via.${v}`);
   });
 
+  it('research: every technology, area, effect target, module and condition', () => {
+    for (const a of AREAS) { need(`tech.area.${a.id}.name`); need(`tech.area.${a.id}.desc`); need(`option.field.${a.id}`); }
+    for (const x of TECHS) { need(`tech.${x.id}.name`); need(`tech.${x.id}.desc`); }
+    for (const x of TARGETS) { need(`research.target.${x.id}`); need(`research.module.${x.module}`); }
+    for (const c of CONDITIONS) need(`research.condition.${c}`);
+    for (const s of ['known', 'reported', 'available', 'needsCondition', 'blocked', 'locked']) need(`research.state.${s}`);
+    for (const h of ['research', 'purchase', 'reverse', 'espionage']) need(`research.via.${h}`);
+  });
+
   it('every error the simulation can raise', () => {
     const files = walk('src').filter((f) => f.endsWith('.js'));
     const keys = new Set(files.flatMap((f) => [...readFileSync(f, 'utf8').matchAll(/new GameError\('(\w+)'/g)].map((m) => m[1])));
@@ -129,3 +139,17 @@ function walk(dir) {
     return statSync(p).isDirectory() ? walk(p) : [p];
   });
 }
+
+describe('research dispatch wording', () => {
+  it('names the technology and counts closed-off applications with plurals', async () => {
+    const { describeDispatch } = await import('../src/ui/text/describe.js');
+    const name = (id) => (id === 'sol' ? 'Sol' : id);
+    /** @returns {any} */
+    const d = (blocked) => ({ id: 'x', key: 'research.breakthrough', params: { tech: 'eng.torch-2', system: 'sol', blocked, how: 'research' }, validAt: 0, receivedAt: 0, via: 'capital', hops: 0 });
+    expect(describeDispatch(d(0), name)).toBe('Breakthrough at Sol: Advanced fusion torch');
+    expect(describeDispatch(d(1), name)).toBe('Breakthrough at Sol: Advanced fusion torch (1 rival application closed off)');
+    expect(describeDispatch(d(2), name)).toBe('Breakthrough at Sol: Advanced fusion torch (2 rival applications closed off)');
+    setLocale('cs');
+    expect(describeDispatch(d(2), name)).toBe('Průlom u Sol: Pokročilý fúzní pohon (uzavřeny 2 konkurenční aplikace)');
+  });
+});

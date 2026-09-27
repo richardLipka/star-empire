@@ -1,0 +1,120 @@
+{
+  "area": "informatics",
+  "techs": [
+    {
+      "id": "inf.computation",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "inf.archives",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "research.rate",
+          "op": "mul",
+          "value": 1.1
+        }
+      ]
+    },
+    {
+      "id": "inf.pattern",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "inf.computation"
+      ],
+      "effects": []
+    },
+    {
+      "id": "inf.beta",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "inf.pattern"
+      ],
+      "effects": []
+    },
+    {
+      "id": "inf.crypto",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "espionage.cryptanalysis"
+        }
+      ]
+    },
+    {
+      "id": "inf.governors",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "inf.beta",
+        "soc.legitimacy"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "governor.simulated"
+        }
+      ]
+    },
+    {
+      "id": "inf.network",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "inf.beta",
+        "com.neutrino"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "research.rate",
+          "op": "mul",
+          "value": 1.15
+        }
+      ]
+    },
+    {
+      "id": "inf.alpha",
+      "kind": "theory",
+      "tier": 5,
+      "requires": [
+        "inf.beta",
+        "soc.neural"
+      ],
+      "effects": []
+    },
+    {
+      "id": "inf.oracle",
+      "kind": "application",
+      "tier": 6,
+      "requires": [
+        "inf.alpha",
+        "xen.machine-signatures"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "research.rate",
+          "op": "mul",
+          "value": 1.25
+        }
+      ]
+    }
+  ]
+}

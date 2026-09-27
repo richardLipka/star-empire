@@ -1,0 +1,127 @@
+{
+  "area": "sociology",
+  "techs": [
+    {
+      "id": "soc.administration",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "soc.biostasis",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": []
+    },
+    {
+      "id": "soc.legitimacy",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "soc.administration"
+      ],
+      "effects": []
+    },
+    {
+      "id": "soc.cryo",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "soc.biostasis"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.sleepers"
+        }
+      ]
+    },
+    {
+      "id": "soc.missions",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "soc.legitimacy"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "loyalty.missions"
+        }
+      ]
+    },
+    {
+      "id": "soc.charters",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.legitimacy",
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "loyalty.charters"
+        }
+      ]
+    },
+    {
+      "id": "soc.longevity",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.biostasis",
+        "pla.survey"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "population.longevity"
+        }
+      ]
+    },
+    {
+      "id": "soc.neural",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "soc.biostasis",
+        "inf.pattern"
+      ],
+      "effects": []
+    },
+    {
+      "id": "soc.consensus",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "soc.neural",
+        "com.neutrino"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "loyalty.consensus"
+        }
+      ]
+    },
+    {
+      "id": "soc.plague",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "soc.neural",
+        "xen.nanotech"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "population.plagueResistance"
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import { mountTimeControls } from './ui/timeControls.js';
 import { mountSavePanel, RESUME_KEY } from './ui/savePanel.js';
 import { mountGalaxyScreen } from './ui/galaxyScreen.js';
 import { createToast } from './ui/toast.js';
+import { mountResearchScreen } from './ui/research/researchScreen.js';
 import { describePause } from './ui/text/describe.js';
 import { serializeWorld, deserializeWorld } from './sim/save.js';
 
@@ -33,6 +34,7 @@ mountLanguageSelect(shell.toolsSlot, {
   },
 });
 const galaxy = mountGalaxyScreen({ viewport, viewportEl: shell.viewport, side: shell.side, toolsSlot: shell.toolsSlot, catalog: DATA.catalog, game, toast });
+const research = mountResearchScreen({ root: document.body, toolsSlot: shell.toolsSlot, game, empire: 'A', toast });
 
 game.bus.on('clock/changed', () => time.render());
 game.bus.on('clock/autoPaused', ({ reason }) => toast(describePause(reason, name)));
@@ -41,11 +43,13 @@ game.bus.on('game/loaded', () => {
   galaxy.refresh();
 });
 game.bus.on('game/changed', () => galaxy.changed());
+game.bus.on('game/loaded', () => research.refresh());
 
 let sinceUi = 0;
 viewport.onFrame((dt) => {
   game.clock.frame(dt);
   galaxy.frame(dt);
+  research.frame(dt);
   sinceUi += dt;
   if (sinceUi > 0.1) {
     sinceUi = 0;

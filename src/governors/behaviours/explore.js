@@ -1,6 +1,7 @@
 // @ts-check
 import { createFleet, launchFleet } from '../../fleet/module.js';
-import { START_DRIVE } from '../../fleet/drives.js';
+import { driveFor } from '../../fleet/drives.js';
+import { empireState } from '../../empire/module.js';
 import { candidates, isExplored } from '../targets.js';
 
 /**
@@ -18,7 +19,7 @@ export default {
     if (!next) return null;
     return () => {
       const f = createFleet(world, ctx, {
-        empire: book.empire, at: book.system, drive: START_DRIVE, transmitter: true, role: 'scout',
+        empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), transmitter: true, role: 'scout',
         mission: { kind: 'explore', target: next, jumpsLeft: d.params.jumps - 1, maxRange: d.params.maxRange, toward: d.params.toward, directive: d.id },
       });
       launchFleet(world, ctx, { fleet: f.id, to: next });

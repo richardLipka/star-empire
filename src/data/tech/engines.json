@@ -1,0 +1,148 @@
+{
+  "area": "engines",
+  "techs": [
+    {
+      "id": "eng.plasma",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "eng.torch",
+      "kind": "application",
+      "tier": 1,
+      "requires": [
+        "eng.plasma"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "drive.fusion-1"
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "eng.nozzle",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "eng.plasma"
+      ],
+      "effects": []
+    },
+    {
+      "id": "eng.torch-2",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "eng.nozzle",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "drive.fusion-2"
+        }
+      ]
+    },
+    {
+      "id": "eng.scoop",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "eng.nozzle",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.scoop"
+        }
+      ]
+    },
+    {
+      "id": "eng.sail",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "nrg.optics",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.sail"
+        }
+      ]
+    },
+    {
+      "id": "eng.antimatter",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "eng.nozzle",
+        "nrg.particle"
+      ],
+      "effects": []
+    },
+    {
+      "id": "eng.am-drive",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "eng.antimatter",
+        "pla.containment"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "drive.antimatter-1"
+        }
+      ]
+    },
+    {
+      "id": "eng.inertial",
+      "kind": "theory",
+      "tier": 4,
+      "requires": [
+        "eng.antimatter",
+        "nrg.fields"
+      ],
+      "effects": []
+    },
+    {
+      "id": "eng.hardburn",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "eng.am-drive",
+        "eng.inertial",
+        "soc.cryo"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "drive.antimatter-hard"
+        }
+      ]
+    },
+    {
+      "id": "eng.near-c",
+      "kind": "theory",
+      "tier": 6,
+      "requires": [
+        "eng.inertial",
+        "xen.relic-physics"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.nearLight"
+        }
+      ]
+    }
+  ]
+}

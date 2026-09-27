@@ -3,6 +3,7 @@ import { createEmpire, establishPresence, empireState, markExplored } from '../e
 import { knowledgeOf, truthNetwork, systemSnapshot } from '../info/module.js';
 import { recordEntry, recordExplored } from '../info/knowledge.js';
 import { distance } from '../core/vec3.js';
+import { imposeDirective } from '../governors/module.js';
 
 /**
  * Starting situations. A scenario runs once on a new game, after every
@@ -57,8 +58,12 @@ export function sandboxScenario(world, ctx) {
       recordEntry(k.systems, system, { validAt: -age, receivedAt: route ? 0 : -1, via: route ? 'relay' : 'courier', hops: route ? route.hops.length : 0, data: systemSnapshot(world, system) });
       recordExplored(k, system, -age);
     }
+    imposeDirective(world, ctx, { system: emp.capital, type: 'research.focus', params: { field: SANDBOX_RESEARCH[/** @type {'A' | 'B'} */ (empire)] } });
   }
 }
+
+/** Research focus of the capitals at the start (the player changes it from the research screen). */
+export const SANDBOX_RESEARCH = { A: 'communication', B: 'engines' };
 
 sandboxScenario.warmupYears = 60;
 

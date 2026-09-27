@@ -58,8 +58,11 @@ describe('save migration', () => {
     for (const k of Object.values(w.state.info.knowledge)) delete k.explored;
     w.state.info.pauseOnDispatch = false;
     w.queue.heap = w.queue.heap.filter((e) => !e.type.startsWith('detection/') && !e.type.startsWith('governors/'));
-    w.modules = w.modules.filter((m) => m !== 'governors');
+    w.modules = w.modules.filter((m) => m !== 'governors' && m !== 'research');
     delete w.state.governors;
+    delete w.state.research;
+    for (const p of Object.values(w.state.empire.presence)) delete p.capabilities;
+    for (const f of Object.values(w.state.fleet.fleets)) { delete f.blueprints; delete f.plumeVisibility; }
     for (const p of Object.values(w.state.empire.presence)) delete p.reporting;
     for (const k of Object.values(w.state.info.knowledge)) k.dispatches = k.dispatches.map((d) => ({ id: d.id, text: 'old', validAt: d.validAt, receivedAt: d.receivedAt }));
     const loaded = deserializeWorld(JSON.stringify(v1));

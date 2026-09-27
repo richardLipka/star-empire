@@ -1,0 +1,412 @@
+{
+  "area": {
+    "engines": {
+      "name": "Pohony",
+      "desc": "Pohony, reakční hmota a meze zrychlení."
+    },
+    "communication": {
+      "name": "Komunikace",
+      "desc": "Relé, senzory a dosah hlasu impéria."
+    },
+    "informatics": {
+      "name": "Informatika",
+      "desc": "Výpočty, simulace a strojové mysli."
+    },
+    "planetary": {
+      "name": "Planetární vědy",
+      "desc": "Světy: průzkum, život na nich, jejich přetváření."
+    },
+    "sociology": {
+      "name": "Sociologie",
+      "desc": "Lidé napříč světelnými roky: medicína, právo a loajalita."
+    },
+    "projectile": {
+      "name": "Projektilové zbraně",
+      "desc": "Tvrdě vržená hmota: od cívkových děl po relativistické střely."
+    },
+    "energy": {
+      "name": "Energetické zbraně",
+      "desc": "Lasery, svazky a pole, která je zastaví."
+    },
+    "missiles": {
+      "name": "Střely a drony",
+      "desc": "Munice, která myslí, rojí se a množí."
+    },
+    "wormholes": {
+      "name": "Využití červích děr",
+      "desc": "Hledání, udržování a jednou i tvorba červích děr."
+    },
+    "exotic": {
+      "name": "Exotické a mimozemské",
+      "desc": "Relikty, mimozemské mysli a fyzika, kterou nás nikdo neučil."
+    }
+  },
+  "eng": {
+    "plasma": {
+      "name": "Fyzika udržení plazmatu",
+      "desc": "Fyzika udržení fúzního plazmatu v magnetických polích."
+    },
+    "torch": {
+      "name": "Raný fúzní pohon",
+      "desc": "Pomalý, spolehlivý fúzní pohon: 0,1 g, cestovní rychlost desetina světla."
+    },
+    "nozzle": {
+      "name": "Teorie magnetické trysky",
+      "desc": "Tvarování výtoku poli místo stěn, které by se roztavily."
+    },
+    "torch-2": {
+      "name": "Pokročilý fúzní pohon",
+      "desc": "Žhavější a tvrdší zážehy: 0,3 g až 0,3 c."
+    },
+    "scoop": {
+      "name": "Mezihvězdný náporový sběrač",
+      "desc": "Sbírání vodíku z řídkého prostředí mezi hvězdami."
+    },
+    "sail": {
+      "name": "Laserem hnaná plachta",
+      "desc": "Světelné plachty poháněné zářiči z domova; bez paliva na palubě."
+    },
+    "antimatter": {
+      "name": "Výroba antihmoty",
+      "desc": "Výroba a skladování antihmoty v použitelném množství."
+    },
+    "am-drive": {
+      "name": "Antihmotový pohon",
+      "desc": "Tah jedné gravitace, cestovní rychlost šest desetin světla."
+    },
+    "inertial": {
+      "name": "Teorie inerciálních soustav",
+      "desc": "Náznaky, že i setrvačnost by se dala vyjednat."
+    },
+    "hardburn": {
+      "name": "Protokoly vysokého přetížení",
+      "desc": "Posádky v nádržích, vyztužené trupy: tři gravitace při krátkých zážezích."
+    },
+    "near-c": {
+      "name": "Kinematika blízko rychlosti světla",
+      "desc": "Co musí trup vydržet, aby žil na hranici rychlosti světla."
+    }
+  },
+  "com": {
+    "signalling": {
+      "name": "Koherentní signalizace",
+      "desc": "Úzké laserové svazky čitelné i na světelné roky."
+    },
+    "relay": {
+      "name": "Stanice relé",
+      "desc": "Páteř impéria: dosah 20 světelných let."
+    },
+    "optics": {
+      "name": "Adaptivní optika",
+      "desc": "Průběžná korekce svazků a zrcadel."
+    },
+    "long-relay": {
+      "name": "Relé s dlouhou základnou",
+      "desc": "Větší apertury: dosah relé +5 sv. r."
+    },
+    "interferometry": {
+      "name": "Interferometrie v hlubokém vesmíru",
+      "desc": "Soustavy, které zachytí vlečky i pod širším úhlem."
+    },
+    "pickets": {
+      "name": "Senzorové hlídky",
+      "desc": "Pozorovací drony rozmístěné kolem systému: dosah zachycení vleček +5 sv. r."
+    },
+    "neutrino": {
+      "name": "Teorie neutrinové signalizace",
+      "desc": "Zprávy, které projdou planetami i prachem."
+    },
+    "neutrino-relay": {
+      "name": "Neutrinové relé",
+      "desc": "Dosah relé +10 sv. r."
+    },
+    "entangle": {
+      "name": "Teorie provázaných kanálů",
+      "desc": "Zakázaná myšlenka: korelace bez zpoždění."
+    },
+    "ansible": {
+      "name": "Pár ansiblů",
+      "desc": "Dvě zařízení, která spolu mluví okamžitě, na jakoukoli vzdálenost."
+    }
+  },
+  "inf": {
+    "computation": {
+      "name": "Distribuované výpočty",
+      "desc": "Počítače rozprostřené po systému sdílejí práci."
+    },
+    "archives": {
+      "name": "Výzkumné archivy",
+      "desc": "Nic naučeného se neztratí: výzkum +10 %."
+    },
+    "pattern": {
+      "name": "Rozpoznávání vzorů",
+      "desc": "Hledání signálu v oceánech šumu."
+    },
+    "beta": {
+      "name": "Simulace úrovně beta",
+      "desc": "Přesvědčivé simulace lidí, bez člověka uvnitř."
+    },
+    "crypto": {
+      "name": "Kryptoanalýza",
+      "desc": "Čtení provozu cizích impérií."
+    },
+    "governors": {
+      "name": "Simulovaní guvernéři",
+      "desc": "Zástupci úrovně beta vládnou tam, kam žádný člověk nepůjde."
+    },
+    "network": {
+      "name": "Síťový výzkum",
+      "desc": "Ústavy pracují jako jedna mysl: výzkum +15 %."
+    },
+    "alpha": {
+      "name": "Nahrávání úrovně alfa",
+      "desc": "Člověk zkopírovaný do stroje. Aspoň to tvrdí."
+    },
+    "oracle": {
+      "name": "Strojová orákula",
+      "desc": "Mysli, které odpovídají na otázky, jež nikdo nepoložil: výzkum +25 %."
+    }
+  },
+  "pla": {
+    "survey": {
+      "name": "Věda o průzkumu planet",
+      "desc": "Čtení světů z oběžné dráhy."
+    },
+    "materials": {
+      "name": "Pokročilé materiály",
+      "desc": "Pevnější, lehčí a podivnější hmota."
+    },
+    "habitats": {
+      "name": "Orbitální habitaty",
+      "desc": "Rotující města tam, kde nás žádný svět nechce."
+    },
+    "climate": {
+      "name": "Dynamika klimatu",
+      "desc": "Jak se atmosféry vyrovnávají a jak selhávají."
+    },
+    "containment": {
+      "name": "Magnetické zadržení",
+      "desc": "Bezpečné nádoby na plazma a antihmotu."
+    },
+    "giants": {
+      "name": "Těžba plynných obrů",
+      "desc": "Ponory do obrů pro palivo a těkavé látky."
+    },
+    "processors": {
+      "name": "Atmosférické procesory",
+      "desc": "Stroje, které pomalu přepisují vzduch světa."
+    },
+    "biosphere": {
+      "name": "Navržené biosféry",
+      "desc": "Navrhování živých soustav, které udrží planetu pohromadě."
+    },
+    "terraform": {
+      "name": "Plná terraformace",
+      "desc": "Staletí práce na nové Zemi."
+    }
+  },
+  "soc": {
+    "administration": {
+      "name": "Mezihvězdná správa",
+      "desc": "Vládnout lidem, od kterých se včas nic nedozvíte."
+    },
+    "biostasis": {
+      "name": "Medicína biostáze",
+      "desc": "Zpomalit tělo téměř do zastavení a znovu ho nastartovat."
+    },
+    "legitimacy": {
+      "name": "Teorie vzdálené legitimity",
+      "desc": "Proč kolonie vzdálené desítky let stále poslouchají a kdy přestanou."
+    },
+    "cryo": {
+      "name": "Kohorty v kryospánku",
+      "desc": "Posádky a kolonisté prospí cestu."
+    },
+    "missions": {
+      "name": "Kulturní mise",
+      "desc": "Písně, archivy a vyslanci připomínají koloniím, kým jsou."
+    },
+    "charters": {
+      "name": "Koloniální listiny",
+      "desc": "Psané svobody zpomalují odklon k nezávislosti."
+    },
+    "longevity": {
+      "name": "Léčba dlouhověkosti",
+      "desc": "Životy měřené staletími; vzpomínky, které přežijí impéria."
+    },
+    "neural": {
+      "name": "Neurální rozhraní",
+      "desc": "Stroje v lebce a co udělají s já."
+    },
+    "consensus": {
+      "name": "Sítě konsenzu",
+      "desc": "Mysli spojené v jedinou vůli. Někdo tomu říká úl."
+    },
+    "plague": {
+      "name": "Obrana proti nanomoru",
+      "desc": "Přežít hnilobu, která žere stroje v těle i mimo ně."
+    }
+  },
+  "kin": {
+    "ballistics": {
+      "name": "Balistika hmotnostních vrhačů",
+      "desc": "Vrhat hmotu rychle a přímo."
+    },
+    "coilgun": {
+      "name": "Cívkové dělo",
+      "desc": "Magnetické cívky metají projektily rychlostí kilometrů za sekundu."
+    },
+    "hypervelocity": {
+      "name": "Fyzika hyperrychlých dopadů",
+      "desc": "Když rychlost dopadu převýší rychlost zvuku v cíli."
+    },
+    "railgun": {
+      "name": "Baterie kolejnicových děl",
+      "desc": "Těžší, rychlejší a hladovější děla."
+    },
+    "flechette": {
+      "name": "Oblaka šipek",
+      "desc": "Nespočet jehel v dráze míjející flotily."
+    },
+    "debris": {
+      "name": "Clony z trosek",
+      "desc": "Obětovaná oblaka zastaví, čemu nelze uhnout."
+    },
+    "rkv": {
+      "name": "Relativistické střely",
+      "desc": "Obyčejná hmota za zlomek rychlosti světla: nic ji nezastaví."
+    },
+    "vault": {
+      "name": "Trezorová výzbroj",
+      "desc": "Zbraně zapečetěné po staletí, určené pro světy, ne lodě."
+    }
+  },
+  "nrg": {
+    "optics": {
+      "name": "Vysokoenergetická optika",
+      "desc": "Zrcadla a čočky, které přežijí vlastní světlo."
+    },
+    "fields": {
+      "name": "Teorie polí",
+      "desc": "Elektromagnetická pole jako nástroje i zbroj."
+    },
+    "laser": {
+      "name": "Bojové lasery",
+      "desc": "Světlo, které pálí na sto tisíc kilometrů."
+    },
+    "particle": {
+      "name": "Fyzika částicových svazků",
+      "desc": "Urychlit samotnou hmotu na zbraň."
+    },
+    "beam": {
+      "name": "Projektor částicového svazku",
+      "desc": "Svazky, které se provrtají pancířem."
+    },
+    "shielding": {
+      "name": "Plazmové štíty",
+      "desc": "Horká pole rozptylují přicházející energii."
+    },
+    "xray": {
+      "name": "Rentgenové lasery",
+      "desc": "Buzení laserů jaderným ohněm."
+    },
+    "graser": {
+      "name": "Gama laser",
+      "desc": "Nejtvrdší světlo: krátký dosah, žádná obrana."
+    }
+  },
+  "msl": {
+    "guidance": {
+      "name": "Naváděcí systémy",
+      "desc": "Řízení munice na vzdálenost světelných sekund."
+    },
+    "missile": {
+      "name": "Fúzní střely",
+      "desc": "Malé zážehové motory s hlavicemi."
+    },
+    "autonomy": {
+      "name": "Autonomní zaměřování",
+      "desc": "Munice, která se rozhoduje sama, vteřiny od nepřítele."
+    },
+    "decoys": {
+      "name": "Klamné drony",
+      "desc": "Falešné vlečky a falešné trupy."
+    },
+    "swarm": {
+      "name": "Roje dronů",
+      "desc": "Stovky malých myslí lovících spolu."
+    },
+    "am-warhead": {
+      "name": "Antihmotové hlavice",
+      "desc": "Stačí gram."
+    },
+    "replication": {
+      "name": "Teorie sebereplikace",
+      "desc": "Stroje, které si z trosek staví vlastní potomky."
+    },
+    "replicators": {
+      "name": "Sebereplikující drony",
+      "desc": "Zbraň, která roste. A možná nepřestane."
+    }
+  },
+  "wor": {
+    "metric": {
+      "name": "Teorie exotické metriky",
+      "desc": "Tvary časoprostoru, které dovolují zkratky."
+    },
+    "detection": {
+      "name": "Detekce červích děr",
+      "desc": "Hledání hrdel podle toho, jak ohýbají světlo hvězd."
+    },
+    "exotic": {
+      "name": "Syntéza exotické hmoty",
+      "desc": "Záporná hustota energie, pár atomů po pár atomech."
+    },
+    "couriers": {
+      "name": "Kurýrní trasy hrdly",
+      "desc": "Automatičtí kurýři vozí zprávy známými hrdly."
+    },
+    "stabilization": {
+      "name": "Stabilizace hrdla",
+      "desc": "Udržet červí díru otevřenou i při hustém provozu."
+    },
+    "transit": {
+      "name": "Inženýrství průchodných hrdel",
+      "desc": "Teorie, jak červí díry tvořit, nejen používat."
+    },
+    "portable": {
+      "name": "Přenosná ústí",
+      "desc": "Odtáhnout jeden konec červí díry k nové hvězdě."
+    }
+  },
+  "xen": {
+    "xenoarch": {
+      "name": "Xenoarcheologie",
+      "desc": "Čtení trosek starších než náš druh."
+    },
+    "relic-salvage": {
+      "name": "Záchrana reliktů",
+      "desc": "Rozebírat mimozemské stroje, aniž by se probudily."
+    },
+    "machine-signatures": {
+      "name": "Signatury spících strojů",
+      "desc": "Slabé pravidelnosti u starých hvězd: něco hlídá hluk."
+    },
+    "ocean-contact": {
+      "name": "Kontakt s oceánskou myslí",
+      "desc": "Vplout do živého oceánu, který si pamatuje každého návštěvníka."
+    },
+    "relic-physics": {
+      "name": "Fyzika reliktů",
+      "desc": "Přírodní zákony, jak je používali stavitelé."
+    },
+    "silence": {
+      "name": "Kázeň signatur",
+      "desc": "Zažehovat potichu, aby nás neslyšelo to, co naslouchá."
+    },
+    "nanotech": {
+      "name": "Mimozemská nanotechnologie",
+      "desc": "Stroje menší než viry a starší než slunce."
+    }
+  }
+}

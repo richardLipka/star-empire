@@ -8,9 +8,10 @@ Browser game in plain JavaScript (Vite + Three.js), no server.
 
 - [Design and architecture](docs/DESIGN.md)
 - [Implementation roadmap](docs/ROADMAP.md)
+- [Research module](docs/RESEARCH.md)
 - [Game data and licences](src/data/README.md)
 
-Current state (M4): a 3D map of the real stars within 50 light-years of Sol. Empire A's relay network carries reports and orders at light speed, hop by hop. The player gives **general directives to governors** (explore, settle, readiness, courier runs, reporting, relay maintenance and more, in eight categories). Each directive reaches its system at light speed, and its status (in transit, awaiting report, in effect…) is known only from the reports that come back. Scouts survey, settlers found outposts, and the empire grows on its own. The map shows what the capital knows and how old it is, coloured by spectral class, status or information age. Drive plumes are detected only when the exhaust points at an observer. The interface is available in **English and Czech**, and all texts live in `src/i18n/locales/`.
+Current state (M4 + M12): a 3D map of the real stars within 50 light-years of Sol. Empire A's relay network carries reports and orders at light speed, hop by hop. The player gives **general directives to governors** (explore, settle, readiness, courier runs, reporting, relay maintenance and more, in eight categories). Each directive reaches its system at light speed, and its status (in transit, awaiting report, in effect…) is known only from the reports that come back. Scouts survey, settlers found outposts, and the empire grows on its own. **Research** spans ten areas and 87 technologies. Each breakthrough reveals one technology and closes off rival applications, blueprints spread at light speed, and the research screen shows the whole technology web. The map shows what the capital knows and how old it is, coloured by spectral class, status or information age. Drive plumes are detected only when the exhaust points at an observer. The interface is available in **English and Czech**, and all texts live in `src/i18n/locales/`.
 
 ## Development
 

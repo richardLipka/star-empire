@@ -1,0 +1,139 @@
+{
+  "area": "communication",
+  "techs": [
+    {
+      "id": "com.signalling",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "com.relay",
+      "kind": "application",
+      "tier": 1,
+      "requires": [
+        "com.signalling"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "relay.station"
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "com.optics",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "com.signalling"
+      ],
+      "effects": []
+    },
+    {
+      "id": "com.long-relay",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "com.optics"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "relay.range",
+          "op": "add",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "com.interferometry",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "com.optics",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "sensor.angle",
+          "op": "add",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": "com.pickets",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "com.optics",
+        "msl.autonomy"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "sensor.range",
+          "op": "add",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "com.neutrino",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "com.optics",
+        "nrg.particle"
+      ],
+      "effects": []
+    },
+    {
+      "id": "com.neutrino-relay",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "com.neutrino",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "relay.range",
+          "op": "add",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": "com.entangle",
+      "kind": "theory",
+      "tier": 5,
+      "requires": [
+        "com.neutrino",
+        "xen.relic-physics"
+      ],
+      "effects": []
+    },
+    {
+      "id": "com.ansible",
+      "kind": "application",
+      "tier": 6,
+      "requires": [
+        "com.entangle",
+        "wor.metric"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ansible.build"
+        }
+      ]
+    }
+  ]
+}

@@ -54,7 +54,14 @@ const SYSTEM_PARAMS = ['system', 'near', 'observer', 'from', 'to'];
 export function describeDispatch(d, name) {
   /** @type {Record<string, string | number>} */
   const params = {};
-  for (const [k, v] of Object.entries(d.params ?? {})) params[k] = SYSTEM_PARAMS.includes(k) && typeof v === 'string' && v ? name(v) : v;
+  for (const [k, v] of Object.entries(d.params ?? {})) {
+    if (SYSTEM_PARAMS.includes(k) && typeof v === 'string' && v) params[k] = name(v);
+    else if (k === 'tech') params[k] = t(`tech.${v}.name`);
+    else if (k === 'how') params[k] = t(`research.via.${v}`);
+    else params[k] = v;
+  }
+  // Breakthroughs that closed off rival applications say how many (with plural forms).
+  if (d.key === 'research.breakthrough' && Number(d.params.blocked) > 0) return t('dispatch.research.breakthroughClosed', { ...params, count: Number(d.params.blocked) });
   return t(`dispatch.${d.key}`, params);
 }
 

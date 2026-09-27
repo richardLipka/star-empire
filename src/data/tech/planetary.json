@@ -1,0 +1,113 @@
+{
+  "area": "planetary",
+  "techs": [
+    {
+      "id": "pla.survey",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "pla.materials",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": []
+    },
+    {
+      "id": "pla.habitats",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "planet.habitats"
+        }
+      ]
+    },
+    {
+      "id": "pla.climate",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "pla.survey"
+      ],
+      "effects": []
+    },
+    {
+      "id": "pla.containment",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.materials",
+        "nrg.fields"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.containment"
+        }
+      ]
+    },
+    {
+      "id": "pla.giants",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.materials",
+        "eng.nozzle"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "planet.gasMining"
+        }
+      ]
+    },
+    {
+      "id": "pla.processors",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.climate",
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "planet.processors"
+        }
+      ]
+    },
+    {
+      "id": "pla.biosphere",
+      "kind": "theory",
+      "tier": 4,
+      "requires": [
+        "pla.climate",
+        "soc.biostasis"
+      ],
+      "effects": []
+    },
+    {
+      "id": "pla.terraform",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "pla.biosphere",
+        "pla.processors"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "planet.terraform"
+        }
+      ]
+    }
+  ]
+}

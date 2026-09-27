@@ -1,0 +1,97 @@
+{
+  "area": "exotic",
+  "techs": [
+    {
+      "id": "xen.xenoarch",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": []
+    },
+    {
+      "id": "xen.relic-salvage",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "xen.xenoarch"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "relic.salvage"
+        }
+      ],
+      "conditions": [
+        "relic"
+      ]
+    },
+    {
+      "id": "xen.machine-signatures",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "xen.xenoarch",
+        "inf.pattern"
+      ],
+      "effects": []
+    },
+    {
+      "id": "xen.ocean-contact",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "xen.xenoarch",
+        "soc.neural"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "aliens.oceanContact"
+        }
+      ],
+      "conditions": [
+        "aliens"
+      ]
+    },
+    {
+      "id": "xen.relic-physics",
+      "kind": "theory",
+      "tier": 4,
+      "requires": [
+        "xen.xenoarch",
+        "nrg.xray"
+      ],
+      "effects": [],
+      "conditions": [
+        "relic"
+      ]
+    },
+    {
+      "id": "xen.silence",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "xen.machine-signatures",
+        "com.interferometry"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "plume.visibility",
+          "op": "mul",
+          "value": 0.7
+        }
+      ]
+    },
+    {
+      "id": "xen.nanotech",
+      "kind": "theory",
+      "tier": 5,
+      "requires": [
+        "xen.relic-physics",
+        "pla.materials"
+      ],
+      "effects": []
+    }
+  ]
+}

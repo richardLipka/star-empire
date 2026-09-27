@@ -1,0 +1,93 @@
+{
+  "area": "wormholes",
+  "techs": [
+    {
+      "id": "wor.metric",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "nrg.fields"
+      ],
+      "effects": []
+    },
+    {
+      "id": "wor.detection",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "wor.metric",
+        "com.optics"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "wormhole.detection"
+        }
+      ]
+    },
+    {
+      "id": "wor.exotic",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "wor.metric",
+        "nrg.particle"
+      ],
+      "effects": []
+    },
+    {
+      "id": "wor.couriers",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "wor.metric",
+        "msl.autonomy"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "wormhole.courierNet"
+        }
+      ]
+    },
+    {
+      "id": "wor.stabilization",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "wor.exotic"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "wormhole.stabilization"
+        }
+      ]
+    },
+    {
+      "id": "wor.transit",
+      "kind": "theory",
+      "tier": 5,
+      "requires": [
+        "wor.exotic",
+        "xen.relic-physics"
+      ],
+      "effects": []
+    },
+    {
+      "id": "wor.portable",
+      "kind": "application",
+      "tier": 6,
+      "requires": [
+        "wor.transit",
+        "wor.stabilization"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "wormhole.creation"
+        }
+      ]
+    }
+  ]
+}

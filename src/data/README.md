@@ -18,5 +18,6 @@ It is regenerated with `npm run catalog` (see `tools/build-star-catalog.js`).
 `drives.json`: drive technology tiers (acceleration and cruise speed).
 `sensors.json`: drive-plume detection range and cone.
 `directives.json`: the catalogue of orders governors understand (categories, parameters, placeholder capacities).
+`tech/`: research areas, one file of technologies per area, and the registry of effect targets and research rules (see docs/RESEARCH.md).
 
 These are game content under the same licence as the code. Their display texts live in `src/i18n/locales/`, never in the data files.

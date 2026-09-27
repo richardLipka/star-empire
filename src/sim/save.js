@@ -35,6 +35,15 @@ const migrations = {
     }
     return { ...w, version: 3 };
   },
+  /** v3 → v4: research. Existing systems start with the start technologies. */
+  3: (w) => {
+    if (!w.modules.includes('research')) {
+      w.modules.push('research');
+      w.state.research = { labs: {}, conditions: {} };
+    }
+    for (const b of Object.values(w.state.governors?.books ?? {})) /** @type {any} */ (b).settings.researchFocus ??= 'none';
+    return { ...w, version: 4 }; // research records are created lazily for existing systems
+  },
 };
 
 /**

@@ -315,7 +315,15 @@
         "acceleratingDeep": "Our fleet accelerating in deep space, seen from {observer}"
       }
     },
-    "legacy": "{text}"
+    "legacy": "{text}",
+    "research": {
+      "breakthrough": "Breakthrough at {system}: {tech}",
+      "acquired": "{tech} obtained at {system} by {how}",
+      "breakthroughClosed": {
+        "one": "Breakthrough at {system}: {tech} ({count} rival application closed off)",
+        "other": "Breakthrough at {system}: {tech} ({count} rival applications closed off)"
+      }
+    }
   },
   "sandbox": {
     "found": "Found outpost",
@@ -474,7 +482,7 @@
     "research": {
       "focus": {
         "name": "Research focus",
-        "desc": "Which field local institutes should pursue."
+        "desc": "The area this system's institutes research. One breakthrough reveals one technology and closes off up to two others."
       }
     },
     "diplomacy": {
@@ -580,11 +588,17 @@
       "full": "full programme"
     },
     "field": {
-      "drives": "drives",
-      "communication": "communication",
-      "sensors": "sensors",
-      "biology": "biology",
-      "weapons": "weapons"
+      "none": "none",
+      "engines": "Engines",
+      "communication": "Communication",
+      "informatics": "Informatics",
+      "planetary": "Planetary science",
+      "sociology": "Sociology",
+      "projectile": "Projectile weapons",
+      "energy": "Energy weapons",
+      "missiles": "Missiles and drones",
+      "wormholes": "Wormhole utilisation",
+      "exotic": "Exotic and alien"
     },
     "stance": {
       "open": "open",
@@ -594,5 +608,122 @@
     },
     "yes": "yes",
     "no": "no"
+  },
+  "research": {
+    "open": "Research",
+    "openTitle": "Technology web and research focus (R)",
+    "title": "Research",
+    "close": "Close",
+    "focusTitle": "Research focus",
+    "focusHint": "Each system researches in the area its governor was told to. Orders travel at light speed.",
+    "focusEmpire": "Whole empire",
+    "focusCapital": "Capital only",
+    "set": "Set focus",
+    "capital": "At the capital",
+    "progress": "{points} / {cost} pts",
+    "stalled": "stalled: needs prerequisites from other areas",
+    "noFocus": "no focus",
+    "focusCounts": "Systems by focus (as reported)",
+    "known": "{known} / {total}",
+    "legend": {
+      "title": "Legend",
+      "theory": "theory (abstract)",
+      "application": "application",
+      "crossArea": "prerequisite from another area"
+    },
+    "state": {
+      "known": "known at the capital",
+      "reported": "known elsewhere, blueprint on its way",
+      "available": "can be researched",
+      "needsCondition": "needs a special condition",
+      "blocked": "closed off: buy, reverse-engineer or steal",
+      "locked": "prerequisites missing"
+    },
+    "kind": {
+      "theory": "Theory",
+      "application": "Application"
+    },
+    "tier": "Tier {n}",
+    "area": "Area",
+    "requires": "Requires",
+    "leadsTo": "Leads to",
+    "none": "none",
+    "effects": "Effects",
+    "noEffects": "No direct effect: opens further research.",
+    "influences": "Influences",
+    "conditions": "Also needs",
+    "spread": "Known at {count} of {total} systems (as reported)",
+    "obtain": "How to obtain",
+    "obtainResearch": "Research in {area} at a system that knows the prerequisites; one of up to three candidates is revealed.",
+    "obtainBlocked": "Closed off for our own research. It can only be bought, reverse-engineered from a captured ship, or stolen by spies.",
+    "sandboxAcquire": "Sandbox: acquire at the capital",
+    "sandboxCondition": "Sandbox: grant condition",
+    "via": {
+      "research": "research",
+      "purchase": "purchase",
+      "reverse": "reverse engineering",
+      "espionage": "espionage"
+    },
+    "effect": {
+      "unlock": "Unlocks: {target}",
+      "add": "{target} +{value} {unit}",
+      "mul": "{target} ×{value}"
+    },
+    "unit": {
+      "ly": "ly",
+      "deg": "°",
+      "factor": ""
+    },
+    "implemented": "in the game",
+    "notYet": "arrives with {module} ({milestone})",
+    "target": {
+      "drive": "Drive",
+      "relay": {
+        "station": "Relay station",
+        "range": "Relay range"
+      },
+      "sensor": {
+        "range": "Plume detection range",
+        "angle": "Plume detection angle"
+      },
+      "plume": {
+        "visibility": "Visibility of our drive plumes"
+      },
+      "research": {
+        "rate": "Research rate"
+      },
+      "ship": "Ship system",
+      "weapon": "Weapon",
+      "planet": "Planetary project",
+      "population": "Population",
+      "loyalty": "Loyalty",
+      "governor": "Governors",
+      "espionage": "Espionage",
+      "wormhole": "Wormholes",
+      "relic": "Relics",
+      "aliens": "Aliens",
+      "ansible": "Ansible"
+    },
+    "module": {
+      "fleet": "fleets",
+      "info": "communication",
+      "detection": "detection",
+      "research": "research",
+      "fleetDesign": "fleet design",
+      "combat": "combat",
+      "planets": "planets",
+      "colonies": "colonies",
+      "governance": "governance",
+      "diplomacy": "diplomacy",
+      "events": "events"
+    },
+    "condition": {
+      "relic": "an alien relic found",
+      "aliens": "contact with an alien mind"
+    },
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fit": "Fit",
+    "focusSent": "Research focus {area} sent to {count} systems."
   }
 }

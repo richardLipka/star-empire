@@ -1,6 +1,12 @@
 // @ts-check
-import en from './locales/en.json';
-import cs from './locales/cs.json';
+import enMain from './locales/en.json';
+import csMain from './locales/cs.json';
+import enTech from './locales/tech.en.json';
+import csTech from './locales/tech.cs.json';
+
+// Technology texts live in their own files (tech.<lang>.json), under the key "tech".
+const en = { ...enMain, tech: enTech };
+const cs = { ...csMain, tech: csTech };
 
 /**
  * Translation. Every text shown to the player lives in `locales/*.json`;

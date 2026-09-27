@@ -17,7 +17,8 @@ import { distance } from '../core/vec3.js';
  * @typedef {{ id: string, ansible: boolean, transmitter?: boolean, dockedAt: string | null, pos: Vec3 }} NetFleet
  * @typedef {object} NetworkInput
  * @property {string} capital
- * @property {number} range
+ * @property {number} range                 base relay range
+ * @property {(system: string) => number} [rangeOf]  range of the relay at a system (technology known there); defaults to `range`
  * @property {Iterable<string>} relays        systems with a working relay
  * @property {NetFleet[]} fleets              the empire's fleets
  * @property {(id: string) => Vec3} posOf     system positions
@@ -40,6 +41,7 @@ export function createNetwork(input) {
     /** @type {NetFleet[]} */ (dockedAt.get(f.dockedAt)).push(f);
   }
   const ansibles = input.fleets.filter((f) => f.ansible);
+  const rangeOf = input.rangeOf ?? (() => input.range);
   /** Systems that can transmit by radio: working relays, plus docked fleets carrying a transmitter. */
   const radio = new Set([...relays, ...input.fleets.filter((f) => f.transmitter && f.dockedAt).map((f) => /** @type {string} */ (f.dockedAt))]);
 
@@ -68,12 +70,13 @@ export function createNetwork(input) {
     if (node === input.capital) for (const f of ansibles) out.push({ from: node, to: f.id, delay: 0, kind: 'ansible' });
     if (radio.has(node)) {
       const here = input.posOf(node);
+      const reach = rangeOf(node);
       const candidates = new Set([...radio, ...dockedAt.keys()]);
       if (!isFleetNode(target)) candidates.add(target);
       for (const other of candidates) {
         if (other === node) continue;
         const d = distance(here, input.posOf(other));
-        if (d <= input.range) out.push({ from: node, to: other, delay: d, kind: 'radio' });
+        if (d <= reach) out.push({ from: node, to: other, delay: d, kind: 'radio' });
       }
     }
     return out;
@@ -130,13 +133,23 @@ export function createNetwork(input) {
     for (let i = 0; i < list.length; i++) {
       for (let j = i + 1; j < list.length; j++) {
         const d = distance(input.posOf(list[i]), input.posOf(list[j]));
-        if (d <= input.range) out.push([list[i], list[j], d]);
+        if (d <= Math.max(rangeOf(list[i]), rangeOf(list[j]))) out.push([list[i], list[j], d]);
       }
     }
     return out;
   }
 
-  return { route, links, posOf, relays, range: input.range, capital: input.capital };
+  /**
+   * Could a message waiting at this node leave it right now? (A relay or a
+   * docked transmitter here, a docked ansible fleet, or the node is a fleet.)
+   * @param {string} node
+   */
+  function canSend(node) {
+    if (isFleetNode(node)) return fleets.has(node);
+    return radio.has(node) || (dockedAt.get(node) ?? []).length > 0 || (node === input.capital && ansibles.length > 0);
+  }
+
+  return { route, links, canSend, posOf, relays, range: input.range, rangeOf, capital: input.capital };
 }
 
 /** @typedef {ReturnType<typeof createNetwork>} Network */

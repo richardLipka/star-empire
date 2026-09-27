@@ -1,0 +1,412 @@
+{
+  "area": {
+    "engines": {
+      "name": "Engines",
+      "desc": "Drives, reaction mass and the limits of acceleration."
+    },
+    "communication": {
+      "name": "Communication",
+      "desc": "Relays, sensors and the reach of the empire's voice."
+    },
+    "informatics": {
+      "name": "Informatics",
+      "desc": "Computation, simulation and machine minds."
+    },
+    "planetary": {
+      "name": "Planetary science",
+      "desc": "Worlds: surveying, living on them, remaking them."
+    },
+    "sociology": {
+      "name": "Sociology",
+      "desc": "People across light-years: medicine, law and loyalty."
+    },
+    "projectile": {
+      "name": "Projectile weapons",
+      "desc": "Mass thrown hard: from coilguns to relativistic slugs."
+    },
+    "energy": {
+      "name": "Energy weapons",
+      "desc": "Lasers, beams and the fields that stop them."
+    },
+    "missiles": {
+      "name": "Missiles and drones",
+      "desc": "Ordnance that thinks, swarms and multiplies."
+    },
+    "wormholes": {
+      "name": "Wormhole utilisation",
+      "desc": "Finding, holding open and one day making wormholes."
+    },
+    "exotic": {
+      "name": "Exotic and alien",
+      "desc": "Relics, alien minds and physics nobody taught us."
+    }
+  },
+  "eng": {
+    "plasma": {
+      "name": "Confined plasma physics",
+      "desc": "The physics of holding a fusion plasma in magnetic fields."
+    },
+    "torch": {
+      "name": "Early fusion torch",
+      "desc": "A slow, reliable fusion drive: 0.1 g, cruising at a tenth of light."
+    },
+    "nozzle": {
+      "name": "Magnetic nozzle theory",
+      "desc": "Shaping exhaust with fields instead of walls that would melt."
+    },
+    "torch-2": {
+      "name": "Advanced fusion torch",
+      "desc": "Hotter, harder burns: 0.3 g up to 0.3 c."
+    },
+    "scoop": {
+      "name": "Interstellar ramscoop",
+      "desc": "Gathering hydrogen from the thin medium between stars."
+    },
+    "sail": {
+      "name": "Laser-pushed sail",
+      "desc": "Light sails driven by beamers at home; no fuel carried."
+    },
+    "antimatter": {
+      "name": "Antimatter production",
+      "desc": "Making and storing antimatter in quantities that matter."
+    },
+    "am-drive": {
+      "name": "Antimatter drive",
+      "desc": "One gravity of thrust, cruising at six tenths of light."
+    },
+    "inertial": {
+      "name": "Inertial frame theory",
+      "desc": "Hints that inertia itself might be negotiable."
+    },
+    "hardburn": {
+      "name": "High-g burn protocols",
+      "desc": "Crews in tanks, hulls braced: three gravities for short burns."
+    },
+    "near-c": {
+      "name": "Near-light kinematics",
+      "desc": "What a hull must survive to live at the edge of light speed."
+    }
+  },
+  "com": {
+    "signalling": {
+      "name": "Coherent signalling",
+      "desc": "Tight laser beams that stay readable across light-years."
+    },
+    "relay": {
+      "name": "Relay station",
+      "desc": "The backbone of the empire: 20 ly of reach."
+    },
+    "optics": {
+      "name": "Adaptive optics",
+      "desc": "Correcting beams and mirrors on the fly."
+    },
+    "long-relay": {
+      "name": "Long-baseline relay",
+      "desc": "Bigger apertures: relay reach +5 ly."
+    },
+    "interferometry": {
+      "name": "Deep-space interferometry",
+      "desc": "Arrays that catch plumes from wider angles."
+    },
+    "pickets": {
+      "name": "Sensor pickets",
+      "desc": "Watching drones seeded around a system: plume range +5 ly."
+    },
+    "neutrino": {
+      "name": "Neutrino signalling theory",
+      "desc": "Messages that pass through planets and dust."
+    },
+    "neutrino-relay": {
+      "name": "Neutrino relay",
+      "desc": "Relay reach +10 ly."
+    },
+    "entangle": {
+      "name": "Entanglement channel theory",
+      "desc": "A forbidden idea: correlation without delay."
+    },
+    "ansible": {
+      "name": "Ansible pair",
+      "desc": "Two devices that speak instantly, at any distance."
+    }
+  },
+  "inf": {
+    "computation": {
+      "name": "Distributed computation",
+      "desc": "Computers spread across a system, sharing work."
+    },
+    "archives": {
+      "name": "Research archives",
+      "desc": "Nothing learned is lost: research +10 %."
+    },
+    "pattern": {
+      "name": "Pattern recognition",
+      "desc": "Finding the signal in oceans of noise."
+    },
+    "beta": {
+      "name": "Beta-level simulation",
+      "desc": "Convincing simulations of people, without a person inside."
+    },
+    "crypto": {
+      "name": "Cryptanalysis",
+      "desc": "Reading other empires' traffic."
+    },
+    "governors": {
+      "name": "Simulated governors",
+      "desc": "Beta-level stand-ins that rule where no human will go."
+    },
+    "network": {
+      "name": "Networked research",
+      "desc": "Institutes working as one mind: research +15 %."
+    },
+    "alpha": {
+      "name": "Alpha-level uploads",
+      "desc": "A person, copied into the machine. Or so it claims."
+    },
+    "oracle": {
+      "name": "Machine oracles",
+      "desc": "Minds that answer questions nobody asked: research +25 %."
+    }
+  },
+  "pla": {
+    "survey": {
+      "name": "Planetary survey science",
+      "desc": "Reading worlds from orbit."
+    },
+    "materials": {
+      "name": "Advanced materials",
+      "desc": "Stronger, lighter, stranger matter."
+    },
+    "habitats": {
+      "name": "Orbital habitats",
+      "desc": "Spinning cities where no world will have us."
+    },
+    "climate": {
+      "name": "Climate dynamics",
+      "desc": "How atmospheres balance, and how they fail."
+    },
+    "containment": {
+      "name": "Magnetic containment",
+      "desc": "Safe bottles for plasma and antimatter."
+    },
+    "giants": {
+      "name": "Gas giant skimming",
+      "desc": "Diving into giants for fuel and volatiles."
+    },
+    "processors": {
+      "name": "Atmosphere processors",
+      "desc": "Machines that slowly rewrite the air of a world."
+    },
+    "biosphere": {
+      "name": "Engineered biospheres",
+      "desc": "Designing living systems that can hold a planet together."
+    },
+    "terraform": {
+      "name": "Full terraforming",
+      "desc": "Centuries of work to make a new Earth."
+    }
+  },
+  "soc": {
+    "administration": {
+      "name": "Interstellar administration",
+      "desc": "Governing people you will never hear from in time."
+    },
+    "biostasis": {
+      "name": "Biostasis medicine",
+      "desc": "Slowing a body almost to a stop, and starting it again."
+    },
+    "legitimacy": {
+      "name": "Theory of distant legitimacy",
+      "desc": "Why colonies decades away still obey, and when they stop."
+    },
+    "cryo": {
+      "name": "Cryo-sleep cohorts",
+      "desc": "Crews and colonists sleep through the crossing."
+    },
+    "missions": {
+      "name": "Cultural missions",
+      "desc": "Songs, archives and envoys that remind colonies who they are."
+    },
+    "charters": {
+      "name": "Colonial charters",
+      "desc": "Written freedoms that slow the drift toward independence."
+    },
+    "longevity": {
+      "name": "Longevity treatments",
+      "desc": "Lives measured in centuries; memories that outlast empires."
+    },
+    "neural": {
+      "name": "Neural interfacing",
+      "desc": "Machines in the skull, and what they do to a self."
+    },
+    "consensus": {
+      "name": "Consensus networks",
+      "desc": "Minds linked into a single will. Some call it a hive."
+    },
+    "plague": {
+      "name": "Nanotech plague defence",
+      "desc": "Surviving the rot that eats machines inside and outside the body."
+    }
+  },
+  "kin": {
+    "ballistics": {
+      "name": "Mass-driver ballistics",
+      "desc": "Throwing mass fast and straight."
+    },
+    "coilgun": {
+      "name": "Coilgun",
+      "desc": "Magnetic coils hurl slugs at kilometres per second."
+    },
+    "hypervelocity": {
+      "name": "Hypervelocity impact physics",
+      "desc": "When impact speed beats the speed of sound in the target."
+    },
+    "railgun": {
+      "name": "Railgun batteries",
+      "desc": "Heavier, faster, hungrier guns."
+    },
+    "flechette": {
+      "name": "Flechette clouds",
+      "desc": "Countless needles in the path of a crossing fleet."
+    },
+    "debris": {
+      "name": "Debris screens",
+      "desc": "Sacrificial clouds that stop what cannot be dodged."
+    },
+    "rkv": {
+      "name": "Relativistic kill vehicles",
+      "desc": "Dumb mass at a fraction of light: nothing stops it."
+    },
+    "vault": {
+      "name": "Vault ordnance",
+      "desc": "Weapons kept sealed for centuries, meant for worlds, not ships."
+    }
+  },
+  "nrg": {
+    "optics": {
+      "name": "High-energy optics",
+      "desc": "Mirrors and lenses that survive their own light."
+    },
+    "fields": {
+      "name": "Field theory",
+      "desc": "Electromagnetic fields as tools and armour."
+    },
+    "laser": {
+      "name": "Combat lasers",
+      "desc": "Light that burns at a hundred thousand kilometres."
+    },
+    "particle": {
+      "name": "Particle beam physics",
+      "desc": "Accelerating matter itself into a weapon."
+    },
+    "beam": {
+      "name": "Particle beam projector",
+      "desc": "Beams that burrow through armour."
+    },
+    "shielding": {
+      "name": "Plasma shielding",
+      "desc": "Hot fields that spread incoming energy."
+    },
+    "xray": {
+      "name": "X-ray lasing",
+      "desc": "Pumping lasers with nuclear fire."
+    },
+    "graser": {
+      "name": "Gamma-ray laser",
+      "desc": "The hardest light: short range, no defence."
+    }
+  },
+  "msl": {
+    "guidance": {
+      "name": "Guidance systems",
+      "desc": "Steering ordnance across light-seconds."
+    },
+    "missile": {
+      "name": "Fusion missiles",
+      "desc": "Small torches with warheads."
+    },
+    "autonomy": {
+      "name": "Autonomous targeting",
+      "desc": "Ordnance that decides for itself, seconds from the enemy."
+    },
+    "decoys": {
+      "name": "Decoy drones",
+      "desc": "False plumes and false hulls."
+    },
+    "swarm": {
+      "name": "Drone swarms",
+      "desc": "Hundreds of small minds hunting together."
+    },
+    "am-warhead": {
+      "name": "Antimatter warheads",
+      "desc": "A gram is enough."
+    },
+    "replication": {
+      "name": "Self-replication theory",
+      "desc": "Machines that build their own children from rubble."
+    },
+    "replicators": {
+      "name": "Self-replicating drones",
+      "desc": "A weapon that grows. And may not stop."
+    }
+  },
+  "wor": {
+    "metric": {
+      "name": "Exotic metric theory",
+      "desc": "Space-time shapes that allow shortcuts."
+    },
+    "detection": {
+      "name": "Wormhole detection",
+      "desc": "Finding throats by the way they bend starlight."
+    },
+    "exotic": {
+      "name": "Exotic matter synthesis",
+      "desc": "Negative energy density, a few atoms at a time."
+    },
+    "couriers": {
+      "name": "Throat courier routing",
+      "desc": "Automatic couriers that carry news through known throats."
+    },
+    "stabilization": {
+      "name": "Throat stabilization",
+      "desc": "Keeping a wormhole open under heavy traffic."
+    },
+    "transit": {
+      "name": "Traversable-throat engineering",
+      "desc": "The theory behind making wormholes, not just using them."
+    },
+    "portable": {
+      "name": "Portable mouths",
+      "desc": "Towing one end of a wormhole to a new star."
+    }
+  },
+  "xen": {
+    "xenoarch": {
+      "name": "Xenoarchaeology",
+      "desc": "Reading ruins older than our species."
+    },
+    "relic-salvage": {
+      "name": "Relic salvage",
+      "desc": "Taking alien machines apart without waking them."
+    },
+    "machine-signatures": {
+      "name": "Dormant machine signatures",
+      "desc": "Faint regularities in old stars: something watches for noise."
+    },
+    "ocean-contact": {
+      "name": "Ocean-mind contact",
+      "desc": "Swimming into a living ocean that remembers every visitor."
+    },
+    "relic-physics": {
+      "name": "Relic physics",
+      "desc": "Laws of nature as the builders used them."
+    },
+    "silence": {
+      "name": "Signature discipline",
+      "desc": "Burning quietly, so that whatever listens does not hear us."
+    },
+    "nanotech": {
+      "name": "Alien nanotechnology",
+      "desc": "Machines smaller than viruses and older than suns."
+    }
+  }
+}

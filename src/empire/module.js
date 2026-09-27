@@ -1,6 +1,7 @@
 // @ts-check
 import { defineModule } from '../sim/module.js';
 import { GameError } from '../core/errors.js';
+import { bump, NETWORK } from '../core/versions.js';
 
 /**
  * Empires and their presence in star systems. In M3 presence is only an
@@ -17,6 +18,7 @@ import { GameError } from '../core/errors.js';
  * @property {'ok' | 'destroyed' | 'none'} relay
  * @property {number} since         game time of founding
  * @property {'routine' | 'frequent' | 'silent'} reporting  set by the governor's reporting directive
+ * @property {import('../research/effects.js').Capabilities} [capabilities]  what the technologies known here allow (set by research)
  */
 
 export const empireModule = defineModule({
@@ -73,6 +75,7 @@ export function establishPresence(world, ctx, { empire, system, relay = true }) 
   const existing = st.presence[system];
   if (existing && existing.empire !== empire) throw new GameError('systemHeld', { system, empire: existing.empire });
   st.presence[system] = { empire, relay: relay ? 'ok' : 'none', since: ctx.now, reporting: 'routine' };
+  bump(world, NETWORK);
   markExplored(world, empire, system, ctx.now);
   ctx.notify('empire/presenceChanged', { system, empire });
   ctx.notify('info/networkChanged', { empire });
@@ -88,5 +91,6 @@ export function setRelay(world, ctx, { system, state }) {
   const p = empireState(world).presence[system];
   if (!p) throw new GameError('noPresence', { system });
   p.relay = state;
+  bump(world, NETWORK);
   ctx.notify('info/networkChanged', { empire: p.empire });
 }

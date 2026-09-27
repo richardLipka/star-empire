@@ -71,10 +71,14 @@ export const detectionModule = defineModule({
       const pos = positionOnLegs(f.legs, ctx.now);
       const motion = normalize(sub(leg.toPos, leg.fromPos));
       const exhaust = phase === 'accelerating' ? scale(motion, -1) : motion;
+      const visibility = f.plumeVisibility ?? 1;
       for (const [system, p] of Object.entries(empireState(world).presence)) {
         const toObserver = sub(ctx.data.catalog.get(system).pos, pos);
         const d = length(toObserver);
-        if (!plumeVisible(exhaust, toObserver)) continue;
+        const caps = p.capabilities;
+        const range = (PLUME_RANGE + (caps?.sensorRange ?? 0)) * visibility;
+        const cos = Math.cos(((sensors.plumeHalfAngleDeg + (caps?.sensorAngle ?? 0)) * Math.PI) / 180);
+        if (!plumeVisible(exhaust, toObserver, range, cos)) continue;
         ctx.scheduleIn(d, 'detection/seen', {
           observer: system, observerEmpire: p.empire, fleet: id, fleetEmpire: f.empire, phase, pos, motion, emittedAt: ctx.now,
         });
@@ -104,13 +108,15 @@ export const detectionModule = defineModule({
 
 /**
  * Is a plume with this exhaust direction visible from an observer at `toObserver` (relative)?
+ * Range and cone widen with the observer's sensor technology.
  * @param {Vec3} exhaust unit vector @param {Vec3} toObserver
+ * @param {number} [range] ly @param {number} [cos] cosine of the cone half-angle
  */
-export function plumeVisible(exhaust, toObserver) {
+export function plumeVisible(exhaust, toObserver, range = PLUME_RANGE, cos = PLUME_COS) {
   const d = length(toObserver);
-  if (d > PLUME_RANGE) return false;
+  if (d > range) return false;
   if (d < POINT_BLANK) return true;
-  return dot(exhaust, toObserver) / d >= PLUME_COS;
+  return dot(exhaust, toObserver) / d >= cos;
 }
 
 /**

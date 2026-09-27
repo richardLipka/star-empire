@@ -1,0 +1,45 @@
+{
+  "note": "Research areas in display order. Texts: research.area.<id>.name/.desc in src/i18n/locales.",
+  "areas": [
+    {
+      "id": "engines",
+      "color": "#ff8a3d"
+    },
+    {
+      "id": "communication",
+      "color": "#7fc8d8"
+    },
+    {
+      "id": "informatics",
+      "color": "#8fa8ff"
+    },
+    {
+      "id": "planetary",
+      "color": "#8fbf6a"
+    },
+    {
+      "id": "sociology",
+      "color": "#e0a8d8"
+    },
+    {
+      "id": "projectile",
+      "color": "#d9b36a"
+    },
+    {
+      "id": "energy",
+      "color": "#ffd84d"
+    },
+    {
+      "id": "missiles",
+      "color": "#e8705a"
+    },
+    {
+      "id": "wormholes",
+      "color": "#c77dff"
+    },
+    {
+      "id": "exotic",
+      "color": "#5fd4b3"
+    }
+  ]
+}

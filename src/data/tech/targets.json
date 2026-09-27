@@ -1,0 +1,135 @@
+{
+  "note": "Everything a technology effect can act on. 'target' in a tech effect matches an entry by exact id or by prefix (id + '.'). 'module' names the consuming module (texts: research.module.<module>), 'implemented' says whether it exists yet. Target texts: research.target.<id>.",
+  "targets": [
+    {
+      "id": "drive",
+      "module": "fleet",
+      "implemented": true,
+      "note": "unlock drive.<tier id> from src/data/drives.json",
+      "milestone": "M3"
+    },
+    {
+      "id": "relay.station",
+      "module": "info",
+      "implemented": true,
+      "milestone": "M3"
+    },
+    {
+      "id": "relay.range",
+      "module": "info",
+      "implemented": true,
+      "unit": "ly",
+      "milestone": "M3"
+    },
+    {
+      "id": "sensor.range",
+      "module": "detection",
+      "implemented": true,
+      "unit": "ly",
+      "milestone": "M3.1"
+    },
+    {
+      "id": "sensor.angle",
+      "module": "detection",
+      "implemented": true,
+      "unit": "deg",
+      "milestone": "M3.1"
+    },
+    {
+      "id": "plume.visibility",
+      "module": "detection",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M3.1"
+    },
+    {
+      "id": "research.rate",
+      "module": "research",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M12"
+    },
+    {
+      "id": "ship",
+      "module": "fleetDesign",
+      "implemented": false,
+      "milestone": "M9"
+    },
+    {
+      "id": "weapon",
+      "module": "combat",
+      "implemented": false,
+      "milestone": "M10"
+    },
+    {
+      "id": "planet",
+      "module": "planets",
+      "implemented": false,
+      "milestone": "M8"
+    },
+    {
+      "id": "population",
+      "module": "colonies",
+      "implemented": false,
+      "milestone": "M5"
+    },
+    {
+      "id": "loyalty",
+      "module": "governance",
+      "implemented": false,
+      "milestone": "M13"
+    },
+    {
+      "id": "governor",
+      "module": "governance",
+      "implemented": false,
+      "milestone": "M13"
+    },
+    {
+      "id": "espionage",
+      "module": "diplomacy",
+      "implemented": false,
+      "milestone": "M14"
+    },
+    {
+      "id": "wormhole",
+      "module": "events",
+      "implemented": false,
+      "milestone": "M16"
+    },
+    {
+      "id": "relic",
+      "module": "events",
+      "implemented": false,
+      "milestone": "M16"
+    },
+    {
+      "id": "aliens",
+      "module": "events",
+      "implemented": false,
+      "milestone": "M16"
+    },
+    {
+      "id": "ansible",
+      "module": "events",
+      "implemented": false,
+      "milestone": "M16"
+    }
+  ],
+  "conditions": {
+    "note": "World conditions some technologies need besides prerequisites (granted by future modules; sandbox can grant them).",
+    "ids": [
+      "relic",
+      "aliens"
+    ]
+  },
+  "rules": {
+    "baseCost": 8,
+    "costGrowth": 1.3,
+    "candidates": 3,
+    "capitalRate": 1,
+    "outpostRate": 0.25,
+    "blockTheories": false,
+    "note": "Research rules. candidates: drawn per breakthrough; one is revealed, the rest are closed off. blockTheories=false: theories drawn but not revealed stay open (only applications, i.e. hardware that can be bought, reverse-engineered or stolen, are closed off). Rates are research points per year until the economy exists."
+  }
+}

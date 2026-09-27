@@ -1,0 +1,97 @@
+{
+  "area": "energy",
+  "techs": [
+    {
+      "id": "nrg.optics",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "nrg.fields",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": []
+    },
+    {
+      "id": "nrg.laser",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "nrg.optics"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.laser"
+        }
+      ]
+    },
+    {
+      "id": "nrg.particle",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "nrg.fields"
+      ],
+      "effects": []
+    },
+    {
+      "id": "nrg.beam",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "nrg.particle"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.particleBeam"
+        }
+      ]
+    },
+    {
+      "id": "nrg.shielding",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "nrg.fields",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.shielding"
+        }
+      ]
+    },
+    {
+      "id": "nrg.xray",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "nrg.optics",
+        "nrg.fields"
+      ],
+      "effects": []
+    },
+    {
+      "id": "nrg.graser",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "nrg.xray",
+        "eng.antimatter"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.graser"
+        }
+      ]
+    }
+  ]
+}

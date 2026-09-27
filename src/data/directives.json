@@ -337,19 +337,25 @@
       "directives": [
         {
           "id": "research.focus",
-          "implemented": false,
+          "implemented": true,
           "params": [
             {
               "id": "field",
               "type": "enum",
               "options": [
-                "drives",
+                "none",
+                "engines",
                 "communication",
-                "sensors",
-                "biology",
-                "weapons"
+                "informatics",
+                "planetary",
+                "sociology",
+                "projectile",
+                "energy",
+                "missiles",
+                "wormholes",
+                "exotic"
               ],
-              "default": "drives"
+              "default": "none"
             }
           ]
         }

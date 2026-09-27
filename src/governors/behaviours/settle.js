@@ -1,6 +1,6 @@
 // @ts-check
 import { createFleet, launchFleet, disbandFleet } from '../../fleet/module.js';
-import { START_DRIVE } from '../../fleet/drives.js';
+import { driveFor } from '../../fleet/drives.js';
 import { empireState, establishPresence } from '../../empire/module.js';
 import { systemTraits } from '../../galaxy/traits.js';
 import { reportFleetEvent } from '../../info/module.js';
@@ -20,7 +20,7 @@ export default {
     if (!target) return null;
     return () => {
       const f = createFleet(world, ctx, {
-        empire: book.empire, at: book.system, drive: START_DRIVE, transmitter: true, role: 'settler',
+        empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), transmitter: true, role: 'settler',
         mission: { kind: 'settle', target, buildRelay: d.params.buildRelay, directive: d.id },
       });
       launchFleet(world, ctx, { fleet: f.id, to: target });

@@ -1,0 +1,107 @@
+{
+  "area": "missiles",
+  "techs": [
+    {
+      "id": "msl.guidance",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "msl.missile",
+      "kind": "application",
+      "tier": 1,
+      "requires": [
+        "msl.guidance"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.missile"
+        }
+      ],
+      "start": true
+    },
+    {
+      "id": "msl.autonomy",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "msl.guidance",
+        "inf.computation"
+      ],
+      "effects": []
+    },
+    {
+      "id": "msl.decoys",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "msl.autonomy"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.decoys"
+        }
+      ]
+    },
+    {
+      "id": "msl.swarm",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "msl.autonomy",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.swarm"
+        }
+      ]
+    },
+    {
+      "id": "msl.am-warhead",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "msl.missile",
+        "eng.antimatter"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.antimatterWarhead"
+        }
+      ]
+    },
+    {
+      "id": "msl.replication",
+      "kind": "theory",
+      "tier": 4,
+      "requires": [
+        "msl.autonomy",
+        "pla.materials"
+      ],
+      "effects": []
+    },
+    {
+      "id": "msl.replicators",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "msl.replication",
+        "inf.beta"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.replicators"
+        }
+      ]
+    }
+  ]
+}

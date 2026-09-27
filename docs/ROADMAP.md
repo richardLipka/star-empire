@@ -2,7 +2,7 @@
 
 Implementation is step by step.
 
-**Status:** M0–M4 done (with the M3.1 quality pass and internationalization). Next: see "Suggested next steps" below. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
+**Status:** M0–M4 and M12 (research) done, with the M3.1 quality pass and internationalization. Next: see "Suggested next steps" below. Each milestone ends in a runnable, tested state and adds one module or layer. See [DESIGN.md](DESIGN.md) for the design.
 
 ## Target directory layout
 
@@ -112,7 +112,7 @@ star-empire/
 | M9 | `fleet/` | Hulls and components, ship designer, fleet organization, full sealed-orders editor, acceleration choice with wear above 1 g. Economy › shipbuilding, Military and Logistics directives. |
 | M10 | `combat/` | Battle-plan editor, deterministic crossing simulation, flyby raids vs. braking assaults, battle reports home at c, vector replay. |
 | M11 | Detection depth | Sensor nets and pickets, relay destruction and rebuilding, Military › readiness and fortify directives. |
-| M12 | `research/` | Tech tree on the Empire screen, research worlds, blueprints spreading via relays, galaxy overlay. Drive tiers (0.1 g / 0.1 c up to 0.6 c), relay range, wear tolerance. |
+| M12 ✔ | `research/` | Done early, see [RESEARCH.md](RESEARCH.md): 10 areas and 87 technologies as data. Breakthroughs reveal one of three candidates and close off applications. Blueprints travel by light and with ships. Effects on drives, relay range, sensors, plume visibility and research rate. Tech-web screen. |
 | M13 | Governance depth | Governor traits, appointment by ship, influence missions, granting autonomy, reintegrating seceded worlds. |
 | M14 | `diplomacy/` | Factions, embassies, ambassador instructions, treaties taking effect on arrival. |
 | M15 | Trade and logistics | Cargo hauling of rare goods, recurring convoys (supplies, people, artefacts). |
@@ -126,7 +126,7 @@ In this order, because each one makes the next meaningful:
 1. **M5 Colonies and production.** Outposts become colonies with population, industry and materiel. Ships get a real cost, which replaces the placeholder shipyard. Without this there is no economy for directives to steer, and expansion is free.
 2. **M6 Loyalty and drift, plus AI for Empire B.** Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
 3. **M9 Fleets (ship design and sealed orders), then M10 combat.** Once rivals expand, contested systems need warships and battle plans. Detection (M3.1) already gives the warning times.
-4. **M12 Research.** Drive tiers, relay range and sensor range are already data-driven, so research only has to raise them, and blueprints travel through the existing relay network.
+4. ~~M12 Research~~ done. What remains for research: real output from institutes (M8), and trade, espionage and salvage as channels for closed-off technologies (M10, M14).
 5. **M7 Star systems and M8 planets.** These give depth to the numbers M5 introduces (habitability, resources per body).
 6. **Early infrastructure work (can start any time):**
    - a performance pass for many fleets: spatial index for detection, fewer notifications;

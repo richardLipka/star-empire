@@ -6,6 +6,7 @@ import { brakeLeg, positionOnLegs, velocityOnLegs } from './legs.js';
 import { length, normalize } from '../core/vec3.js';
 import { wormholes } from '../events/wormholes.js';
 import { markExplored } from '../empire/module.js';
+import { bump, NETWORK } from '../core/versions.js';
 
 /**
  * Fleets moving between systems at sublight speed.
@@ -20,6 +21,8 @@ import { markExplored } from '../empire/module.js';
  * @property {boolean} transmitter  carries a relay module: can transmit from any system it is docked at
  * @property {'generic' | 'scout' | 'settler' | 'courier'} role
  * @property {any} mission          what its governor sent it to do (plain data), or null
+ * @property {string[]} [blueprints] technologies it carries (known where it was launched)
+ * @property {number} [plumeVisibility] how far its drive plume can be seen (1 = normal), from launch-site technology
  * @property {'docked' | 'transit'} status
  * @property {string | null} at     system when docked
  * @property {string | null} dest   destination when in transit
@@ -53,6 +56,7 @@ export const fleetModule = defineModule({
       f.at = l.toSystem;
       f.dest = null;
       f.legs = [];
+      bump(world, NETWORK);
       markExplored(world, f.empire, f.at, ctx.now);
       ctx.notify('fleet/arrived', { fleet: id, system: f.at });
       ctx.notify('info/networkChanged', { empire: f.empire });
@@ -85,6 +89,7 @@ export function createFleet(world, ctx, { empire, at, drive, ansible = false, co
   /** @type {Fleet} */
   const f = { id, empire, name: name ?? `${empire}-${number}`, drive: { accelG: drive.accelG, cruise: drive.cruise }, ansible, courier, transmitter, role, mission, status: 'docked', at, dest: null, legs: [], trip: 0, cargo: { reports: [], messages: [] } };
   fleetState(world).fleets[id] = f;
+  bump(world, NETWORK);
   ctx.notify('fleet/created', { fleet: id, system: at });
   if (ansible || transmitter) ctx.notify('info/networkChanged', { empire });
   return f;
@@ -100,6 +105,7 @@ export function disbandFleet(world, ctx, id) {
   const f = fleetState(world).fleets[id];
   if (!f) return;
   delete fleetState(world).fleets[id];
+  bump(world, NETWORK);
   ctx.notify('fleet/disbanded', { fleet: id, empire: f.empire, system: f.at });
   ctx.notify('info/networkChanged', { empire: f.empire });
 }
@@ -160,6 +166,7 @@ export function redirectFleet(world, ctx, { fleet: id, to }) {
  */
 function startTrip(world, ctx, f, legs, dest) {
   f.trip++;
+  bump(world, NETWORK);
   f.status = 'transit';
   f.at = null;
   f.dest = dest;

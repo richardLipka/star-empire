@@ -1,0 +1,111 @@
+{
+  "area": "projectile",
+  "techs": [
+    {
+      "id": "kin.ballistics",
+      "kind": "theory",
+      "tier": 1,
+      "requires": [],
+      "effects": [],
+      "start": true
+    },
+    {
+      "id": "kin.coilgun",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "kin.ballistics",
+        "nrg.fields"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.coilgun"
+        }
+      ]
+    },
+    {
+      "id": "kin.hypervelocity",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "kin.ballistics"
+      ],
+      "effects": []
+    },
+    {
+      "id": "kin.railgun",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "kin.coilgun",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.railgun"
+        }
+      ]
+    },
+    {
+      "id": "kin.flechette",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "kin.hypervelocity"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.flechette"
+        }
+      ]
+    },
+    {
+      "id": "kin.debris",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "kin.hypervelocity",
+        "inf.pattern"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.debrisScreen"
+        }
+      ]
+    },
+    {
+      "id": "kin.rkv",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "kin.hypervelocity",
+        "eng.antimatter"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.rkv"
+        }
+      ]
+    },
+    {
+      "id": "kin.vault",
+      "kind": "application",
+      "tier": 6,
+      "requires": [
+        "kin.rkv",
+        "xen.relic-physics"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "weapon.vault"
+        }
+      ]
+    }
+  ]
+}

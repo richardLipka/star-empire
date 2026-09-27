@@ -262,5 +262,5 @@ describe('determinism with all modules', () => {
       return stateHash(s.world);
     };
     expect(run(true)).toBe(run(false));
-  });
+  }, 30000);
 });

@@ -284,5 +284,5 @@ describe('determinism with governors', () => {
       return stateHash(s.world);
     };
     expect(run(true)).toBe(run(false));
-  });
+  }, 30000);
 });

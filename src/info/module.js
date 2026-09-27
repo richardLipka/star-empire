@@ -1,6 +1,7 @@
 // @ts-check
 import { defineModule } from '../sim/module.js';
 import { hashUnit } from '../core/rng.js';
+import { version, NETWORK } from '../core/versions.js';
 import { empireState } from '../empire/module.js';
 import { fleetState, fleetPosition } from '../fleet/module.js';
 import { createNetwork, isFleetNode } from './network.js';
@@ -13,7 +14,7 @@ import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './know
  * @typedef {object} Message
  * @property {string} id
  * @property {string} empire
- * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting'} kind
+ * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint'} kind
  * @property {string} origin     node where it was created
  * @property {string} target     system or fleet id
  * @property {number} createdAt
@@ -103,8 +104,10 @@ export const infoModule = defineModule({
       ctx.scheduleIn(hashUnit(world.seed, `report:${system}`) * interval, 'info/report', { system });
     },
     'info/networkChanged'(world, { empire }, ctx) {
+      // Only messages that could now leave where they wait are worth routing again.
+      const net = truthNetwork(world, ctx, empire);
       for (const msg of Object.values(infoState(world).messages)) {
-        if (msg.empire === empire && msg.status === 'stalled') advance(world, ctx, msg);
+        if (msg.empire === empire && msg.status === 'stalled' && net.canSend(msg.at)) advance(world, ctx, msg);
       }
     },
     'fleet/launched'(world, { fleet: id, system }, ctx) {
@@ -137,12 +140,32 @@ export function knowledgeOf(world, empire) {
 }
 
 /**
+ * Networks are rebuilt only when something changed: cached per world, empire,
+ * moment and network version (core/versions.js, bumped wherever relays,
+ * presence, docked fleets or relay technology change). Derived data only.
+ * @type {WeakMap<object, Map<string, { key: string, net: import('./network.js').Network }>>}
+ */
+const networkCache = new WeakMap();
+
+/**
  * The empire's real communication network right now.
  * @param {import('../sim/world.js').World} world
  * @param {{ now: number, data: Record<string, any> }} ctx
  * @param {string} empire
  */
 export function truthNetwork(world, ctx, empire) {
+  let cache = networkCache.get(world);
+  if (!cache) networkCache.set(world, (cache = new Map()));
+  const key = `${ctx.now}|${version(world, NETWORK)}|${Object.keys(empireState(world).presence).length}`;
+  const hit = cache.get(empire);
+  if (hit && hit.key === key) return hit.net;
+  const net = buildNetwork(world, ctx, empire);
+  cache.set(empire, { key, net });
+  return net;
+}
+
+/** @param {import('../sim/world.js').World} world @param {{ now: number, data: Record<string, any> }} ctx @param {string} empire */
+function buildNetwork(world, ctx, empire) {
   const es = empireState(world);
   const emp = es.empires[empire];
   const posOf = (/** @type {string} */ id) => ctx.data.catalog.get(id).pos;
@@ -150,7 +173,8 @@ export function truthNetwork(world, ctx, empire) {
   const fleets = Object.values(fleetState(world).fleets)
     .filter((f) => f.empire === empire)
     .map((f) => ({ id: f.id, ansible: f.ansible, transmitter: f.transmitter, dockedAt: f.status === 'docked' ? f.at : null, pos: fleetPosition(f, ctx.now, posOf) }));
-  return createNetwork({ capital: emp.capital, range: emp.relayRange, relays, fleets, posOf });
+  const rangeOf = (/** @type {string} */ s) => emp.relayRange + (es.presence[s]?.empire === empire ? es.presence[s].capabilities?.relayBonus ?? 0 : 0);
+  return createNetwork({ capital: emp.capital, range: emp.relayRange, rangeOf, relays, fleets, posOf });
 }
 
 /**
