@@ -52,7 +52,8 @@
     "noQuick": "No quick save found.",
     "storageOff": "Browser storage unavailable; use Export instead.",
     "failed": "Save failed: {error}",
-    "loadFailed": "Load failed: {error}"
+    "loadFailed": "Load failed: {error}",
+    "tooBig": "This game is too large for browser storage. Use Export to save it to a file."
   },
   "error": {
     "saveFormat": "not a Star Empire save file",

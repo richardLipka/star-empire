@@ -22,6 +22,16 @@ import { fleetsPicture, battlesPicture } from '../src/perspective/fleets.js';
  * random voyages, attacks and strikes by Empire A; every perspective is built
  * along the way, and saving and loading must change nothing.
  */
+/** Paths of numbers in the world that JSON cannot hold (Infinity, NaN). @param {any} x @returns {string[]} */
+function nonFinite(x, path = 'world', out = []) {
+  if (typeof x === 'number') {
+    if (!Number.isFinite(x)) out.push(path);
+  } else if (x && typeof x === 'object') {
+    for (const [k, v] of Object.entries(x)) if (out.length < 10) nonFinite(v, `${path}.${k}`, out);
+  }
+  return out;
+}
+
 test('a long mixed game runs, renders and saves without errors', () => {
   for (const seed of ['f1', 'f2']) {
     const rng = createRng(seed.length * 97 + seed.charCodeAt(1));
@@ -55,6 +65,7 @@ test('a long mixed game runs, renders and saves without errors', () => {
         knowledgePicture(world, sim.ctx, e); truthPicture(world, sim.ctx, e);
         fleetsPicture(world, sim.ctx, e, 'knowledge'); battlesPicture(world, e, 'knowledge');
       }
+      if (y % 50 === 0) expect(nonFinite(world)).toEqual([]); // JSON would silently turn these into null
       if (y % 100 === 0) {
         const loaded = createSimulation({ modules: MODULES, data: DATA, world: deserializeWorld(serializeWorld(world)) });
         if (stateHash(loaded.world) !== stateHash(world)) throw new Error('save changes state');

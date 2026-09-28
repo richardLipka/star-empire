@@ -31,7 +31,9 @@ export function mountSavePanel(slot, { getWorld, loadWorld, toast }) {
       s.setItem(SLOT_KEY, serializeWorld(getWorld(), { label: 'quick' }));
       toast(t('save.saved', { year: fmtYear(getWorld().time) }));
     } catch (e) {
-      toast(t('save.failed', { error: describeError(e) }));
+      // Browser storage holds a few megabytes; a large empire may not fit. Export always works.
+      const full = e instanceof DOMException && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED');
+      toast(full ? t('save.tooBig') : t('save.failed', { error: describeError(e) }));
     }
   }
 

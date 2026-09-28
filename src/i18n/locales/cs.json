@@ -52,7 +52,8 @@
     "noQuick": "Rychlé uložení nenalezeno.",
     "storageOff": "Úložiště prohlížeče není dostupné; použijte Export.",
     "failed": "Uložení selhalo: {error}",
-    "loadFailed": "Načtení selhalo: {error}"
+    "loadFailed": "Načtení selhalo: {error}",
+    "tooBig": "Hra je příliš velká pro úložiště prohlížeče. Uložte ji do souboru přes Export."
   },
   "error": {
     "saveFormat": "toto není uložená hra Hvězdného impéria",

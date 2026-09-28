@@ -24,7 +24,7 @@ import { RULES, stageOf, forces, secessionChance } from './model.js';
  * @property {number} value
  * @property {Stage} stage
  * @property {number} lastContact        when word last came from the capital (orders, blueprints, ships)
- * @property {number} lastDirective      when an order last raised loyalty
+ * @property {number | null} lastDirective  when an order last raised loyalty (null: never; saves cannot hold Infinity)
  * @property {number} nextRollAt
  */
 
@@ -61,7 +61,7 @@ export const loyaltyModule = defineModule({
       if (!rec || rec.empire !== message.empire) return;
       if (message.origin !== empireState(world).empires[rec.empire].capital) return;
       rec.lastContact = ctx.now;
-      if (message.kind === 'directive' && ctx.now - rec.lastDirective >= 1) {
+      if (message.kind === 'directive' && (rec.lastDirective == null || ctx.now - rec.lastDirective >= 1)) {
         rec.lastDirective = ctx.now;
         change(world, ctx, message.target, rec, RULES.pull.directive);
       }
@@ -94,7 +94,7 @@ export const loyaltyAt = (world, system) => records(world)[system] ?? null;
 function newRecord(world, ctx, system, empire) {
   const mode = colonyAt(world, system)?.mode ?? 'cryo';
   const value = /** @type {Record<string, number>} */ (RULES.start)[mode] ?? 0.9;
-  return { empire, value, stage: stageOf(value), lastContact: ctx.now, lastDirective: -Infinity, nextRollAt: ctx.now + hashUnit(world.seed, `loyalty:${system}`) };
+  return { empire, value, stage: stageOf(value), lastContact: ctx.now, lastDirective: null, nextRollAt: ctx.now + hashUnit(world.seed, `loyalty:${system}`) };
 }
 
 /**

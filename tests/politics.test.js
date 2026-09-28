@@ -103,7 +103,7 @@ describe('obedience', () => {
   it('restless colonies ignore low-priority orders; autonomous ones refuse all but governance', () => {
     const { world, act } = sandbox('o1');
     const tau = sys('Tau Ceti');
-    act((w, c) => change(w, c, tau, records(w)[tau] ?? (w.state.loyalty.records[tau] = { empire: 'A', value: 0.9, stage: /** @type {const} */ ('loyal'), lastContact: 0, lastDirective: -Infinity, nextRollAt: 1 }), 0));
+    act((w, c) => change(w, c, tau, records(w)[tau] ?? (w.state.loyalty.records[tau] = { empire: 'A', value: 0.9, stage: /** @type {const} */ ('loyal'), lastContact: 0, lastDirective: null, nextRollAt: 1 }), 0));
     const rec = records(world)[tau];
     act((w, c) => change(w, c, tau, rec, 0.5 - rec.value));
     expect(rec.stage).toBe('restless');
