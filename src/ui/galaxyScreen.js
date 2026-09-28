@@ -142,5 +142,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
     },
     /** After a world change from the UI. */
     changed: redraw,
+    /** The map's perspective (other screens follow it). */
+    getMode: () => map.mode,
   };
 }

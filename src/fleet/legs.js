@@ -19,11 +19,11 @@ import { add, distance, lerp, normalize, scale, sub } from '../core/vec3.js';
  */
 
 /**
- * @param {{ fromPos: Vec3, toPos: Vec3, fromSystem: string | null, toSystem: string, departAt: number, drive: Drive }} p
+ * @param {{ fromPos: Vec3, toPos: Vec3, fromSystem: string | null, toSystem: string, departAt: number, drive: Drive, brake?: boolean }} p
  * @returns {FlightLeg}
  */
-export function flightLeg({ fromPos, toPos, fromSystem, toSystem, departAt, drive }) {
-  const profile = flightProfile({ distance: distance(fromPos, toPos), accelG: drive.accelG, cruise: drive.cruise });
+export function flightLeg({ fromPos, toPos, fromSystem, toSystem, departAt, drive, brake = true }) {
+  const profile = flightProfile({ distance: distance(fromPos, toPos), accelG: drive.accelG, cruise: drive.cruise, brake });
   return { kind: 'flight', fromPos, toPos, fromSystem, toSystem, departAt, arriveAt: departAt + profile.totalTime, profile };
 }
 

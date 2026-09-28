@@ -106,6 +106,36 @@
           "target": "weapon.vault"
         }
       ]
+    },
+    {
+      "id": "kin.whipple",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "kin.ballistics",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.whipple"
+        }
+      ]
+    },
+    {
+      "id": "kin.batteries",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "kin.hypervelocity",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "defense.grid"
+        }
+      ]
     }
   ]
 }

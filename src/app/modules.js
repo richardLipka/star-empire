@@ -11,13 +11,15 @@ import { researchModule } from '../research/module.js';
 import { securityModule } from '../security/module.js';
 import { loyaltyModule } from '../loyalty/module.js';
 import { aiModule } from '../ai/module.js';
+import { shipsModule } from '../ships/module.js';
+import { combatModule } from '../combat/module.js';
 
 /**
  * The ordered list of simulation modules in this build of the game.
  * New gameplay modules are registered here, after their dependencies.
  * @type {import('../sim/module.js').SimModule[]}
  */
-export const MODULES = [galaxyModule, empireModule, wormholeModule, fleetModule, infoModule, detectionModule, colonyModule, governorsModule, loyaltyModule, researchModule, securityModule, aiModule];
+export const MODULES = [galaxyModule, empireModule, wormholeModule, fleetModule, infoModule, detectionModule, colonyModule, shipsModule, governorsModule, loyaltyModule, combatModule, researchModule, securityModule, aiModule];
 
 /** Static content handed to every module as `ctx.data`. */
 export const DATA = { catalog };

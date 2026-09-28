@@ -78,16 +78,10 @@
       "unit": "factor"
     },
     {
-      "id": "ship",
-      "module": "fleetDesign",
-      "implemented": false,
-      "milestone": "M9"
-    },
-    {
       "id": "weapon",
-      "module": "combat",
-      "implemented": false,
-      "milestone": "M10"
+      "module": "fleetDesign",
+      "implemented": true,
+      "milestone": "M9"
     },
     {
       "id": "population",
@@ -352,6 +346,121 @@
       "module": "governance",
       "implemented": false,
       "milestone": "M13"
+    },
+    {
+      "id": "ship.frigate",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.cruiser",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.stealthApproach",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.pdLaser",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.interceptors",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.whipple",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.battleComputer",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.shielding",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.decoys",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.debrisScreen",
+      "module": "fleetDesign",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "sensor.net",
+      "module": "detection",
+      "implemented": true,
+      "unit": "ly",
+      "milestone": "M9"
+    },
+    {
+      "id": "defense.grid",
+      "module": "combat",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "defense.shield",
+      "module": "combat",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M9"
+    },
+    {
+      "id": "ship.scoop",
+      "module": "fleetDesign",
+      "implemented": false,
+      "milestone": "M15"
+    },
+    {
+      "id": "ship.sail",
+      "module": "fleetDesign",
+      "implemented": false,
+      "milestone": "M15"
+    },
+    {
+      "id": "ship.nearLight",
+      "module": "fleetDesign",
+      "implemented": false,
+      "milestone": "M15"
+    },
+    {
+      "id": "ship.containment",
+      "module": "fleetDesign",
+      "implemented": false,
+      "milestone": "M15"
     }
   ],
   "conditions": {

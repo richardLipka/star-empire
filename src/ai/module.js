@@ -8,6 +8,12 @@ import { issueDirective } from '../governors/issue.js';
 import { labs, frontier } from '../research/module.js';
 import { AREAS } from '../research/catalog.js';
 import { knownPreparations } from '../colony/preparation.js';
+import { grievancesOf } from '../combat/module.js';
+import { guardOf } from '../governors/behaviours/warships.js';
+import { mergeFleets } from '../ships/module.js';
+import { fleetState } from '../fleet/module.js';
+import { orderFleet } from '../info/orders.js';
+import { distance } from '../core/vec3.js';
 
 /**
  * Rival and independent AI (see docs/POLITICS.md).
@@ -21,13 +27,18 @@ import { knownPreparations } from '../colony/preparation.js';
  *   prepared some), robotic preparation while only embryo ships are known,
  *   and later settling from every colony;
  * - economy: hungry colonies farm, fed ones return to balance;
- * - loyalty: cultural missions, and broad autonomy for colonies that slip away.
+ * - loyalty: cultural missions, and broad autonomy for colonies that slip away;
+ * - war: a home guard at the capital; an empire that has destroyed a world
+ *   is hated: war footing, fortified systems, and now and then its guard
+ *   sails to attack the nearest known system of the wrongdoer. The AI never
+ *   strikes a world itself.
  *
  * @typedef {'expansionist' | 'scholar' | 'cautious'} Personality
  * @typedef {object} Controller
  * @property {Personality} personality
  * @property {number} nextAt
  * @property {Record<string, string>} issued   what it has ordered (key → setting), so it does not repeat itself
+ * @property {number} [lastAttack]  when it last sent its guard to attack
  */
 
 export const AI = aiData;
@@ -131,5 +142,34 @@ export function think(world, ctx, empire, c) {
     const stage = e.data.loyalty?.stage;
     if (stage === 'autonomous') order(`autonomy:${id}`, 'broad', { empire, type: 'governance.autonomy', target: { kind: 'system', system: id }, params: { level: 'broad' }, priority: 'high' });
     else if (stage === 'loyal' && c.issued[`autonomy:${id}`] === 'broad') order(`autonomy:${id}`, 'normal', { empire, type: 'governance.autonomy', target: { kind: 'system', system: id }, params: { level: 'normal' }, priority: 'high' });
+  }
+
+  // War.
+  const hated = Object.entries(grievancesOf(world, empire)).filter(([, n]) => n > 0).map(([e]) => e);
+  order('warships', hated.length ? 'war' : 'defensive', { empire, type: 'military.warships', target: here, params: { level: hated.length ? 'war' : 'defensive' } });
+  // Warships idling at the capital (home from a raid) rejoin the home guard.
+  const guardHere = guardOf(world, capital, empire);
+  for (const f of Object.values(fleetState(world).fleets)) {
+    if (f.empire !== empire || f.status !== 'docked' || f.at !== capital || !f.ships?.length || f.mission || f === guardHere) continue;
+    if (guardHere) mergeFleets(world, ctx, { from: f.id, into: guardHere.id });
+    else f.mission = { kind: 'guard', home: capital };
+  }
+  if (hated.length) {
+    order('readiness', 'fortify', { empire, type: 'military.readiness', target: { kind: 'empire' }, params: { posture: 'fortify' } });
+    const guard = guardOf(world, capital, empire);
+    // One raid at a time: at a tenth of light a raid takes centuries there and back.
+    const raiding = Object.values(fleetState(world).fleets).some((f) => f.empire === empire && f.voyage?.waypoints.some((w) => w.action === 'attack') && f.status === 'transit');
+    if (guard && !raiding && (guard.ships?.length ?? 0) >= AI.attackWith && ctx.now - (c.lastAttack ?? -Infinity) >= AI.attackEvery) {
+      const home = ctx.data.catalog.get(capital).pos;
+      const targets = Object.entries(k.systems)
+        .filter(([, e]) => hated.includes(e.data.owner))
+        .map(([id]) => ({ id, d: distance(ctx.data.catalog.get(id).pos, home) }))
+        .filter((x) => x.d <= AI.attackRange)
+        .sort((a, b) => a.d - b.d);
+      if (targets.length && orderFleet(world, ctx, { empire, fleet: guard.id, payload: { type: 'voyage', waypoints: [{ system: targets[0].id, action: 'attack' }, { system: capital, action: 'visit' }], approach: 'normal' } })) {
+        c.lastAttack = ctx.now;
+        guard.mission = null; // it leaves its post; a new guard will be built
+      }
+    }
   }
 }

@@ -198,7 +198,7 @@
         },
         {
           "id": "military.warships",
-          "implemented": false,
+          "implemented": true,
           "params": [
             {
               "id": "level",
@@ -211,7 +211,8 @@
               ],
               "default": "defensive"
             }
-          ]
+          ],
+          "repeating": true
         }
       ]
     },
@@ -241,6 +242,25 @@
               "id": "courier",
               "type": "boolean",
               "default": false
+            }
+          ]
+        },
+        {
+          "id": "fleet.build",
+          "implemented": true,
+          "oneShot": true,
+          "params": [
+            {
+              "id": "design",
+              "type": "design"
+            },
+            {
+              "id": "count",
+              "type": "number",
+              "min": 1,
+              "max": 12,
+              "step": 1,
+              "default": 3
             }
           ]
         }

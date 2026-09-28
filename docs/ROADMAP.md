@@ -153,8 +153,8 @@ star-empire/
 |---|---|---|
 | M7 | `system/` | Kepler orbits on rails, real and generated planets, 3D orrery, system screen. |
 | M8 | `planet/` + `economy/` | Deposits, surface and orbital installations, production chains, food and population, terraforming. The colony model migrates here. |
-| M9 | `fleet/` | Hulls and components, ship designer, fleet organization, full sealed-orders editor, acceleration choice with wear above 1 g. Economy › shipbuilding, Military and Logistics directives. |
-| M10 | `combat/` | Battle-plan editor, deterministic crossing simulation, flyby raids vs. braking assaults, battle reports home at c, vector replay. |
+| M9 ✔ | `fleet/`, `ships/`, `combat/` | Done, see [FLEETS.md](FLEETS.md): hulls and components, designer, build orders carrying designs, warship construction, voyages through several systems (normal, flyby, stealth), orders by light and fleet mailboxes, predicted voyages, battle plans, automatic combat of seconds, battle reports by light, relativistic strikes and grievances, sensor nets, Fleets screen with designs and battle reports. |
+| M10 | `combat/` depth | Much of it arrived with M9 (plans, crossing simulation, flyby raids vs braking assaults, reports at c). Remaining: conquest, blockades, fleets meeting in deep space, vector replay. |
 | M11 | Detection depth | Sensor nets and pickets, relay destruction and rebuilding, Military › readiness and fortify directives. |
 | M12 ✔ | `research/` | Done early, see [RESEARCH.md](RESEARCH.md): 10 areas and 87 technologies as data (112 since M5). Breakthroughs reveal one of three candidates and close off applications. Blueprints travel by light and with ships. Effects on drives, relay range, sensors, plume visibility and research rate. Tech-web screen. |
 | M13 | Governance depth | Governor traits, appointment by ship, influence missions, granting autonomy, reintegrating seceded worlds. |
@@ -169,13 +169,36 @@ star-empire/
 - Security map layer (exposed links) and counts; the capital sends missing blueprints to systems that lack them.
 - **Tests (134).**
 
-## Suggested next steps (after M6)
+### M9: Fleets, ship design and combat ✔
+- See [FLEETS.md](FLEETS.md).
+- **Ship design:**
+  - hulls and components, stock and own designs;
+  - build orders carry their design;
+  - *Military › Warship construction* in effect.
+- **Voyages:**
+  - through several systems, with normal, flyby (no braking) and stealth (faint burns) approaches;
+  - orders by light; a fleet in flight gets them at its next port (mailbox);
+  - the capital predicts ordered voyages before any report.
+- **Combat:**
+  - battle plans set in advance, windows of seconds from closing speed, surprise, planetary defences, bombardment;
+  - reports by light, only from survivors; flyby raiders report when home.
+- **Relativistic strikes:** worlds scorched; shame, fear and grievances spreading with the flash; the AI goes to war and raids.
+- **Sensor nets;** plume brightness by acceleration.
+- **11 new technologies;** all weapon targets implemented.
+- **Fleets screen:** fleets and orders, designs and building, battle reports with an engagement timeline.
+- **Bug fixes:**
+  - relocation of a dying capital, which compared positions wrongly;
+  - flyby profiles, which must survive JSON.
+- Save migration v7 → v8.
+- **Tests (189).**
+
+## Suggested next steps (after M9)
 
 In this order, because each one makes the next meaningful:
 
 1. ~~M5 Colonies and production~~ done.
 2. ~~M6 Loyalty and drift, plus AI for Empire B~~ done. Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
-3. **M9 Fleets (ship design and sealed orders), then M10 combat.** Once rivals expand, contested systems need warships and battle plans. Detection (M3.1) already gives the warning times.
+3. ~~M9 Fleets~~ done. **M10 combat depth:** conquest and blockades, then M13 governance and M14 diplomacy (grievances and relations).
 4. ~~M12 Research~~ done. What remains for research: real output from institutes (M8), and trade, espionage and salvage as channels for closed-off technologies (M10, M14).
 5. **M7 Star systems and M8 planets.** Bodies already exist (M5). What remains: Kepler orbits and a 3D system view, installations per body, resources beyond materiel, food and colonists moving between systems.
 6. **Early infrastructure work (can start any time):**

@@ -47,6 +47,8 @@ import { loyaltyAt } from '../loyalty/module.js';
  * @property {boolean} courier
  * @property {'accelerating' | 'braking' | null} burning   truth only: engines firing now
  * @property {number | null} brakingSeenAt  knowledge: when its braking plume was seen (valid time)
+ * @property {number} ships          designed ships in it (0: a single civilian vessel)
+ * @property {boolean} planned        knowledge: position predicted from a voyage the capital ordered, not from any report
  * @typedef {{ id: string, kind: string, pos: Vec3, fromPos: Vec3, toPos: Vec3, stalled: boolean }} PicMessage
  * @typedef {{ id: string, pos: Vec3, motion: Vec3, phase: string, fleetEmpire: string, own: boolean, near: string | null, observer: string, emittedAt: number, receivedAt: number, age: number }} PicSighting
  * @typedef {object} Picture
@@ -109,7 +111,20 @@ export function knowledgePicture(world, ctx, empire) {
     if (f.status === 'gone' || f.status === 'disbanded') continue; // left (whereabouts unknown), or no longer exists
     const age = now - e.validAt;
     const live = e.via === 'ansible' || (f.status === 'docked' && f.at === emp.capital);
-    const base = { id, name: f.name, empire: f.empire, role: f.role ?? 'generic', validAt: e.validAt, age, ansible: f.ansible, courier: f.courier, burning: null };
+    const base = { id, name: f.name, empire: f.empire, role: f.role ?? 'generic', validAt: e.validAt, age, ansible: f.ansible, courier: f.courier, burning: null, ships: f.ships?.length ?? 0, planned: false };
+    // A voyage the capital ordered after this report: predict it from the plan itself.
+    const plan = k.plans?.[id];
+    if (plan && !live && plan.departAt > e.validAt && now >= plan.departAt && plan.legs.length) {
+      const legs = plan.legs;
+      const last = legs[legs.length - 1];
+      const done = now >= last.arriveAt;
+      fleets.push({
+        ...base, pos: positionOnLegs(legs, now), confirmedPos: f.status === 'docked' ? posOf(f.at) : positionOnLegs(f.legs, e.validAt),
+        path: done ? [] : remainingPath(legs, now), wormholeJumps: [], at: null, dest: last.kind === 'brake' ? null : last.toSystem, eta: last.arriveAt,
+        certainty: done ? 'unconfirmed' : 'expected', brakingSeenAt: null, planned: true,
+      });
+      continue;
+    }
     if (f.status === 'docked') {
       const p = posOf(f.at);
       fleets.push({ ...base, pos: p, confirmedPos: p, path: [], wormholeJumps: [], at: f.at, dest: null, eta: null, certainty: live ? 'live' : 'confirmed', brakingSeenAt: null });
@@ -184,6 +199,7 @@ export function truthPicture(world, ctx, empire) {
       id: f.id, name: f.name, empire: f.empire, role: f.role, pos: p, confirmedPos: p, path: f.status === 'transit' ? remainingPath(f.legs, now) : [],
       wormholeJumps: wormholeJumps(f.legs, now), at: f.at, dest: f.dest, eta: f.legs.length ? f.legs[f.legs.length - 1].arriveAt : null,
       certainty: 'actual', validAt: now, age: 0, ansible: f.ansible, courier: f.courier, burning: burnPhase(f.legs, now), brakingSeenAt: null,
+      ships: f.ships?.length ?? 0, planned: false,
     };
   });
 

@@ -22,6 +22,8 @@ It is regenerated with `npm run catalog` (see `tools/build-star-catalog.js`).
 `systems.json`: hand-authored planetary systems of known stars (Sol, Alpha Centauri, Tau Ceti, Epsilon Eridani and others); all other systems are generated.
 `loyalty.json`: loyalty and drift rules (pushes, pulls, stages, secession; see docs/POLITICS.md).
 `ai.json`: AI personalities and thresholds for rival and independent polities.
+`ships.json`: hulls, components, stock designs, approaches and warship levels (see docs/FLEETS.md).
+`combat.json`: the combat model's numbers: windows, accuracy, formations, surprise, stations, strikes and atrocities.
 `tech/`: research areas, one file of technologies per area, and the registry of effect targets and research rules (see docs/RESEARCH.md).
 
 These are game content under the same licence as the code. Their display texts live in `src/i18n/locales/`, never in the data files.

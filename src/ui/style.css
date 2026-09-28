@@ -241,3 +241,28 @@ svg.orrery .body.hostile { fill: #b08a6a; }
 svg.orrery .body.terraformable { fill: #5fd4b3; }
 svg.orrery .body.habitable { fill: #8fdf6a; }
 svg.orrery .colony-ring { fill: none; stroke: var(--accent); stroke-width: 1; }
+
+/* Fleets screen (M9) */
+.fleets-screen .tabs { margin-left: 16px; display: flex; gap: 2px; }
+.fleets-body { flex: 1; min-height: 0; display: flex; }
+.fleets-grid { flex: 1; display: grid; grid-template-columns: 270px 1fr 360px; min-height: 0; }
+.fleets-centre { padding: 14px 18px; overflow-y: auto; }
+.fleets-centre h2 { margin: 0 0 4px; font-size: 15px; }
+.fleets-centre h3 { margin: 14px 0 6px; font-size: 10px; font-weight: 500; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.2em; }
+.fleet-list { display: flex; flex-direction: column; gap: 2px; }
+.fleet-pick { text-align: left; background: none; border: 1px solid transparent; color: var(--text); font: inherit; padding: 5px 6px; cursor: pointer; }
+.fleet-pick:hover { border-color: var(--line); }
+.fleet-pick.on { border-color: var(--accent); }
+.fleet-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.fleet-table th { text-align: left; color: var(--text-dim); font-weight: 400; padding: 2px 6px 2px 0; }
+.fleet-table td { padding: 2px 6px 2px 0; }
+.fleet-table .bar { min-width: 90px; }
+.research-detail select, .fleets-centre select, .research-detail input, .fleets-centre input { background: var(--bg); color: var(--text); border: 1px solid var(--line-strong); padding: 2px 3px; font: inherit; max-width: 100%; }
+.waypoint select { max-width: 150px; }
+.battle-timeline svg.timeline { width: 100%; max-width: 640px; height: auto; display: block; margin: 8px 0; }
+svg.timeline .row-label, svg.timeline .row-value, svg.timeline .axis-label { fill: var(--text-dim); font-size: 10px; font-family: inherit; }
+svg.timeline .closest { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 3; }
+@media (max-width: 900px) {
+  .fleets-grid { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow-y: auto; }
+}
+.fleets-screen .tabs .tab { flex: none; padding: 6px 14px; }

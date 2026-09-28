@@ -10,6 +10,7 @@ import { BEHAVIOURS, MISSIONS } from './behaviours/index.js';
 import { DEFAULT_SETTINGS, SETTINGS } from './behaviours/settings.js';
 import { spend } from '../colony/module.js';
 import { retryPendingSends } from './behaviours/fleetSend.js';
+import { continueBuilds } from './behaviours/build.js';
 
 /**
  * Governors: one per held system. They keep a book of standing directives
@@ -33,7 +34,7 @@ import { retryPendingSends } from './behaviours/fleetSend.js';
  * @property {Record<string, Directive>} directives   one per directive type; a newer order replaces an older one
  * @property {string[]} received                      ids of recently received orders (acknowledgements)
  * @property {string[]} [refused]                     ids of orders it would not follow (loyalty)
- * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number>, pendingSends?: Directive[], missionDue?: Record<string, number> }} memory
+ * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number>, pendingSends?: Directive[], missionDue?: Record<string, number>, pendingBuilds?: { design: any, count: number, into: string | null }[] }} memory
  * @property {typeof DEFAULT_SETTINGS} settings
  */
 
@@ -43,7 +44,7 @@ const ORDER = new Map(ALL_DIRECTIVES.map((d, i) => [d.id, i]));
 
 export const governorsModule = defineModule({
   id: 'governors',
-  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'detection', 'colony'],
+  dependsOn: ['galaxy', 'empire', 'fleet', 'info', 'detection', 'colony', 'ships'],
   initState: () => ({ /** @type {Record<string, Book>} */ books: {}, /** @type {Record<string, Record<string, any>>} */ issued: {} }),
 
   handlers: {
@@ -186,6 +187,7 @@ function think(world, ctx, book) {
   applySettings(world, ctx, book);
   repairRelay(world, ctx, book);
   retryPendingSends(world, ctx, book);
+  continueBuilds(world, ctx, book);
 
   // Higher priority first; at equal priority, whichever launched least recently (fair rotation).
   const last = (/** @type {Directive} */ d) => book.memory.lastLaunch[d.type] ?? -Infinity;

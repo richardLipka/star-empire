@@ -1,10 +1,11 @@
 // @ts-check
 import data from '../data/directives.json';
+import { validDesign } from '../ships/catalog.js';
 
 /**
  * The catalogue of directives governors understand (src/data/directives.json).
  *
- * @typedef {{ id: string, type: 'enum' | 'number' | 'boolean' | 'system' | 'drive', options?: string[], default?: any,
+ * @typedef {{ id: string, type: 'enum' | 'number' | 'boolean' | 'system' | 'drive' | 'design', options?: string[], default?: any,
  *             min?: number, max?: number, step?: number, unit?: string, optional?: boolean }} ParamDef
  * @typedef {{ id: string, category: string, implemented: boolean, repeating?: boolean, oneShot?: boolean, params: ParamDef[] }} DirectiveDef
  */
@@ -53,6 +54,7 @@ export function normalizeParams(type, params) {
       continue;
     }
     if (p.type === 'enum' && !p.options?.includes(v)) throw new Error(`Bad value ${v} for ${type}.${p.id}`);
+    if (p.type === 'design' && !validDesign(v)) throw new Error(`Bad design for ${type}.${p.id}`);
     if (p.type === 'number' && (typeof v !== 'number' || v < /** @type {number} */ (p.min) || v > /** @type {number} */ (p.max))) {
       throw new Error(`Bad value ${v} for ${type}.${p.id}`);
     }

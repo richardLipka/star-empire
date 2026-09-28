@@ -32,7 +32,11 @@
     "ly": "{n} ly",
     "lsun": "{n} L☉",
     "kelvin": "{min}–{max} K",
-    "au": "{n} AU"
+    "au": "{n} AU",
+    "ms": "{n} ms",
+    "s": "{n} s",
+    "min": "{n} min",
+    "c": "{n} c"
   },
   "save": {
     "save": "Save",
@@ -195,7 +199,9 @@
     "troubled": "Colonies in trouble",
     "restless": "Restless colonies",
     "autonomousCount": "Autonomous colonies",
-    "polities": "Polities known"
+    "polities": "Polities known",
+    "grievances": "Grievances held",
+    "grievance": "Empire {empire} ({count})"
   },
   "control": {
     "click": "Click",
@@ -292,7 +298,9 @@
       "generic": "fleet",
       "scout": "scout",
       "settler": "settler",
-      "courier": "courier"
+      "courier": "courier",
+      "warship": "warships",
+      "impactor": "impactor"
     },
     "at": "at {system}",
     "live": "live",
@@ -352,13 +360,17 @@
         "braking": "Drive plume (Empire {empire} signature) braking toward {near}, seen from {observer}",
         "brakingDeep": "Drive plume (Empire {empire} signature) braking in deep space, seen from {observer}",
         "accelerating": "Drive plume (Empire {empire} signature) accelerating away from {near}, seen from {observer}",
-        "acceleratingDeep": "Drive plume (Empire {empire} signature) accelerating in deep space, seen from {observer}"
+        "acceleratingDeep": "Drive plume (Empire {empire} signature) accelerating in deep space, seen from {observer}",
+        "net": "Sensor net: Empire {empire} fleet near {near}, seen from {observer}",
+        "netDeep": "Sensor net: Empire {empire} fleet in deep space, seen from {observer}"
       },
       "own": {
         "braking": "Our fleet braking toward {near}, seen from {observer}",
         "brakingDeep": "Our fleet braking in deep space, seen from {observer}",
         "accelerating": "Our fleet accelerating away from {near}, seen from {observer}",
-        "acceleratingDeep": "Our fleet accelerating in deep space, seen from {observer}"
+        "acceleratingDeep": "Our fleet accelerating in deep space, seen from {observer}",
+        "net": "Sensor net: our fleet near {near}, seen from {observer}",
+        "netDeep": "Sensor net: our fleet in deep space, seen from {observer}"
       }
     },
     "legacy": "{text}",
@@ -400,6 +412,26 @@
       "joined": "{system} has joined a breakaway polity",
       "preparedLanding": "Colonists landed at {system} on a site prepared by our robots ({percent} %)",
       "unprepared": "Colonists reached {system} expecting a prepared site and found none: half the frozen embryos are lost"
+    },
+    "combat": {
+      "attacked": {
+        "attackerWon": "Our attack on {system} succeeded: {killed} of Empire {empire} destroyed, {lost} lost",
+        "defenderWon": "Our attack on {system} failed: {lost} lost, {killed} of Empire {empire} destroyed",
+        "mutual": "Our attack on {system}: both fleets destroyed",
+        "passed": "Our fleet passed {system}: {lost} lost, {killed} of Empire {empire} destroyed"
+      },
+      "defended": {
+        "attackerWon": "{system} fell to Empire {empire}: {lost} lost, {killed} of theirs destroyed",
+        "defenderWon": "{system} held against Empire {empire}: {killed} of theirs destroyed, {lost} lost",
+        "mutual": "Battle at {system}: our defenders and the Empire {empire} fleet destroyed each other",
+        "passed": "Empire {empire} attacked {system}: {lost} lost, {killed} of theirs destroyed"
+      },
+      "strikeHit": "Our impactor struck {system}: {killed} dead",
+      "strikeMissed": "Our impactor was stopped at {system}",
+      "struck": "{system} struck by a relativistic impactor of Empire {empire}: {killed} dead",
+      "strikeStopped": "An impactor of Empire {empire} was stopped at {system}",
+      "atrocity": "The light of a dying world: Empire {empire} destroyed {system}",
+      "ourAtrocity": "The light of {system}, destroyed by our own hand, has reached our people"
     }
   },
   "sandbox": {
@@ -532,13 +564,17 @@
       },
       "warships": {
         "name": "Warship construction",
-        "desc": "How many warships to build."
+        "desc": "Keep a home guard of warships here, of the strongest design the yard can build and afford: none, defensive (2), steady (5) or war footing (10). One ship a year."
       }
     },
     "fleet": {
       "send": {
         "name": "Send fleet",
         "desc": "Launch one fleet from the target system to a destination when the order arrives."
+      },
+      "build": {
+        "name": "Build ships",
+        "desc": "Build ships of a design at this system into a new fleet. The design travels inside the order; the yard needs every technology it uses. What cannot be paid for now is built as materiel comes in."
       }
     },
     "logistics": {
@@ -617,7 +653,9 @@
     "field": "Field",
     "stance": "Stance",
     "vessel": "Colony ships",
-    "threshold": "Send to"
+    "threshold": "Send to",
+    "design": "Design",
+    "count": "Ships"
   },
   "option": {
     "priority": {
@@ -799,7 +837,8 @@
       },
       "sensor": {
         "range": "Plume detection range",
-        "angle": "Plume detection angle"
+        "angle": "Plume detection angle",
+        "net": "Sensor net radius"
       },
       "plume": {
         "visibility": "Visibility of our drive plumes"
@@ -807,7 +846,22 @@
       "research": {
         "rate": "Research rate"
       },
-      "ship": "Ship system",
+      "ship": {
+        "frigate": "Frigate hulls",
+        "cruiser": "Cruiser hulls",
+        "stealthApproach": "Stealth approaches",
+        "pdLaser": "Point-defence lasers",
+        "interceptors": "Interceptor drones",
+        "whipple": "Whipple shields",
+        "battleComputer": "Battle computers",
+        "shielding": "Field shielding",
+        "decoys": "Decoys",
+        "debrisScreen": "Debris screens",
+        "scoop": "Fuel scoops",
+        "sail": "Light sails",
+        "nearLight": "Near-light flight",
+        "containment": "Magnetic containment"
+      },
       "weapon": "Weapon",
       "planet": {
         "terraform": "Terraforming",
@@ -869,6 +923,10 @@
         "failure": "Failure of robotic preparations",
         "time": "Time to prepare a site",
         "headStart": "Terraforming begun by seeders"
+      },
+      "defense": {
+        "grid": "Planetary defences",
+        "shield": "Planetary shields"
       }
     },
     "module": {
@@ -996,5 +1054,244 @@
     "capital": "The capital: the seat of the empire does not drift.",
     "unknownForces": "The forces are known only here (Truth).",
     "points": "{n} pts"
+  },
+  "ship": {
+    "hull": {
+      "corvette": "Corvette",
+      "frigate": "Frigate",
+      "cruiser": "Cruiser",
+      "impactor": "Impactor"
+    },
+    "hullDesc": {
+      "corvette": "Two slots. Cheap, fragile, fast to build.",
+      "frigate": "Four slots. The line ship of most navies.",
+      "cruiser": "Seven slots. Slow to build, hard to kill.",
+      "impactor": "No slots: an unmanned kill vehicle at 0.85 c. It cannot brake. Its only use is the destruction of a world."
+    },
+    "component": {
+      "missile": "Missile rack",
+      "swarm": "Drone swarm",
+      "amWarhead": "Antimatter missiles",
+      "replicators": "Replicator swarm",
+      "coilgun": "Coilgun",
+      "railgun": "Railgun",
+      "flechette": "Flechette gun",
+      "vault": "Vault gun",
+      "laser": "Laser",
+      "particleBeam": "Particle beam",
+      "graser": "Graser",
+      "flak": "Flak (point defence)",
+      "pdLaser": "Point-defence laser",
+      "interceptors": "Interceptor drones",
+      "armour": "Armour",
+      "whipple": "Whipple shield",
+      "debrisScreen": "Debris screen",
+      "shielding": "Field shielding",
+      "decoys": "Decoys",
+      "battleComputer": "Battle computer"
+    },
+    "design": {
+      "picket": "Picket",
+      "lancer": "Lancer",
+      "warden": "Warden",
+      "impactor": "Impactor"
+    }
+  },
+  "plan": {
+    "priority": {
+      "title": "Targets first",
+      "warships": "warships",
+      "unarmed": "transports and civilians",
+      "defences": "planetary defences",
+      "spread": "spread fire"
+    },
+    "pd": {
+      "title": "Point defence",
+      "missiles": "against missiles",
+      "balanced": "balanced",
+      "slugs": "against slugs"
+    },
+    "formation": {
+      "title": "Formation",
+      "wall": "wall",
+      "column": "column",
+      "dispersed": "dispersed",
+      "wallHint": "Wall: every weapon bears (+20 % fire), but the whole fleet is exposed (+10 % hits taken).",
+      "columnHint": "Column: the leading ships screen the rest (−20 % hits taken), fewer weapons bear (−15 % fire).",
+      "dispersedHint": "Dispersed: missiles find fewer targets (−30 % missile hits), fire is less concentrated (−10 %)."
+    },
+    "engage": {
+      "title": "Engagement",
+      "fight": "fight",
+      "evade": "evade (hold fire, pass through)"
+    }
+  },
+  "approach": {
+    "normal": {
+      "name": "normal",
+      "desc": "Accelerate, coast, brake into each waypoint. The braking plume is seen from the target long before arrival; battles are slow and bloody."
+    },
+    "flyby": {
+      "name": "flyby (no braking)",
+      "desc": "Pass each waypoint at full speed without braking: no plume ahead of you, but the battle lasts seconds or less. The fleet brakes beyond and returns home."
+    },
+    "stealth": {
+      "name": "stealth",
+      "desc": "Gentle burns at 0.01 g and a low cruise: faint plumes seen only from close, and a much longer trip. Sensor nets still see you."
+    }
+  },
+  "action": {
+    "visit": "visit",
+    "attack": "attack",
+    "strike": "relativistic strike"
+  },
+  "fleets": {
+    "title": "Fleets",
+    "open": "Fleets",
+    "openTitle": "Fleets, designs and battle reports (F)",
+    "tab": {
+      "fleets": "Fleets",
+      "designs": "Designs",
+      "battles": "Battles"
+    },
+    "ours": "Our fleets",
+    "none": "No fleets of ours known.",
+    "pick": "Pick a fleet.",
+    "civilian": "civilian vessel",
+    "shipsStrength": {
+      "one": "{count} ship · strength {strength}",
+      "other": "{count} ships · strength {strength}"
+    },
+    "dockedAt": "at {system}",
+    "bound": "bound for {system} ({year})",
+    "deepSpace": "in deep space",
+    "truthHint": "Truth: the fleets as they really are.",
+    "knowledgeHint": "As the capital knows them: positions and losses are as old as the last report.",
+    "asOf": "as of {year} ({age} ago)",
+    "ansible": "ansible",
+    "ships": "Ships",
+    "design": "Design",
+    "count": "Count",
+    "condition": "Condition",
+    "planNow": "Battle plan (as known)",
+    "noPlan": "No battle plan: an unarmed fleet.",
+    "voyageNow": "Voyage (as known)",
+    "noVoyage": "No voyage.",
+    "orders": "Orders",
+    "planTitle": "New battle plan",
+    "sendPlan": "Send battle plan",
+    "voyageTitle": "New voyage",
+    "approach": "Approach",
+    "addWaypoint": "+ Waypoint",
+    "sendVoyage": "Send voyage",
+    "strikeWarning": "Destroying a world is the gravest of crimes. Its light will reach every colony of every empire: your own people will be ashamed, others afraid, and every empire that hears of it will hate you.",
+    "unreachable": "{fleet} cannot be reached: no route, and nowhere known for the order to wait.",
+    "sentDirect": "Orders on their way to {fleet}; they arrive in {year}.",
+    "sentMailbox": "{fleet} is in flight: the orders will wait at {system} (there by {year}) until it docks.",
+    "reachAnsible": "Orders reach it at once (ansible).",
+    "reachDocked": "Docked at {system}: orders reach it by light in {delay}.",
+    "reachNone": "Docked at {system}, out of reach of our relays.",
+    "reachMailbox": "In flight: it cannot receive anything. Orders will wait at {system} for it ({year}). Plan in advance.",
+    "reachLost": "Whereabouts unknown.",
+    "preview": "The voyage, if the orders reach it now:",
+    "flybyWindow": "passes at {speed}: beams bear {beam}, slugs {kinetic}",
+    "brakedWindow": "brakes in: a long battle (beams up to {beam})",
+    "warning": "braking plume seen {years} ahead",
+    "noWarning": "no braking plume toward the target",
+    "plumeRange": "Plumes of this approach are seen from up to {range} ly (sensor nets see any fleet near them).",
+    "returnsHome": "It brakes beyond the last target and is home at {system} in {year}.",
+    "endsAt": "It stays at {system} from {year}."
+  },
+  "designs": {
+    "title": "Designs",
+    "costStrength": "cost {cost} · strength {strength}",
+    "notYet": "not buildable yet",
+    "editor": "Design editor",
+    "name": "Name",
+    "namePlaceholder": "name of the new design",
+    "hull": "Hull",
+    "slots": {
+      "one": "{count} slot",
+      "other": "{count} slots"
+    },
+    "slot": "Slot {n}",
+    "empty": "— empty —",
+    "locked": "not yet known",
+    "stats": "Numbers",
+    "cost": "Cost (materiel)",
+    "hp": "Hull points",
+    "missiles": "Missiles per salvo",
+    "beams": "Beam damage per second",
+    "kinetics": "Slug damage per second",
+    "pd": "Point defence",
+    "protection": "Damage taken",
+    "taken": "beams ×{beam}, slugs ×{kinetic}, missiles ×{missile}; decoys {ecm}",
+    "strength": "Strength",
+    "needs": "Technologies needed",
+    "needsNothing": "Nothing: buildable from the start.",
+    "save": "Save design",
+    "saved": "Design {name} saved",
+    "hint": "A design is an idea at the capital: it reaches a shipyard inside the build order.",
+    "build": "Build",
+    "each": "{cost} materiel each",
+    "yard": "Shipyard",
+    "count": "Ships",
+    "buildHint": "The order travels to the yard by light; ships are built as materiel allows.",
+    "buildLocked": "The capital does not know every technology this design needs; a yard that does can still build it.",
+    "orderBuild": "Order ships",
+    "ordered": "Build order sent: {count} × {name} at {system}"
+  },
+  "battles": {
+    "title": "Battle reports",
+    "none": "No battle reports have reached the capital.",
+    "pick": "Pick a report.",
+    "hint": "Reports travel home at light speed, and only if someone survives to send them. Fleets in flight report when they next dock.",
+    "heard": "heard {age} later",
+    "at": "Battle at {system}, {year}",
+    "speed": "Closing speed",
+    "braked": "{speed} (braking in)",
+    "beamWindow": "Beams could bear",
+    "kineticWindow": "Slugs crossed in",
+    "pdWindow": "Point defence had",
+    "received": "Report received",
+    "timeline": "The engagement, centred on closest approach",
+    "timelineHint": "Bars: how long each weapon could act (beams and guns at most 30 s: heat). Missiles were launched long before.",
+    "closest": "closest approach",
+    "phase": {
+      "missile": "missiles",
+      "pd": "point defence",
+      "beam": "beams",
+      "kinetic": "slugs"
+    },
+    "outcome": {
+      "attackerWon": "attacker won",
+      "defenderWon": "defender held",
+      "mutual": "mutual destruction",
+      "passed": "both survived"
+    },
+    "line": "{lost} lost, {killed} destroyed · {outcome}",
+    "role": {
+      "attacker": "attacker",
+      "defender": "defender"
+    },
+    "alerted": "alerted",
+    "surprised": "surprised (half effect)",
+    "missiles": "Missiles",
+    "missileLine": "{n} fired, {stopped} stopped, {hits} hits",
+    "beams": "Beams",
+    "kinetics": "Slugs",
+    "hitLine": "{n} fired, {hits} hits",
+    "damage": "Damage dealt",
+    "losses": "Losses",
+    "lostOf": "{lost} of {total} lost",
+    "station": "planetary defences",
+    "civilian": "civilian vessels",
+    "strikeHit": "Empire {empire} struck: {killed} dead",
+    "strikeStopped": "Empire {empire}'s impactor stopped",
+    "strikeAt": "Relativistic strike on {system}, {year}",
+    "strikeHitLong": "An impactor of Empire {empire} struck the world: {killed} of {population} dead.",
+    "strikeStoppedLong": "An impactor of Empire {empire} was intercepted before it struck.",
+    "interceptChance": "Chance to intercept",
+    "strikeHint": "Only an alerted system with point defence or debris screens has any chance against a relativistic impactor."
   }
 }

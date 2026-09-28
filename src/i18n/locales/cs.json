@@ -32,7 +32,11 @@
     "ly": "{n} sv. r.",
     "lsun": "{n} L☉",
     "kelvin": "{min}–{max} K",
-    "au": "{n} AU"
+    "au": "{n} AU",
+    "ms": "{n} ms",
+    "s": "{n} s",
+    "min": "{n} min",
+    "c": "{n} c"
   },
   "save": {
     "save": "Uložit",
@@ -195,7 +199,9 @@
     "troubled": "Kolonie v nesnázích",
     "restless": "Neklidné kolonie",
     "autonomousCount": "Autonomní kolonie",
-    "polities": "Známé mocnosti"
+    "polities": "Známé mocnosti",
+    "grievances": "Křivdy",
+    "grievance": "impérium {empire} ({count})"
   },
   "control": {
     "click": "Klik",
@@ -294,7 +300,9 @@
       "generic": "flotila",
       "scout": "průzkumník",
       "settler": "osadník",
-      "courier": "kurýr"
+      "courier": "kurýr",
+      "warship": "válečné lodě",
+      "impactor": "impaktor"
     },
     "at": "u {system}",
     "live": "živě",
@@ -354,13 +362,17 @@
         "braking": "Vlečka motoru (signatura impéria {empire}) brzdí k {near}, pozorováno z {observer}",
         "brakingDeep": "Vlečka motoru (signatura impéria {empire}) brzdí v hlubokém vesmíru, pozorováno z {observer}",
         "accelerating": "Vlečka motoru (signatura impéria {empire}) zrychluje od {near}, pozorováno z {observer}",
-        "acceleratingDeep": "Vlečka motoru (signatura impéria {empire}) zrychluje v hlubokém vesmíru, pozorováno z {observer}"
+        "acceleratingDeep": "Vlečka motoru (signatura impéria {empire}) zrychluje v hlubokém vesmíru, pozorováno z {observer}",
+        "net": "Senzorová síť: flotila impéria {empire} poblíž {near}, spatřena z {observer}",
+        "netDeep": "Senzorová síť: flotila impéria {empire} v hlubokém vesmíru, spatřena z {observer}"
       },
       "own": {
         "braking": "Naše flotila brzdí k {near}, pozorováno z {observer}",
         "brakingDeep": "Naše flotila brzdí v hlubokém vesmíru, pozorováno z {observer}",
         "accelerating": "Naše flotila zrychluje od {near}, pozorováno z {observer}",
-        "acceleratingDeep": "Naše flotila zrychluje v hlubokém vesmíru, pozorováno z {observer}"
+        "acceleratingDeep": "Naše flotila zrychluje v hlubokém vesmíru, pozorováno z {observer}",
+        "net": "Senzorová síť: naše flotila poblíž {near}, spatřena z {observer}",
+        "netDeep": "Senzorová síť: naše flotila v hlubokém vesmíru, spatřena z {observer}"
       }
     },
     "legacy": "{text}",
@@ -408,6 +420,26 @@
       "joined": "{system} se přidala k odtržené mocnosti",
       "preparedLanding": "Kolonisté přistáli v soustavě {system} na místě připraveném našimi roboty ({percent} %)",
       "unprepared": "Kolonisté dorazili do soustavy {system} v očekávání připraveného místa a žádné nenašli: polovina zmrazených embryí je ztracena"
+    },
+    "combat": {
+      "attacked": {
+        "attackerWon": "Náš útok na {system} uspěl: zničeno {killed} lodí impéria {empire}, ztraceno {lost}",
+        "defenderWon": "Náš útok na {system} selhal: ztraceno {lost}, zničeno {killed} lodí impéria {empire}",
+        "mutual": "Náš útok na {system}: obě flotily zničeny",
+        "passed": "Naše flotila proletěla {system}: ztraceno {lost}, zničeno {killed} lodí impéria {empire}"
+      },
+      "defended": {
+        "attackerWon": "{system} padla impériu {empire}: ztraceno {lost}, zničeno {killed} jejich",
+        "defenderWon": "{system} odolala impériu {empire}: zničeno {killed} jejich, ztraceno {lost}",
+        "mutual": "Bitva u {system}: naši obránci a flotila impéria {empire} se navzájem zničili",
+        "passed": "Impérium {empire} zaútočilo na {system}: ztraceno {lost}, zničeno {killed} jejich"
+      },
+      "strikeHit": "Náš impaktor zasáhl {system}: {killed} mrtvých",
+      "strikeMissed": "Náš impaktor byl zastaven u {system}",
+      "struck": "{system} zasažena relativistickým impaktorem impéria {empire}: {killed} mrtvých",
+      "strikeStopped": "Impaktor impéria {empire} byl zastaven u {system}",
+      "atrocity": "Světlo umírajícího světa: impérium {empire} zničilo {system}",
+      "ourAtrocity": "Světlo soustavy {system}, zničené naší vlastní rukou, dorazilo k našemu lidu"
     }
   },
   "sandbox": {
@@ -544,13 +576,17 @@
       },
       "warships": {
         "name": "Stavba válečných lodí",
-        "desc": "Kolik válečných lodí stavět."
+        "desc": "Udržovat zde domácí stráž válečných lodí nejsilnější konstrukce, kterou loděnice umí postavit a zaplatit: žádná, obranná (2), stálá (5) nebo válečná (10). Jedna loď ročně."
       }
     },
     "fleet": {
       "send": {
         "name": "Vyslat flotilu",
         "desc": "Po příchodu rozkazu vyslat jednu flotilu z cílového systému do určeného místa."
+      },
+      "build": {
+        "name": "Postavit lodě",
+        "desc": "Postavit v této soustavě lodě dané konstrukce do nové flotily. Konstrukce cestuje v rozkazu; loděnice potřebuje všechny technologie, které používá. Co teď nelze zaplatit, se postaví, jakmile přibude materiál."
       }
     },
     "logistics": {
@@ -629,7 +665,9 @@
     "field": "Obor",
     "stance": "Postoj",
     "vessel": "Kolonizační lodě",
-    "threshold": "Poslat do"
+    "threshold": "Poslat do",
+    "design": "Konstrukce",
+    "count": "Lodí"
   },
   "option": {
     "priority": {
@@ -811,7 +849,8 @@
       },
       "sensor": {
         "range": "Dosah zachycení vleček",
-        "angle": "Úhel zachycení vleček"
+        "angle": "Úhel zachycení vleček",
+        "net": "Poloměr senzorové sítě"
       },
       "plume": {
         "visibility": "Viditelnost našich vleček"
@@ -819,7 +858,22 @@
       "research": {
         "rate": "Rychlost výzkumu"
       },
-      "ship": "Lodní systém",
+      "ship": {
+        "frigate": "Trupy fregat",
+        "cruiser": "Trupy křižníků",
+        "stealthApproach": "Skryté přílety",
+        "pdLaser": "Lasery bodové obrany",
+        "interceptors": "Záchytné drony",
+        "whipple": "Whippleovy štíty",
+        "battleComputer": "Bojové počítače",
+        "shielding": "Silové stínění",
+        "decoys": "Návnady",
+        "debrisScreen": "Clony trosek",
+        "scoop": "Palivové lapače",
+        "sail": "Světelné plachty",
+        "nearLight": "Let téměř rychlostí světla",
+        "containment": "Magnetické zadržení"
+      },
       "weapon": "Zbraň",
       "planet": {
         "terraform": "Terraformace",
@@ -881,6 +935,10 @@
         "failure": "Selhání robotických příprav",
         "time": "Doba přípravy místa",
         "headStart": "Terraformace zahájená výsadky"
+      },
+      "defense": {
+        "grid": "Planetární obrana",
+        "shield": "Planetární štíty"
       }
     },
     "module": {
@@ -1008,5 +1066,248 @@
     "capital": "Hlavní město: sídlo impéria se neodcizuje.",
     "unknownForces": "Síly jsou známy jen zde (Skutečnost).",
     "points": "{n} b."
+  },
+  "ship": {
+    "hull": {
+      "corvette": "Korveta",
+      "frigate": "Fregata",
+      "cruiser": "Křižník",
+      "impactor": "Impaktor"
+    },
+    "hullDesc": {
+      "corvette": "Dva sloty. Levná, křehká, rychle postavená.",
+      "frigate": "Čtyři sloty. Řadová loď většiny loďstev.",
+      "cruiser": "Sedm slotů. Pomalu se staví, těžko ničí.",
+      "impactor": "Žádné sloty: bezpilotní ničitel letící 0,85 c. Nemůže brzdit. Jediné jeho použití je zničení světa."
+    },
+    "component": {
+      "missile": "Raketnice",
+      "swarm": "Roj dronů",
+      "amWarhead": "Antihmotové střely",
+      "replicators": "Roj replikátorů",
+      "coilgun": "Cívkové dělo",
+      "railgun": "Kolejnicové dělo",
+      "flechette": "Šipkomet",
+      "vault": "Dělo z trezoru",
+      "laser": "Laser",
+      "particleBeam": "Částicový paprsek",
+      "graser": "Graser",
+      "flak": "Flak (bodová obrana)",
+      "pdLaser": "Laser bodové obrany",
+      "interceptors": "Záchytné drony",
+      "armour": "Pancíř",
+      "whipple": "Whippleův štít",
+      "debrisScreen": "Clona trosek",
+      "shielding": "Silové stínění",
+      "decoys": "Návnady",
+      "battleComputer": "Bojový počítač"
+    },
+    "design": {
+      "picket": "Hlídka",
+      "lancer": "Kopiník",
+      "warden": "Strážce",
+      "impactor": "Impaktor"
+    }
+  },
+  "plan": {
+    "priority": {
+      "title": "Cíle nejdřív",
+      "warships": "válečné lodě",
+      "unarmed": "transporty a civilní lodě",
+      "defences": "planetární obrana",
+      "spread": "rozptýlená palba"
+    },
+    "pd": {
+      "title": "Bodová obrana",
+      "missiles": "proti střelám",
+      "balanced": "vyvážená",
+      "slugs": "proti projektilům"
+    },
+    "formation": {
+      "title": "Formace",
+      "wall": "stěna",
+      "column": "kolona",
+      "dispersed": "rozptýlená",
+      "wallHint": "Stěna: pálí všechny zbraně (+20 % palby), ale celá flotila je vystavena (+10 % zásahů).",
+      "columnHint": "Kolona: přední lodě kryjí ostatní (−20 % zásahů), pálí méně zbraní (−15 % palby).",
+      "dispersedHint": "Rozptýlená: střely najdou méně cílů (−30 % zásahů střelami), palba je méně soustředěná (−10 %)."
+    },
+    "engage": {
+      "title": "Střetnutí",
+      "fight": "bojovat",
+      "evade": "vyhnout se (nepálit, proletět)"
+    }
+  },
+  "approach": {
+    "normal": {
+      "name": "běžný",
+      "desc": "Zrychlit, letět setrvačností, zabrzdit u každého bodu. Brzdnou vlečku cíl uvidí dlouho před příletem; bitvy jsou pomalé a krvavé."
+    },
+    "flyby": {
+      "name": "průlet (bez brzdění)",
+      "desc": "Proletět každým bodem plnou rychlostí bez brzdění: žádná vlečka před vámi, ale bitva trvá sekundy či méně. Flotila zabrzdí za cílem a vrátí se domů."
+    },
+    "stealth": {
+      "name": "skrytý",
+      "desc": "Jemné zážehy 0,01 g a nízká cestovní rychlost: slabé vlečky viditelné jen zblízka a mnohem delší cesta. Senzorové sítě vás přesto uvidí."
+    }
+  },
+  "action": {
+    "visit": "navštívit",
+    "attack": "zaútočit",
+    "strike": "relativistický úder"
+  },
+  "fleets": {
+    "title": "Flotily",
+    "open": "Flotily",
+    "openTitle": "Flotily, konstrukce a hlášení o bitvách (F)",
+    "tab": {
+      "fleets": "Flotily",
+      "designs": "Konstrukce",
+      "battles": "Bitvy"
+    },
+    "ours": "Naše flotily",
+    "none": "Žádné naše flotily nejsou známy.",
+    "pick": "Vyberte flotilu.",
+    "civilian": "civilní loď",
+    "shipsStrength": {
+      "one": "{count} loď · síla {strength}",
+      "few": "{count} lodě · síla {strength}",
+      "many": "{count} lodi · síla {strength}",
+      "other": "{count} lodí · síla {strength}"
+    },
+    "dockedAt": "u {system}",
+    "bound": "směr {system} ({year})",
+    "deepSpace": "v hlubokém vesmíru",
+    "truthHint": "Skutečnost: flotily tak, jak opravdu jsou.",
+    "knowledgeHint": "Jak je zná hlavní město: polohy a ztráty jsou staré jako poslední hlášení.",
+    "asOf": "k roku {year} (před {age})",
+    "ansible": "ansibl",
+    "ships": "Lodě",
+    "design": "Konstrukce",
+    "count": "Počet",
+    "condition": "Stav",
+    "planNow": "Bitevní plán (známý)",
+    "noPlan": "Bez bitevního plánu: neozbrojená flotila.",
+    "voyageNow": "Plavba (známá)",
+    "noVoyage": "Žádná plavba.",
+    "orders": "Rozkazy",
+    "planTitle": "Nový bitevní plán",
+    "sendPlan": "Odeslat bitevní plán",
+    "voyageTitle": "Nová plavba",
+    "approach": "Přílet",
+    "addWaypoint": "+ Bod trasy",
+    "sendVoyage": "Odeslat plavbu",
+    "strikeWarning": "Zničení světa je nejtěžší zločin. Jeho světlo dorazí do každé kolonie každé říše: váš vlastní lid se bude stydět, ostatní se budou bát a každá říše, která se o tom dozví, vás bude nenávidět.",
+    "unreachable": "{fleet} nelze zastihnout: žádná cesta a není známo, kde by rozkaz mohl čekat.",
+    "sentDirect": "Rozkazy jsou na cestě k {fleet}; dorazí roku {year}.",
+    "sentMailbox": "{fleet} je v letu: rozkazy počkají v soustavě {system} (tam roku {year}), dokud nepřistane.",
+    "reachAnsible": "Rozkazy ji zastihnou okamžitě (ansibl).",
+    "reachDocked": "Kotví u {system}: rozkazy ji zastihnou světlem za {delay}.",
+    "reachNone": "Kotví u {system}, mimo dosah našich relé.",
+    "reachMailbox": "V letu: nemůže nic přijmout. Rozkazy na ni počkají v soustavě {system} ({year}). Plánujte dopředu.",
+    "reachLost": "Poloha neznámá.",
+    "preview": "Plavba, pokud ji rozkazy zastihnou nyní:",
+    "flybyWindow": "proletí rychlostí {speed}: paprsky pálí {beam}, projektily {kinetic}",
+    "brakedWindow": "zabrzdí v soustavě: dlouhá bitva (paprsky až {beam})",
+    "warning": "brzdná vlečka viditelná {years} předem",
+    "noWarning": "žádná brzdná vlečka směrem k cíli",
+    "plumeRange": "Vlečky tohoto příletu jsou viditelné až na {range} sv. r. (senzorové sítě vidí každou flotilu nablízku).",
+    "returnsHome": "Zabrzdí za posledním cílem a doma u {system} bude roku {year}.",
+    "endsAt": "Zůstane u {system} od roku {year}."
+  },
+  "designs": {
+    "title": "Konstrukce",
+    "costStrength": "cena {cost} · síla {strength}",
+    "notYet": "zatím nelze stavět",
+    "editor": "Návrh konstrukce",
+    "name": "Název",
+    "namePlaceholder": "název nové konstrukce",
+    "hull": "Trup",
+    "slots": {
+      "one": "{count} slot",
+      "few": "{count} sloty",
+      "many": "{count} slotu",
+      "other": "{count} slotů"
+    },
+    "slot": "Slot {n}",
+    "empty": "— prázdný —",
+    "locked": "dosud neznámé",
+    "stats": "Čísla",
+    "cost": "Cena (materiál)",
+    "hp": "Body trupu",
+    "missiles": "Střel v salvě",
+    "beams": "Poškození paprsky za sekundu",
+    "kinetics": "Poškození projektily za sekundu",
+    "pd": "Bodová obrana",
+    "protection": "Přijaté poškození",
+    "taken": "paprsky ×{beam}, projektily ×{kinetic}, střely ×{missile}; návnady {ecm}",
+    "strength": "Síla",
+    "needs": "Potřebné technologie",
+    "needsNothing": "Nic: lze stavět od začátku.",
+    "save": "Uložit konstrukci",
+    "saved": "Konstrukce {name} uložena",
+    "hint": "Konstrukce je myšlenka v hlavním městě: do loděnice dorazí v rozkazu ke stavbě.",
+    "build": "Stavba",
+    "each": "{cost} materiálu za kus",
+    "yard": "Loděnice",
+    "count": "Lodí",
+    "buildHint": "Rozkaz putuje do loděnice světlem; lodě se staví podle materiálu.",
+    "buildLocked": "Hlavní město nezná všechny technologie, které konstrukce potřebuje; loděnice, která je zná, ji přesto postaví.",
+    "orderBuild": "Objednat lodě",
+    "ordered": "Rozkaz ke stavbě odeslán: {count} × {name} u {system}"
+  },
+  "battles": {
+    "title": "Hlášení o bitvách",
+    "none": "Do hlavního města nedorazilo žádné hlášení o bitvě.",
+    "pick": "Vyberte hlášení.",
+    "hint": "Hlášení letí domů rychlostí světla, a jen pokud někdo přežije, aby je odeslal. Flotily v letu hlásí, až přistanou.",
+    "heard": "zpráva o {age} později",
+    "at": "Bitva u {system}, {year}",
+    "speed": "Rychlost sbližování",
+    "braked": "{speed} (brzdění)",
+    "beamWindow": "Paprsky mohly pálit",
+    "kineticWindow": "Projektily se minuly za",
+    "pdWindow": "Bodová obrana měla",
+    "received": "Hlášení přijato",
+    "timeline": "Střetnutí se středem v okamžiku největšího přiblížení",
+    "timelineHint": "Pruhy: jak dlouho mohla každá zbraň působit (paprsky a děla nejvýše 30 s: teplo). Střely byly vypuštěny dávno předtím.",
+    "closest": "největší přiblížení",
+    "phase": {
+      "missile": "střely",
+      "pd": "bodová obrana",
+      "beam": "paprsky",
+      "kinetic": "projektily"
+    },
+    "outcome": {
+      "attackerWon": "útočník zvítězil",
+      "defenderWon": "obránce vydržel",
+      "mutual": "vzájemné zničení",
+      "passed": "obě strany přežily"
+    },
+    "line": "{lost} ztraceno, {killed} zničeno · {outcome}",
+    "role": {
+      "attacker": "útočník",
+      "defender": "obránce"
+    },
+    "alerted": "varován",
+    "surprised": "zaskočen (poloviční účinek)",
+    "missiles": "Střely",
+    "missileLine": "{n} vypuštěno, {stopped} zachyceno, {hits} zásahů",
+    "beams": "Paprsky",
+    "kinetics": "Projektily",
+    "hitLine": "{n} výstřelů, {hits} zásahů",
+    "damage": "Způsobené poškození",
+    "losses": "Ztráty",
+    "lostOf": "{lost} z {total} ztraceno",
+    "station": "planetární obrana",
+    "civilian": "civilní lodě",
+    "strikeHit": "Úder impéria {empire}: {killed} mrtvých",
+    "strikeStopped": "Impaktor impéria {empire} zastaven",
+    "strikeAt": "Relativistický úder na {system}, {year}",
+    "strikeHitLong": "Impaktor impéria {empire} zasáhl svět: {killed} z {population} mrtvých.",
+    "strikeStoppedLong": "Impaktor impéria {empire} byl zachycen dřív, než zasáhl.",
+    "interceptChance": "Šance na zachycení",
+    "strikeHint": "Proti relativistickému impaktoru má jistou šanci jen varovaná soustava s bodovou obranou nebo clonou trosek."
   }
 }

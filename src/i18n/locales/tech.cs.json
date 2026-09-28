@@ -85,6 +85,18 @@
     "near-c": {
       "name": "Kinematika blízko rychlosti světla",
       "desc": "Co musí trup vydržet, aby žil na hranici rychlosti světla."
+    },
+    "spaceframes": {
+      "name": "Konstrukce fregat",
+      "desc": "Trupy dost pevné, aby nesly skutečné zbraně při desetině rychlosti světla."
+    },
+    "capital-ships": {
+      "name": "Konstrukce velkých lodí",
+      "desc": "Křižníky: lodě velké jako města, a stejně drahé."
+    },
+    "cold-drive": {
+      "name": "Pohony se studeným výtokem",
+      "desc": "Jemné zážehy, které sotva svítí. Umožní skrytý přílet; vlečky jsou slabší."
     }
   },
   "com": {
@@ -143,6 +155,14 @@
     "quantum-keys": {
       "name": "Kanály s kvantovými klíči",
       "desc": "Klíče, které prozradí každého odposlouchávajícího: síla šifry +2."
+    },
+    "sensor-net": {
+      "name": "Senzorové sítě",
+      "desc": "Unášené senzory kolem soustavy vidí vše, co se pohybuje nablízku, ať motory hoří, nebo ne."
+    },
+    "deep-net": {
+      "name": "Hluboké senzorové sítě",
+      "desc": "Sítě široké světelné roky, protkané neutrinovými detektory."
     }
   },
   "inf": {
@@ -201,6 +221,10 @@
     "codebreakers": {
       "name": "Luštitelé úrovně beta",
       "desc": "Simulované mysli, které cizí tajemství nikdy neomrzí: dešifrování +2."
+    },
+    "battle-computers": {
+      "name": "Bojové počítače",
+      "desc": "Plány prováděné v mikrosekundách, protože nic jiného není dost rychlé."
     }
   },
   "pla": {
@@ -435,6 +459,14 @@
     "vault": {
       "name": "Trezorová výzbroj",
       "desc": "Zbraně zapečetěné po staletí, určené pro světy, ne lodě."
+    },
+    "whipple": {
+      "name": "Whippleovy štíty",
+      "desc": "Vrstvy, které z projektilu udělají spršku dřív, než dopadne na trup."
+    },
+    "batteries": {
+      "name": "Orbitální baterie",
+      "desc": "Děla a bodová obrana kolem obydleného světa."
     }
   },
   "nrg": {
@@ -469,6 +501,14 @@
     "graser": {
       "name": "Gama laser",
       "desc": "Nejtvrdší světlo: krátký dosah, žádná obrana."
+    },
+    "pd-lasers": {
+      "name": "Lasery bodové obrany",
+      "desc": "Rychlé lasery, které vypalují střely z oblohy."
+    },
+    "defense-shield": {
+      "name": "Planetární silová pole",
+      "desc": "Pole nad světem, která rozptylují paprsky."
     }
   },
   "msl": {
@@ -503,6 +543,10 @@
     "replicators": {
       "name": "Sebereplikující drony",
       "desc": "Zbraň, která roste. A možná nepřestane."
+    },
+    "interceptors": {
+      "name": "Záchytné drony",
+      "desc": "Malí lovci, kteří vyrazí vstříc projektilům a impaktorům daleko od cíle."
     }
   },
   "wor": {

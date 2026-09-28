@@ -8,6 +8,8 @@ import { imposeDirective } from '../governors/module.js';
 import { colonies, setColony } from '../colony/module.js';
 import { capacity } from '../colony/model.js';
 import { addController } from '../ai/module.js';
+import { buildShips, designOf } from '../ships/module.js';
+import { colonyAt } from '../colony/module.js';
 
 /**
  * Starting situations. A scenario runs once on a new game, after every
@@ -68,6 +70,15 @@ export function sandboxScenario(world, ctx) {
   }
   // Empire B is played by the AI, from its own knowledge and by its own directives.
   addController(world, ctx, 'B', 'expansionist');
+  // A home guard at each capital, and a squadron at Sol for the player.
+  for (const [empire, system] of [['A', 'sol'], ['B', empireState(world).empires.B.capital]]) {
+    const c = /** @type {import('../colony/module.js').Colony} */ (colonyAt(world, system));
+    const funds = c.materiel;
+    c.materiel += 1000;
+    buildShips(world, ctx, { system, design: /** @type {any} */ (designOf(world, empire, 'picket')), count: 4, mission: { kind: 'guard', home: system }, name: SANDBOX_FLEETS.guard });
+    if (empire === 'A') buildShips(world, ctx, { system, design: /** @type {any} */ (designOf(world, empire, 'picket')), count: 3, name: SANDBOX_FLEETS.squadron });
+    c.materiel = funds;
+  }
 }
 
 /**
@@ -89,6 +100,9 @@ function settleSandbox(world) {
     }
   }
 }
+
+/** Names of the starting fleets (proper names, not translated). */
+export const SANDBOX_FLEETS = { guard: 'Home Guard', squadron: 'First Squadron' };
 
 /** Research focus of the capitals at the start (the player changes it from the research screen). */
 export const SANDBOX_RESEARCH = { A: 'communication', B: 'engines' };

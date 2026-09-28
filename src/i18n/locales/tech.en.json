@@ -85,6 +85,18 @@
     "near-c": {
       "name": "Near-light kinematics",
       "desc": "What a hull must survive to live at the edge of light speed."
+    },
+    "spaceframes": {
+      "name": "Frigate spaceframes",
+      "desc": "Hulls strong enough to carry real weapons at a tenth of light."
+    },
+    "capital-ships": {
+      "name": "Capital spaceframes",
+      "desc": "Cruisers: ships that are small cities, and cost like them."
+    },
+    "cold-drive": {
+      "name": "Cold-exhaust drives",
+      "desc": "Gentle burns that barely glow. Allows stealth approaches; plumes are fainter."
     }
   },
   "com": {
@@ -143,6 +155,14 @@
     "quantum-keys": {
       "name": "Quantum-keyed channels",
       "desc": "Keys that reveal any eavesdropper: cipher strength +2."
+    },
+    "sensor-net": {
+      "name": "Sensor nets",
+      "desc": "Drifting sensors around a system see anything that moves nearby, burning or not."
+    },
+    "deep-net": {
+      "name": "Deep sensor nets",
+      "desc": "Nets light-years wide, strung with neutrino detectors."
     }
   },
   "inf": {
@@ -201,6 +221,10 @@
     "codebreakers": {
       "name": "Beta-level codebreakers",
       "desc": "Simulated minds that never tire of other people's secrets: decryption +2."
+    },
+    "battle-computers": {
+      "name": "Battle computers",
+      "desc": "Plans executed in microseconds, because nothing else is fast enough."
     }
   },
   "pla": {
@@ -435,6 +459,14 @@
     "vault": {
       "name": "Vault ordnance",
       "desc": "Weapons kept sealed for centuries, meant for worlds, not ships."
+    },
+    "whipple": {
+      "name": "Whipple shields",
+      "desc": "Layers that turn a slug into spray before it reaches the hull."
+    },
+    "batteries": {
+      "name": "Orbital batteries",
+      "desc": "Guns and point defences around an inhabited world."
     }
   },
   "nrg": {
@@ -469,6 +501,14 @@
     "graser": {
       "name": "Gamma-ray laser",
       "desc": "The hardest light: short range, no defence."
+    },
+    "pd-lasers": {
+      "name": "Point-defence lasers",
+      "desc": "Fast lasers that burn missiles out of the sky."
+    },
+    "defense-shield": {
+      "name": "Planetary field shields",
+      "desc": "Fields over a world that scatter beams."
     }
   },
   "msl": {
@@ -503,6 +543,10 @@
     "replicators": {
       "name": "Self-replicating drones",
       "desc": "A weapon that grows. And may not stop."
+    },
+    "interceptors": {
+      "name": "Interceptor drones",
+      "desc": "Small hunters that meet slugs and impactors far out."
     }
   },
   "wor": {

@@ -2,6 +2,7 @@
 import { defineModule } from '../sim/module.js';
 import { GameError } from '../core/errors.js';
 import { bump, NETWORK } from '../core/versions.js';
+import { distance } from '../core/vec3.js';
 
 /**
  * Empires and their presence in star systems. In M3 presence is only an
@@ -174,7 +175,7 @@ export function abandonPresence(world, ctx, { system, reason }) {
   if (emp.capital === system) {
     // The seat moves to the nearest system still held (with the archives); with none left, the polity dissolves.
     const here = ctx.data.catalog.get(system).pos;
-    const d = (/** @type {string} */ s) => { const q = ctx.data.catalog.get(s).pos; return Math.hypot(q.x - here.x, q.y - here.y, q.z - here.z); };
+    const d = (/** @type {string} */ s) => distance(ctx.data.catalog.get(s).pos, here);
     const next = Object.entries(st.presence).filter(([, q]) => q.empire === p.empire).map(([s]) => s).sort((a, b) => d(a) - d(b))[0];
     if (next) {
       emp.capital = next;

@@ -6,6 +6,7 @@ import { infoState } from '../../info/module.js';
 import { countStatuses } from '../../perspective/starStatus.js';
 import { securityPicture } from '../../perspective/security.js';
 import { colonyTotals } from '../../perspective/colony.js';
+import { grievancesOf } from '../../combat/module.js';
 
 /**
  * Empire summary shown when nothing is selected.
@@ -40,6 +41,7 @@ function colonyRows(c, pic) {
     [t('panel.restless'), String(own.filter((s) => s.loyalty?.stage === 'restless').length)],
     [t('panel.autonomousCount'), String(own.filter((s) => s.loyalty?.stage === 'autonomous').length)],
     [t('panel.polities'), [...new Set(pic.systems.map((s) => s.owner))].filter((o) => o !== pic.empire).sort().join(', ') || '—'],
+    [t('panel.grievances'), Object.entries(grievancesOf(c.game.world, pic.empire)).map(([e, n]) => t('panel.grievance', { empire: e, count: n })).join(', ') || '—'],
   ];
 }
 

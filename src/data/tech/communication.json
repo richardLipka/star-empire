@@ -201,6 +201,40 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "com.sensor-net",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "com.optics",
+        "msl.autonomy"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "sensor.net",
+          "op": "add",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "id": "com.deep-net",
+      "kind": "application",
+      "tier": 5,
+      "requires": [
+        "com.neutrino",
+        "com.sensor-net"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "sensor.net",
+          "op": "add",
+          "value": 3
+        }
+      ]
     }
   ]
 }

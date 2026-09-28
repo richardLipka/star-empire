@@ -22,6 +22,7 @@ export function paramValue(p, v, name) {
     case 'enum': return t(`option.${p.id}.${v}`);
     case 'boolean': return t(v ? 'option.yes' : 'option.no');
     case 'system': return name(v);
+    case 'design': return v?.name ?? t(`ship.design.${v?.id}`);
     case 'drive': return typeof v === 'number' ? t(`drive.${DRIVE_TIERS[v].id}`) : t('drive.spec', { g: v.accelG, c: v.cruise });
     default: return unitText(p.unit, v);
   }

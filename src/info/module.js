@@ -14,7 +14,7 @@ import { emptyKnowledge, recordEntry, recordExplored, logDispatch } from './know
  * @typedef {object} Message
  * @property {string} id
  * @property {string} empire
- * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint' | 'intercept' | 'colony'} kind
+ * @property {'report' | 'fleetReport' | 'directive' | 'fleetOrder' | 'note' | 'sighting' | 'blueprint' | 'intercept' | 'colony' | 'battle' | 'atrocity'} kind
  * @property {string} origin     node where it was created
  * @property {string} target     system or fleet id
  * @property {number} createdAt
@@ -351,6 +351,7 @@ export function absorbSystemReport(world, ctx, empire, system, entry, data) {
 export const fleetSnapshot = (f) => JSON.parse(JSON.stringify({
   id: f.id, name: f.name, empire: f.empire, status: f.status, at: f.at, dest: f.dest, legs: f.legs,
   ansible: f.ansible, courier: f.courier, transmitter: f.transmitter, role: f.role, drive: f.drive,
+  ships: f.ships ?? null, designs: f.designs ?? null, plan: f.plan ?? null, voyage: f.voyage ?? null,
 }));
 
 /** Fleet events after which the ship is gone (used up or lost). */

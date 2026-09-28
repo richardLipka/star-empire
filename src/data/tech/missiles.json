@@ -102,6 +102,20 @@
           "target": "weapon.replicators"
         }
       ]
+    },
+    {
+      "id": "msl.interceptors",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "msl.autonomy"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.interceptors"
+        }
+      ]
     }
   ]
 }

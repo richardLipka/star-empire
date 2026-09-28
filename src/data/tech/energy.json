@@ -92,6 +92,35 @@
           "target": "weapon.graser"
         }
       ]
+    },
+    {
+      "id": "nrg.pd-lasers",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "nrg.optics"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.pdLaser"
+        }
+      ]
+    },
+    {
+      "id": "nrg.defense-shield",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "nrg.fields",
+        "nrg.shielding"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "defense.shield"
+        }
+      ]
     }
   ]
 }

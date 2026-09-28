@@ -92,6 +92,21 @@ const migrations = {
     for (const b of Object.values(w.state.governors?.books ?? {})) /** @type {any} */ (b).settings.autonomy ??= 'normal';
     return { ...w, version: 7 }; // loyalty records start on the next tick; capabilities gain defaults when next recomputed
   },
+  /** v7 → v8: ship design, combat, voyages, fleet mailboxes, sensor nets. */
+  7: (w) => {
+    const insertAfter = (/** @type {string} */ id, /** @type {string} */ after) => {
+      if (w.modules.includes(id)) return;
+      const at = w.modules.indexOf(after);
+      w.modules.splice(at < 0 ? w.modules.length : at + 1, 0, id);
+    };
+    insertAfter('ships', 'colony');
+    insertAfter('combat', 'loyalty');
+    w.state.ships ??= { designs: {} };
+    w.state.combat ??= { records: [], scorched: {}, told: {} };
+    w.state.fleet.mailbox ??= {};
+    if (w.state.detection) w.state.detection.netSeen ??= {};
+    return { ...w, version: 8 };
+  },
 };
 
 /**

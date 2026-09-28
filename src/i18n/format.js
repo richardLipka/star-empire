@@ -49,3 +49,13 @@ export function fmtSpeed(rate) {
   if (rate < 1) return t('speed.months', { n: Math.round(rate * 12) });
   return t('speed.years', { n: Math.round(rate) });
 }
+
+/** A short span in seconds: "3.2 ms", "14 s", "12 min". @param {number} s */
+export function fmtSeconds(s) {
+  if (s < 1) return t('unit.ms', { n: nf({ maximumFractionDigits: s < 0.01 ? 2 : 1 }).format(s * 1000) });
+  if (s < 120) return t('unit.s', { n: nf({ maximumFractionDigits: s < 10 ? 1 : 0 }).format(s) });
+  return t('unit.min', { n: nf({ maximumFractionDigits: 0 }).format(s / 60) });
+}
+
+/** A speed as a fraction of c: "0.12 c". @param {number} v */
+export const fmtC = (v) => t('unit.c', { n: nf({ maximumFractionDigits: v < 0.01 ? 4 : 2 }).format(v) });

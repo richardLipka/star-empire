@@ -149,7 +149,9 @@ function found(world, ctx, system, empire) {
   const mode = /** @type {Mode} */ (f.mode);
   const def = mode === 'old' ? null : RULES.modes[mode];
   const society = def?.society ?? 'old';
-  const site = chooseSite(world.seed, ctx.data.catalog.get(system));
+  let site = chooseSite(world.seed, ctx.data.catalog.get(system));
+  // A world burnt by a relativistic impact is a dead world: domes only.
+  if (world.state.combat?.scorched[system] != null && (site.kind === 'habitable' || site.kind === 'terraformed' || site.kind === 'terraformable')) site = { ...site, kind: 'hostile' };
   const caps = empireState(world).presence[system]?.capabilities;
   const prep = consumePreparation(world, ctx, system, empire);
   // Embryo ships sent to a site believed ready carry little: without the robots' nurseries, half the frozen stock is lost.

@@ -199,6 +199,21 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "inf.battle-computers",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "inf.pattern",
+        "msl.guidance"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.battleComputer"
+        }
+      ]
     }
   ]
 }

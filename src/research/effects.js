@@ -17,7 +17,7 @@ import { DRIVE_TIERS } from '../fleet/drives.js';
  *              robotic preparation (prepare.*, colony.prepare)
  * - loyalty:   drift push and pull, latency, secession; cultural missions
  *
- * @typedef {{ relayBonus: number, sensorRange: number, sensorAngle: number, plumeVisibility: number, researchRate: number,
+ * @typedef {{ relayBonus: number, sensorRange: number, sensorAngle: number, sensorNet: number, plumeVisibility: number, researchRate: number,
  *             cipher: number, decrypt: number, interceptRange: number, beamSpill: number, drive: string | null, unlocks: string[],
  *             colony: ColonyCaps, loyalty: LoyaltyCaps, prepare: PrepareCaps }} Capabilities
  * @typedef {{ capacity: Record<string, number>, food: number, foodClosed: number, growth: number, industry: number, risk: Record<string, number>, instability: number, terraformSpeed: number }} ColonyCaps
@@ -27,7 +27,7 @@ import { DRIVE_TIERS } from '../fleet/drives.js';
 
 /** @returns {Capabilities} */
 export const baseCapabilities = () => ({
-  relayBonus: 0, sensorRange: 0, sensorAngle: 0, plumeVisibility: 1, researchRate: 1,
+  relayBonus: 0, sensorRange: 0, sensorAngle: 0, sensorNet: 0, plumeVisibility: 1, researchRate: 1,
   cipher: 0, decrypt: 0, interceptRange: 0, beamSpill: 1, drive: null, unlocks: [],
   colony: {
     capacity: { habitable: 1, terraformed: 1, terraformable: 1, hostile: 1, orbital: 1 },
@@ -57,6 +57,7 @@ export function capabilities(known) {
         case 'relay.range': caps.relayBonus += e.value; break;
         case 'sensor.range': caps.sensorRange += e.value; break;
         case 'sensor.angle': caps.sensorAngle += e.value; break;
+        case 'sensor.net': caps.sensorNet += e.value; break;
         case 'research.rate': caps.researchRate *= e.value; break;
         case 'plume.visibility': caps.plumeVisibility *= e.value; break;
         case 'crypto.cipher': caps.cipher += e.value; break;

@@ -143,6 +143,56 @@
           "target": "ship.nearLight"
         }
       ]
+    },
+    {
+      "id": "eng.spaceframes",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "eng.nozzle",
+        "pla.materials"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.frigate"
+        }
+      ]
+    },
+    {
+      "id": "eng.capital-ships",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "eng.antimatter",
+        "eng.spaceframes"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.cruiser"
+        }
+      ]
+    },
+    {
+      "id": "eng.cold-drive",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "eng.nozzle"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "ship.stealthApproach"
+        },
+        {
+          "kind": "modifier",
+          "target": "plume.visibility",
+          "op": "mul",
+          "value": 0.85
+        }
+      ]
     }
   ]
 }

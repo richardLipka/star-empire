@@ -5,6 +5,8 @@ import courier from './courier.js';
 import fleetSend from './fleetSend.js';
 import prepare from './prepare.js';
 import missions from './missions.js';
+import warships from './warships.js';
+import build from './build.js';
 
 /**
  * Behaviour per directive type. Types without an entry are "standing
@@ -19,6 +21,8 @@ export const BEHAVIOURS = {
   'fleet.send': fleetSend,
   'expansion.prepare': prepare,
   'governance.missions': missions,
+  'military.warships': warships,
+  'fleet.build': build,
 };
 
 /** mission kind → behaviour that handles arrivals. */

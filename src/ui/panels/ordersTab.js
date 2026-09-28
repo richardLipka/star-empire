@@ -1,5 +1,6 @@
 // @ts-check
 import { h } from '../dom.js';
+import { designsOf } from '../../ships/module.js';
 import { t } from '../../i18n/index.js';
 import { fmtYearShort } from '../../i18n/format.js';
 import { CATEGORIES, COMMON_PARAMS, directiveDef } from '../../governors/catalog.js';
@@ -94,6 +95,13 @@ function control(p, measure, c) {
       return driveSelect(get() ?? 0, set);
     case 'system':
       return h('span.dim', {}, measure ? t('orders.systemParam', { value: c.name(measure) }) : t('orders.systemNone'));
+    case 'design': {
+      // The design itself travels inside the order.
+      const designs = designsOf(c.game.world, c.empire);
+      if (!get()) set(designs[0]);
+      return h('select', { onchange: (/** @type {Event} */ e) => set(designs[Number(/** @type {HTMLSelectElement} */ (e.target).value)]) },
+        ...designs.map((d, i) => h('option', { value: i, selected: get()?.id === d.id }, d.name ?? t(`ship.design.${d.id}`))));
+    }
     default:
       return h('span');
   }

@@ -1,0 +1,243 @@
+{
+  "note": "Hulls and components for ship design (M9, docs/FLEETS.md). unlock: capability needed (a technology effect target), null = known from the start. Texts: ship.hull.<id>, ship.component.<id> in src/i18n/locales.",
+  "hulls": {
+    "corvette": {
+      "slots": 2,
+      "hp": 6,
+      "cost": 30,
+      "unlock": null
+    },
+    "frigate": {
+      "slots": 4,
+      "hp": 14,
+      "cost": 70,
+      "unlock": "ship.frigate"
+    },
+    "cruiser": {
+      "slots": 7,
+      "hp": 32,
+      "cost": 180,
+      "unlock": "ship.cruiser"
+    },
+    "impactor": {
+      "slots": 0,
+      "hp": 1,
+      "cost": 60,
+      "unlock": "weapon.rkv",
+      "unmanned": true,
+      "drive": {
+        "accelG": 3,
+        "cruise": 0.85
+      },
+      "note": "an unmanned relativistic kill vehicle: a world-killer that cannot brake"
+    }
+  },
+  "components": {
+    "missile": {
+      "kind": "missile",
+      "cost": 10,
+      "salvo": 6,
+      "damage": 2,
+      "evade": 0,
+      "unlock": null
+    },
+    "swarm": {
+      "kind": "missile",
+      "cost": 16,
+      "salvo": 20,
+      "damage": 1,
+      "evade": 0.5,
+      "unlock": "weapon.swarm"
+    },
+    "amWarhead": {
+      "kind": "missile",
+      "cost": 24,
+      "salvo": 4,
+      "damage": 10,
+      "evade": 0.2,
+      "unlock": "weapon.antimatterWarhead"
+    },
+    "replicators": {
+      "kind": "missile",
+      "cost": 30,
+      "salvo": 30,
+      "damage": 2,
+      "evade": 0.6,
+      "unlock": "weapon.replicators"
+    },
+    "coilgun": {
+      "kind": "kinetic",
+      "cost": 8,
+      "rate": 4,
+      "damage": 0.3,
+      "range": 0.2,
+      "unlock": "weapon.coilgun"
+    },
+    "railgun": {
+      "kind": "kinetic",
+      "cost": 14,
+      "rate": 2,
+      "damage": 1,
+      "range": 0.3,
+      "unlock": "weapon.railgun"
+    },
+    "flechette": {
+      "kind": "kinetic",
+      "cost": 12,
+      "rate": 20,
+      "damage": 0.08,
+      "range": 0.1,
+      "pd": 6,
+      "unlock": "weapon.flechette"
+    },
+    "vault": {
+      "kind": "kinetic",
+      "cost": 60,
+      "rate": 0.2,
+      "damage": 25,
+      "range": 0.5,
+      "unlock": "weapon.vault"
+    },
+    "laser": {
+      "kind": "beam",
+      "cost": 12,
+      "rate": 0.5,
+      "damage": 0.4,
+      "range": 1,
+      "unlock": "weapon.laser"
+    },
+    "particleBeam": {
+      "kind": "beam",
+      "cost": 20,
+      "rate": 0.2,
+      "damage": 2,
+      "range": 0.5,
+      "unlock": "weapon.particleBeam"
+    },
+    "graser": {
+      "kind": "beam",
+      "cost": 40,
+      "rate": 0.2,
+      "damage": 6,
+      "range": 3,
+      "unlock": "weapon.graser"
+    },
+    "flak": {
+      "kind": "pd",
+      "cost": 6,
+      "pd": 6,
+      "unlock": null
+    },
+    "pdLaser": {
+      "kind": "pd",
+      "cost": 12,
+      "pd": 14,
+      "unlock": "ship.pdLaser"
+    },
+    "interceptors": {
+      "kind": "pd",
+      "cost": 16,
+      "pd": 10,
+      "vsKinetic": 2,
+      "unlock": "ship.interceptors"
+    },
+    "armour": {
+      "kind": "armour",
+      "cost": 6,
+      "hp": 4,
+      "unlock": null
+    },
+    "whipple": {
+      "kind": "screen",
+      "cost": 8,
+      "hp": 1,
+      "kinetic": 0.5,
+      "unlock": "ship.whipple"
+    },
+    "debrisScreen": {
+      "kind": "screen",
+      "cost": 12,
+      "kinetic": 0.35,
+      "missile": 0.8,
+      "unlock": "ship.debrisScreen"
+    },
+    "shielding": {
+      "kind": "shield",
+      "cost": 18,
+      "beam": 0.5,
+      "unlock": "ship.shielding"
+    },
+    "decoys": {
+      "kind": "ecm",
+      "cost": 10,
+      "ecm": 0.3,
+      "unlock": "ship.decoys"
+    },
+    "battleComputer": {
+      "kind": "computer",
+      "cost": 14,
+      "accuracy": 1.3,
+      "unlock": "ship.battleComputer"
+    }
+  },
+  "defaultDesigns": [
+    {
+      "id": "picket",
+      "hull": "corvette",
+      "components": [
+        "missile",
+        "flak"
+      ]
+    },
+    {
+      "id": "lancer",
+      "hull": "frigate",
+      "components": [
+        "laser",
+        "laser",
+        "flak",
+        "armour"
+      ]
+    },
+    {
+      "id": "warden",
+      "hull": "cruiser",
+      "components": [
+        "laser",
+        "laser",
+        "missile",
+        "missile",
+        "pdLaser",
+        "armour",
+        "armour"
+      ]
+    },
+    {
+      "id": "impactor",
+      "hull": "impactor",
+      "components": []
+    }
+  ],
+  "approaches": {
+    "note": "How a fleet closes on a waypoint. normal: accelerate, coast, brake (bright braking plume toward the target). flyby: no braking (no plume ahead, but it passes at full speed: a battle of seconds, and it must brake beyond). stealth: gentle burns (accelG, cruise capped): faint plumes, a much longer trip.",
+    "normal": {
+      "brake": true
+    },
+    "flyby": {
+      "brake": false
+    },
+    "stealth": {
+      "brake": true,
+      "accelG": 0.01,
+      "cruise": 0.04,
+      "unlock": "ship.stealthApproach"
+    }
+  },
+  "plumeReferenceG": 0.1,
+  "warshipLevels": {
+    "none": 0,
+    "defensive": 2,
+    "steady": 5,
+    "war": 10
+  }
+}

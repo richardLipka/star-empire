@@ -6,6 +6,8 @@ import { fleetState } from '../fleet/module.js';
 import { positionOnLegs } from '../fleet/legs.js';
 import { send, recordDispatch } from '../info/module.js';
 import { distance, dot, normalize, scale, sub, length } from '../core/vec3.js';
+import { gToLyYr2 } from '../core/units.js';
+import { PLUME_REFERENCE_G } from '../ships/catalog.js';
 
 /**
  * Drive-plume detection (DESIGN §5). A fleet is visible only while its engines
@@ -14,9 +16,13 @@ import { distance, dot, normalize, scale, sub, length } from '../core/vec3.js';
  * - braking toward its destination, the plume points ahead: seen from the destination.
  * A coasting fleet is dark. Light from the burn reaches an observer at c, and
  * the observer's report then travels to its capital like any message.
+ * The brightness of a plume grows with the burn: a gentle stealth burn is
+ * seen from far less far (range × √(accel / reference accel)).
+ * Sensor nets (technology) see any foreign fleet in flight within their
+ * radius, burning or not: the answer to dark flybys and stealth approaches.
  *
  * @typedef {import('../core/vec3.js').Vec3} Vec3
- * @typedef {'accelerating' | 'braking'} Phase
+ * @typedef {'accelerating' | 'braking' | 'net'} Phase
  * @typedef {object} Sighting
  * @property {string} id
  * @property {string} observer        system that saw it
@@ -41,7 +47,37 @@ const POINT_BLANK = 0.02;
 export const detectionModule = defineModule({
   id: 'detection',
   dependsOn: ['galaxy', 'empire', 'fleet', 'info'],
-  initState: () => ({ /** @type {Record<string, Sighting[]>} */ sightings: {} }),
+  initState: () => ({
+    /** @type {Record<string, Sighting[]>} */ sightings: {},
+    /** @type {Record<string, number>} "observer|fleet" → when a sensor net last reported it */ netSeen: {},
+  }),
+
+  tick(world, dt, ctx) {
+    // Sensor nets sweep four times a year.
+    if (Math.floor(ctx.now * 4) === Math.floor((ctx.now - dt) * 4)) return;
+    const nets = Object.entries(empireState(world).presence).filter(([, p]) => (p.capabilities?.sensorNet ?? 0) > 0);
+    if (!nets.length) return;
+    const moving = Object.values(fleetState(world).fleets).filter((f) => f.status === 'transit');
+    const seen = (world.state.detection.netSeen ??= {});
+    for (const [system, p] of nets) {
+      const here = ctx.data.catalog.get(system).pos;
+      const reach = /** @type {number} */ (p.capabilities?.sensorNet);
+      for (const f of moving) {
+        if (f.empire === p.empire) continue;
+        const pos = positionOnLegs(f.legs, ctx.now);
+        const d = distance(pos, here);
+        if (d > reach) continue;
+        const key = `${system}|${f.id}`;
+        if (seen[key] != null && ctx.now - seen[key] < 1) continue;
+        seen[key] = ctx.now;
+        const leg = f.legs.find((l) => ctx.now >= l.departAt && ctx.now < l.arriveAt) ?? f.legs[f.legs.length - 1];
+        ctx.scheduleIn(d, 'detection/seen', {
+          observer: system, observerEmpire: p.empire, fleet: f.id, fleetEmpire: f.empire, phase: 'net', pos, motion: normalize(sub(leg.toPos, leg.fromPos)), emittedAt: ctx.now,
+        });
+      }
+    }
+    for (const [key, at] of Object.entries(seen)) if (ctx.now - at > 5) delete seen[key];
+  },
 
   listeners: {
     'fleet/tripStarted'(world, { fleet: id, trip }, ctx) {
@@ -49,7 +85,7 @@ export const detectionModule = defineModule({
       f.legs.forEach((leg, i) => {
         if (leg.kind === 'flight') {
           ctx.scheduleAt(leg.departAt, 'detection/burn', { fleet: id, trip, leg: i, phase: 'accelerating' });
-          ctx.scheduleAt(leg.departAt + leg.profile.brakeStart, 'detection/burn', { fleet: id, trip, leg: i, phase: 'braking' });
+          if (leg.profile.brake !== false) ctx.scheduleAt(leg.departAt + leg.profile.brakeStart, 'detection/burn', { fleet: id, trip, leg: i, phase: 'braking' });
         } else if (leg.kind === 'brake') {
           ctx.scheduleAt(leg.departAt, 'detection/burn', { fleet: id, trip, leg: i, phase: 'braking' });
         }
@@ -71,7 +107,9 @@ export const detectionModule = defineModule({
       const pos = positionOnLegs(f.legs, ctx.now);
       const motion = normalize(sub(leg.toPos, leg.fromPos));
       const exhaust = phase === 'accelerating' ? scale(motion, -1) : motion;
-      const visibility = f.plumeVisibility ?? 1;
+      // A gentle burn is faint: stealth approaches are seen from much less far.
+      const accel = leg.kind === 'flight' ? leg.profile.accel : leg.kind === 'brake' ? leg.accel : gToLyYr2(PLUME_REFERENCE_G);
+      const visibility = (f.plumeVisibility ?? 1) * Math.min(2, Math.sqrt(accel / gToLyYr2(PLUME_REFERENCE_G)));
       for (const [system, p] of Object.entries(empireState(world).presence)) {
         const toObserver = sub(ctx.data.catalog.get(system).pos, pos);
         const d = length(toObserver);

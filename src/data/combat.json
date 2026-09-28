@@ -1,0 +1,66 @@
+{
+  "note": "Combat model (M9, docs/FLEETS.md). Battles between fast fleets last seconds or less; everything is decided by the plans set in advance. Times in seconds, ranges in light-seconds, speeds in fractions of c.",
+  "braked": {
+    "speed": 0.0005,
+    "note": "closing speed when an attacker brakes into a system (a slow, long battle)"
+  },
+  "maxWindow": 900,
+  "accuracy": {
+    "beam": 0.7,
+    "kinetic": 0.25,
+    "missile": 0.85
+  },
+  "kineticSpeedBonus": 50,
+  "kineticEvasion": 8,
+  "missileSalvosPerMinute": 1,
+  "maxSalvos": 4,
+  "pdWindow": 10,
+  "overkill": 0.2,
+  "formations": {
+    "wall": {
+      "out": 1.2,
+      "in": 1.1
+    },
+    "column": {
+      "out": 0.85,
+      "in": 0.8
+    },
+    "dispersed": {
+      "out": 0.9,
+      "in": 1.0,
+      "missiles": 0.7
+    }
+  },
+  "evade": {
+    "out": 0,
+    "in": 0.6
+  },
+  "surprise": 0.5,
+  "station": {
+    "hp": 20,
+    "hpPerDecade": 6,
+    "note": "planetary defences: hp 20 + 6 per power of ten of population above a thousand"
+  },
+  "strike": {
+    "kill": [
+      0.85,
+      1.0
+    ],
+    "intercept": 0.25,
+    "note": "a relativistic impact kills this fraction of the people (larger peoples on a world lose less than all); an alerted system with point defences or debris screens may intercept it"
+  },
+  "atrocity": {
+    "shame": 0.15,
+    "fear": 0.03,
+    "grievance": 1,
+    "note": "when the light of a world's destruction reaches a colony: the attacker's own colonies lose loyalty (shame), other empires' colonies a little (fear), and their capitals hold a grievance against the attacker"
+  },
+  "memory": 60,
+  "heat": 30,
+  "heatNote": "beams and guns can fire at most this many seconds in one engagement (heat)",
+  "bombardment": {
+    "kill": 0.1,
+    "loyalty": 0.1,
+    "note": "an attacker that brakes in and wins bombards the colony: this fraction dies, and its loyalty to its own empire falls"
+  }
+}
