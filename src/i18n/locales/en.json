@@ -328,7 +328,8 @@
     "noLink": "no link in flight",
     "none": "None known.",
     "redirected": "{fleet} redirected to {system} by ansible",
-    "unreachable": "{fleet} cannot be reached"
+    "unreachable": "{fleet} cannot be reached",
+    "planned": "as ordered: bound for {dest}, due {eta} (no report yet)"
   },
   "sighting": {
     "own": "own fleet",

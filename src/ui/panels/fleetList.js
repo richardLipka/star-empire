@@ -24,7 +24,7 @@ export function renderFleetList(c, selected) {
     }
     return h('div.fleet-row', {},
       h('div', {},
-        h('span', { className: `certainty ${f.certainty}` }, `${fleetName(f)}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''}`),
+        h('span', { className: `certainty ${f.certainty}` }, `${fleetName(f)}${f.ships ? ` ×${f.ships}` : ''}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''}`),
         f.empire === c.empire && f.role !== 'generic' ? h('span.dim', {}, ` · ${t(`fleet.role.${f.role}`)}`) : null,
         h('div.dim', {}, describeFleet(f, c.name)),
         h('div.dim.small', {}, t(`fleet.certainty.${f.certainty}`)),
@@ -35,4 +35,4 @@ export function renderFleetList(c, selected) {
 }
 
 /** Map label for a fleet. @param {import('../../perspective/picture.js').PicFleet} f @param {(id: string) => string} name */
-export const fleetLabel = (f, name) => `${fleetName(f)}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''} ${describeFleet(f, name)}`;
+export const fleetLabel = (f, name) => `${fleetName(f)}${f.ships ? ` ×${f.ships}` : ''}${f.ansible ? ' ⌁' : ''}${f.courier ? ' ✉' : ''} ${describeFleet(f, name)}`;

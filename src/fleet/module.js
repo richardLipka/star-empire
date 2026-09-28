@@ -41,6 +41,9 @@ import { bump, NETWORK } from '../core/versions.js';
  * @typedef {{ waypoints: import('./plan.js').Waypoint[], approach: import('./plan.js').Approach, home: string | null, reach: number[], issuedBy?: string | null }} Voyage
  */
 
+/** How long orders wait at a system for a fleet that never comes. */
+const MAILBOX_YEARS = 300;
+
 export const fleetModule = defineModule({
   id: 'fleet',
   dependsOn: ['galaxy', 'empire', 'wormholes'],
@@ -60,7 +63,7 @@ export const fleetModule = defineModule({
       if (payload.forFleet) {
         const f = fleetState(world).fleets[payload.forFleet];
         if (f && f.status === 'docked' && f.at === target) applyOrder(world, ctx, f, payload);
-        else (world.state.fleet.mailbox[target] ??= []).push(payload);
+        else (world.state.fleet.mailbox[target] ??= []).push({ ...payload, postedAt: ctx.now });
         return;
       }
       const f = fleetState(world).fleets[target];
@@ -72,6 +75,12 @@ export const fleetModule = defineModule({
         const order = q.queued;
         q.queued = null;
         applyOrder(world, ctx, q, order);
+      }
+      // Orders nobody came for in three centuries are forgotten.
+      for (const [s, list] of Object.entries(world.state.fleet.mailbox ?? {})) {
+        const left = list.filter((o) => ctx.now - (o.postedAt ?? ctx.now) <= MAILBOX_YEARS);
+        if (left.length) world.state.fleet.mailbox[s] = left;
+        else delete world.state.fleet.mailbox[s];
       }
       const box = world.state.fleet.mailbox?.[system];
       if (!box?.length) return;
@@ -160,6 +169,12 @@ export function disbandFleet(world, ctx, id) {
   const f = fleetState(world).fleets[id];
   if (!f) return;
   delete fleetState(world).fleets[id];
+  // Orders waiting for it anywhere are moot.
+  for (const [system, box] of Object.entries(world.state.fleet.mailbox ?? {})) {
+    const left = box.filter((o) => o.forFleet !== id);
+    if (left.length) world.state.fleet.mailbox[system] = left;
+    else delete world.state.fleet.mailbox[system];
+  }
   bump(world, NETWORK);
   ctx.notify('fleet/disbanded', { fleet: id, empire: f.empire, system: f.at });
   ctx.notify('info/networkChanged', { empire: f.empire });

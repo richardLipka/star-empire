@@ -80,5 +80,11 @@ function predict(world, ctx, empire, fleet, payload, departAt) {
     departAt, drive: known.drive, stealth: APPROACHES.stealth, home: payload.approach === 'flyby' ? from : null,
     posOf: (/** @type {string} */ id) => ctx.data.catalog.get(id).pos, wormholes: [],
   });
-  (k.plans ??= {})[fleet] = { legs, issuedAt: ctx.now, departAt };
+  const plans = (k.plans ??= {});
+  plans[fleet] = { legs, issuedAt: ctx.now, departAt };
+  // Predictions long past their end are no use.
+  for (const [id, p] of Object.entries(plans)) {
+    const end = p.legs.length ? p.legs[p.legs.length - 1].arriveAt : p.departAt;
+    if (ctx.now - end > 100) delete plans[id];
+  }
 }

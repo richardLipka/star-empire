@@ -163,11 +163,12 @@ function attack(world, ctx, f, system, speed) {
   const owner = empireState(world).presence[system]?.empire ?? null;
   if (!owner || owner === f.empire || !f.ships?.length) return;
   const def = defenders(world, system, owner);
+  // Keys carry the ship's position in the fleet (losses are applied by it).
   /** @type {import('./model.js').Unit[]} */
-  const mine = fleetShips(f).filter((s) => s.stats).map((s, i) => ({
+  const mine = fleetShips(f).map((s, i) => ({
     key: `${f.id}:${i}`, design: s.d, fleet: f.id, role: /** @type {'warship' | 'unarmed'} */ (s.stats?.armed ? 'warship' : 'unarmed'),
     stats: /** @type {import('../ships/catalog.js').DesignStats} */ (s.stats), hp: s.hp,
-  }));
+  })).filter((u) => u.stats);
   const battle = resolveBattle(
     { empire: f.empire, role: 'attacker', plan: f.plan ?? { ...DEFAULT_PLAN }, units: mine, alerted: true },
     { empire: owner, role: 'defender', plan: def.plan, units: def.units, alerted: alerted(world, ctx, system) },
@@ -184,8 +185,8 @@ function attack(world, ctx, f, system, speed) {
   if (battle.outcome === 'attackerWon' && speed <= RULES.braked.speed * 2) {
     const colony = colonyAt(world, system);
     if (colony) colony.population *= 1 - RULES.bombardment.kill;
-    const rec = loyaltyAt(world, system);
-    if (rec) change(world, ctx, system, rec, -RULES.bombardment.loyalty);
+    const loyalty = loyaltyAt(world, system);
+    if (loyalty) change(world, ctx, system, loyalty, -RULES.bombardment.loyalty);
   }
   remember(world, rec);
   ctx.notify('combat/battle', { id: rec.id, system, attacker: f.empire, defender: owner, outcome: battle.outcome });
@@ -271,6 +272,8 @@ function remember(world, rec) {
   const list = world.state.combat.records;
   list.push(rec);
   if (list.length > RULES.memory) list.splice(0, list.length - RULES.memory);
+  const kept = new Set(list.map((r) => r.id));
+  for (const id of Object.keys(world.state.combat.told)) if (!kept.has(id)) delete world.state.combat.told[id];
 }
 
 /**

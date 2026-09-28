@@ -62,7 +62,7 @@ A fleet is sent on a **voyage**: a list of waypoints, each to visit, attack or s
 The capital sends orders to a fleet (Fleets screen, `orderFleet`): a new **battle plan**, or a **voyage**.
 
 - **A fleet the network reaches** (docked at one of our systems, or carrying an ansible) gets the order by light, or at once.
-- **A fleet in flight cannot receive anything.** The order goes to the system where the capital believes it will next dock (its **mailbox**) and waits there. It takes effect when the fleet docks. An ansible fleet in flight keeps the voyage for when it docks.
+- **A fleet in flight cannot receive anything.** The order goes to the system where the capital believes it will next dock (its **mailbox**) and waits there. It takes effect when the fleet docks. Orders for a fleet that is lost are dropped; orders nobody collects are forgotten after 300 years. An ansible fleet in flight keeps the voyage for when it docks.
 - **The capital remembers the voyages it ordered.** The map shows such a fleet at its predicted position (*expected*, flagged *planned*) even before any report has come back, from when the order should take effect until its arrival.
 - **Voyages pass through several systems.** The whole route is planned at once, so the prediction covers all of it.
 

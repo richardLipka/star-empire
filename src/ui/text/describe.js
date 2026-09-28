@@ -28,6 +28,7 @@ export function describeFleet(f, name) {
     case 'confirmed':
       return t('fleet.confirmed', { system: name(/** @type {string} */ (f.at)), age });
     case 'expected':
+      if (f.planned) return t('fleet.planned', { dest, eta });
       return t('fleet.expected', { dest, eta, age }) + (f.brakingSeenAt != null ? ` · ${t('fleet.brakingSeen')}` : '');
     case 'unconfirmed':
       return t(f.brakingSeenAt != null ? 'fleet.unconfirmedBraking' : 'fleet.unconfirmed', { dest, eta });

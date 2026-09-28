@@ -36,6 +36,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: check
     runs-on: ubuntu-latest
+    # Deployment needs GitHub Pages enabled (Settings › Pages › Source: GitHub Actions);
+    # until then it must not mark the checks as failed.
+    continue-on-error: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

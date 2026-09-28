@@ -330,7 +330,8 @@
     "noLink": "za letu bez spojení",
     "none": "Žádné známé.",
     "redirected": "{fleet} přesměrována k {system} přes ansible",
-    "unreachable": "{fleet} je nedosažitelná"
+    "unreachable": "{fleet} je nedosažitelná",
+    "planned": "podle rozkazu: směr {dest}, očekávána {eta} (zatím bez hlášení)"
   },
   "sighting": {
     "own": "naše flotila",
