@@ -26,7 +26,9 @@
   "shipCosts": {
     "scout": 25,
     "courier": 12,
-    "generic": 45
+    "generic": 45,
+    "envoy": 50,
+    "seeder": 80
   },
   "sites": {
     "note": "capacity in people (habitable scaled by world quality); food: produced / needed at the start technologies' level (closed sites add colony.closedFood); industry: output factor; crops: open-air agriculture (crop failures are worse, recycling is not needed).",
@@ -203,5 +205,31 @@
     "scale": 6,
     "chance": 0.7,
     "loss": 0.85
-  }
+  },
+  "preparation": {
+    "note": "Robotic preparatory missions (expansion.prepare). Seeders build habitats, nurseries and fields before colonists arrive. The work can fail, often silently.",
+    "cost": 80,
+    "years": 25,
+    "failure": 0.25,
+    "failureByClass": {
+      "M": 0.1,
+      "A": 0.1,
+      "B": 0.2,
+      "O": 0.2
+    },
+    "silentFailure": 0.6,
+    "bonus": {
+      "food": 0.25,
+      "capacity": 0.5,
+      "risk": 0.5,
+      "riskYears": 100,
+      "decant": 1.0,
+      "instability": 0.4
+    },
+    "lightEmbryo": {
+      "cost": 0.7,
+      "note": "embryo ships sent to a prepared site carry less: cheaper, but half the frozen stock dies if the site is not ready"
+    }
+  },
+  "restlessIndustry": 0.9
 }

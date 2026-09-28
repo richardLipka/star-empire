@@ -152,7 +152,7 @@ input.num { width: 58px; background: var(--bg); color: var(--text); border: 1px 
 .chip.status-inEffect, .chip.status-carriedOut { border-color: #6fbf73; color: #8fd493; }
 .chip.status-inTransit { border-color: var(--accent); color: var(--accent); }
 .chip.status-awaitingReport { border-color: #a9bccd; color: #a9bccd; }
-.chip.status-unreachable, .chip.status-expired, .chip.status-revoked { border-color: var(--warn); color: var(--warn); }
+.chip.status-unreachable, .chip.status-expired, .chip.status-revoked, .chip.status-refused, .chip.status-lost { border-color: var(--warn); color: var(--warn); }
 ul.plain { list-style: none; margin: 2px 0 6px; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 
 /* Research screen */

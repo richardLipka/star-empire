@@ -8,6 +8,7 @@ import { orderDispatch } from '../../governors/issue.js';
 import { openWormhole } from '../../events/wormholes.js';
 import { createFleet, launchFleet } from '../../fleet/module.js';
 import { colonyAt } from '../../colony/module.js';
+import { loyaltyAt, change, secede } from '../../loyalty/module.js';
 
 /** Form state survives re-renders. */
 const form = { tier: 0, ansible: false, courier: false };
@@ -46,6 +47,11 @@ export function renderSandboxTools(c, id, target) {
       onchange: (/** @type {Event} */ e) => c.game.act((w) => (w.state.colony.risks = /** @type {HTMLInputElement} */ (e.target).checked)),
     }), ` ${t('sandbox.disasters')}`),
     colony ? h('button.btn', { onclick: () => c.act((w) => (colonyAt(w, id).materiel += 500), t('sandbox.supplied', { system: here })) }, t('sandbox.supply')) : null));
+  if (loyaltyAt(c.game.world, id)) {
+    rows.push(h('div.row', {},
+      h('button.btn', { onclick: () => c.act((w, x) => change(w, x, id, /** @type {any} */ (loyaltyAt(w, id)), -0.25), t('sandbox.loyaltyChanged', { system: here })) }, t('sandbox.loyaltyDown')),
+      h('button.btn', { onclick: () => c.act((w, x) => secede(w, x, id), t('sandbox.seceded', { system: here })) }, t('sandbox.secede'))));
+  }
   if (!target || target === id) {
     rows.push(h('p.hint', {}, t('sandbox.pickTarget')));
     return h('div.tools', {}, ...rows);

@@ -1,0 +1,57 @@
+{
+  "note": "Loyalty and drift (M6, docs/POLITICS.md). Values 0-1; rates per year. Texts: loyalty.* and dispatch.politics.* in src/i18n/locales.",
+  "stages": {
+    "loyal": 0.6,
+    "restless": 0.35,
+    "autonomous": 0.15,
+    "note": "value >= threshold: that stage; below 'autonomous' a colony may secede"
+  },
+  "start": {
+    "embryo": 0.75,
+    "ark": 0.85,
+    "cryo": 0.9,
+    "old": 1
+  },
+  "push": {
+    "latencyPerLy": 0.0001,
+    "neglectGrace": 40,
+    "neglectRate": 0.003,
+    "neglectCap": 3,
+    "instability": 0.008,
+    "hunger": 0.02,
+    "unrest": 0.03,
+    "disaster": 0.015,
+    "selfSufficiency": 0.004,
+    "note": "latency: per ly of light delay to the capital; neglect: after grace years without word from the capital, rate x min(cap, (years - grace) / 50); instability: x the colony's instability; hunger/unrest: while it lasts; disaster: once per disaster; selfSufficiency: x resilience (large peoples need the empire less)"
+  },
+  "pull": {
+    "base": 0.002,
+    "prosperity": 0.003,
+    "directive": 0.01,
+    "mission": 0.2,
+    "note": "base: always; prosperity: while fed (food >= 1) and free of famine and unrest; directive: each order received (at most once a year); mission: a cultural mission arriving"
+  },
+  "autonomy": {
+    "tight": {
+      "push": 1.25
+    },
+    "normal": {
+      "push": 1
+    },
+    "broad": {
+      "push": 0.6
+    },
+    "note": "the governance.autonomy directive: tight control chafes, broad autonomy relieves (but a broad governor ignores low-priority orders)"
+  },
+  "restless": {
+    "note": "restless colonies ignore low-priority orders and work less (colonies.json restlessIndustry)"
+  },
+  "secession": {
+    "chance": 0.15,
+    "joinRange": 10,
+    "note": "yearly chance to declare independence while below the autonomous threshold (only peoples of at least minPopulation, who can stand alone); autonomous colonies of the same empire within joinRange ly join the new polity",
+    "minPopulation": 2000
+  },
+  "missionCost": 50,
+  "missionEvery": 40
+}

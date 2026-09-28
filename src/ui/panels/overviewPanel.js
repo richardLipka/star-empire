@@ -33,9 +33,13 @@ export function renderSummary(c) {
 /** @param {import('./context.js').PanelContext} c @param {import('../../perspective/picture.js').Picture} pic @returns {[string, string][]} */
 function colonyRows(c, pic) {
   const totals = colonyTotals(c.game.world, pic);
+  const own = pic.systems.filter((s) => s.owner === pic.empire);
   return [
     [t(pic.mode === 'truth' ? 'panel.population' : 'panel.populationKnown'), fmtPeople(totals.population)],
     [t('panel.troubled'), String(totals.troubled)],
+    [t('panel.restless'), String(own.filter((s) => s.loyalty?.stage === 'restless').length)],
+    [t('panel.autonomousCount'), String(own.filter((s) => s.loyalty?.stage === 'autonomous').length)],
+    [t('panel.polities'), [...new Set(pic.systems.map((s) => s.owner))].filter((o) => o !== pic.empire).sort().join(', ') || '—'],
   ];
 }
 

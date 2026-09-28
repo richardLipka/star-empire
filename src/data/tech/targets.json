@@ -96,12 +96,6 @@
       "milestone": "M5"
     },
     {
-      "id": "loyalty",
-      "module": "governance",
-      "implemented": false,
-      "milestone": "M13"
-    },
-    {
       "id": "governor",
       "module": "governance",
       "implemented": false,
@@ -268,6 +262,96 @@
       "module": "planets",
       "implemented": false,
       "milestone": "M8"
+    },
+    {
+      "id": "loyalty.missions",
+      "module": "loyalty",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "loyalty.push",
+      "module": "loyalty",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "loyalty.pull",
+      "module": "loyalty",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "loyalty.latency",
+      "module": "loyalty",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "loyalty.secession",
+      "module": "loyalty",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "colony.prepare",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "prepare.failure",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "prepare.time",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "prepare.headStart",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "colony.instability",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "planet.ecopoiesis",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "planet.terraformSpeed",
+      "module": "colonies",
+      "implemented": true,
+      "unit": "factor",
+      "milestone": "M6"
+    },
+    {
+      "id": "loyalty",
+      "module": "governance",
+      "implemented": false,
+      "milestone": "M13"
     }
   ],
   "conditions": {

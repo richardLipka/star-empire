@@ -5,7 +5,7 @@
  * economy focus and the terraforming programme. With no directive,
  * the defaults apply.
  */
-export const DEFAULT_SETTINGS = { posture: 'vigilance', reporting: 'routine', relayRepair: 'normal', researchFocus: 'none', economyFocus: 'balanced', terraform: 'full' };
+export const DEFAULT_SETTINGS = { posture: 'vigilance', reporting: 'routine', relayRepair: 'normal', researchFocus: 'none', economyFocus: 'balanced', terraform: 'full', autonomy: 'normal' };
 
 /** directive type → (params) → settings it imposes */
 export const SETTINGS = {
@@ -15,4 +15,5 @@ export const SETTINGS = {
   'research.focus': (/** @type {any} */ p) => ({ researchFocus: p.field }),
   'economy.focus': (/** @type {any} */ p) => ({ economyFocus: p.focus }),
   'economy.terraform': (/** @type {any} */ p) => ({ terraform: p.program }),
+  'governance.autonomy': (/** @type {any} */ p) => ({ autonomy: p.level }),
 };

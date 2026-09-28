@@ -7,6 +7,7 @@ import { hashUnit } from '../core/rng.js';
 import { imposeDirective } from '../governors/module.js';
 import { colonies, setColony } from '../colony/module.js';
 import { capacity } from '../colony/model.js';
+import { addController } from '../ai/module.js';
 
 /**
  * Starting situations. A scenario runs once on a new game, after every
@@ -65,6 +66,8 @@ export function sandboxScenario(world, ctx) {
     }
     imposeDirective(world, ctx, { system: emp.capital, type: 'research.focus', params: { field: SANDBOX_RESEARCH[/** @type {'A' | 'B'} */ (empire)] } });
   }
+  // Empire B is played by the AI, from its own knowledge and by its own directives.
+  addController(world, ctx, 'B', 'expansionist');
 }
 
 /**

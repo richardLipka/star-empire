@@ -7,7 +7,10 @@
     "label": "Jazyk"
   },
   "empire": {
-    "name": "Impérium {id}"
+    "name": "Impérium {id}",
+    "polity": "Impérium {id}",
+    "brokeAway": "odtrhlo se od impéria {parent} roku {year}",
+    "dissolved": "zaniklo roku {year}"
   },
   "time": {
     "year": "ROK",
@@ -87,7 +90,9 @@
     "galacticCentre": "▸ střed Galaxie",
     "ring": "{n} sv. r.",
     "security": "Bezpečnost",
-    "securityTitle": "Naše spoje relé v dosahu rozptylu cizích systémů (mohou být odposlouchávány)"
+    "securityTitle": "Naše spoje relé v dosahu rozptylu cizích systémů (mohou být odposlouchávány)",
+    "politics": "Politika",
+    "economy": "Hospodářství"
   },
   "symbol": {
     "fleetKnown": "flotila, poloha známá",
@@ -187,7 +192,10 @@
     "colony": "Lidé",
     "population": "Obyvatelstvo",
     "populationKnown": "Obyvatelstvo (podle hlášení)",
-    "troubled": "Kolonie v nesnázích"
+    "troubled": "Kolonie v nesnázích",
+    "restless": "Neklidné kolonie",
+    "autonomousCount": "Autonomní kolonie",
+    "polities": "Známé mocnosti"
   },
   "control": {
     "click": "Klik",
@@ -332,7 +340,12 @@
       "departed": "{fleet} odletěla od {system}",
       "arrived": "{fleet} dorazila k {system}",
       "settled": "{fleet} založila kolonii v soustavě {system}",
-      "settleFailed": "{fleet} našla {system} již obsazený"
+      "settleFailed": "{fleet} našla {system} již obsazený",
+      "prepStarted": "{fleet} přistála v soustavě {system}: roboti připravují místo",
+      "prepReady": "{fleet}: místo v soustavě {system} je připraveno pro kolonisty",
+      "prepLost": "{fleet} v soustavě {system}: spojení ztraceno, příprava selhala",
+      "prepTaken": "{fleet} našla soustavu {system} obsazenou nebo již připravovanou",
+      "missionArrived": "Kulturní mise {fleet} dorazila do soustavy {system}"
     },
     "note": "Zpráva z {from}: {text}",
     "foreignFleetPresent": "U {system} kotví flotila impéria {empire}",
@@ -386,7 +399,15 @@
       "unrest": "Nepokoje v soustavě {system}: práce stojí, {lost} mrtvých",
       "strangeness": "Lid vychovaný stroji v soustavě {system} se stává podivným a neklidným: práce stojí, {lost} mrtvých",
       "extinct": "Kolonie v soustavě {system} po {years} letech vymřela. Soustava je ztracena.",
-      "terraformed": "{system}: terraformace dokončena. Svět je otevřen nebi."
+      "terraformed": "{system}: terraformace dokončena. Svět je otevřen nebi.",
+      "restless": "{system} je neklidná: rozkazy s nízkou prioritou přehlíží",
+      "autonomous": "{system} se stala autonomní: už neposlouchá naše rozkazy",
+      "loyalAgain": "{system} je opět věrná",
+      "restlessAgain": "{system} je neklidná, ale opět poslouchá rozkazy",
+      "independence": "{system} vyhlásila nezávislost",
+      "joined": "{system} se přidala k odtržené mocnosti",
+      "preparedLanding": "Kolonisté přistáli v soustavě {system} na místě připraveném našimi roboty ({percent} %)",
+      "unprepared": "Kolonisté dorazili do soustavy {system} v očekávání připraveného místa a žádné nenašli: polovina zmrazených embryí je ztracena"
     }
   },
   "sandbox": {
@@ -414,7 +435,11 @@
     "courier": "kurýr",
     "disasters": "Katastrofy v koloniích",
     "supply": "+500 materiálu",
-    "supplied": "Materiál doručen do soustavy {system}"
+    "supplied": "Materiál doručen do soustavy {system}",
+    "secede": "Vyhlásit nezávislost",
+    "seceded": "{system} vyhlásila nezávislost",
+    "loyaltyDown": "−25 % věrnosti",
+    "loyaltyChanged": "Věrnost soustavy {system} změněna"
   },
   "governor": {
     "none": "Od tohoto guvernéra zatím nepřišlo hlášení.",
@@ -426,7 +451,8 @@
     "noOrders": "Žádné trvalé rozkazy (platí výchozí).",
     "onTheWay": "Rozkazy na cestě sem",
     "arrives": "dorazí {year}",
-    "economyFocus": "Zaměření výroby"
+    "economyFocus": "Zaměření výroby",
+    "autonomy": "Autonomie"
   },
   "orders": {
     "compose": "Nová směrnice",
@@ -472,7 +498,9 @@
       "superseded": "nahrazeno",
       "unreachable": "nedosažitelné",
       "expired": "vypršelo",
-      "revoked": "odvoláno"
+      "revoked": "odvoláno",
+      "refused": "odmítnuto",
+      "lost": "soustava ztracena"
     },
     "targetDesc": {
       "system": "{system}",
@@ -503,6 +531,10 @@
       "settle": {
         "name": "Osídlit",
         "desc": "Vysílat kolonizační lodě. „Nejobyvatelnější“ a „nejbohatší“ berou v úvahu jen prozkoumané soustavy. Lodě stojí materiál: embryonální lodě jsou levné, ale vychovají podivné, nestálé společnosti; archy nesou tisíce lidí po staletí; kryospáči přiletí jako ustálený národ."
+      },
+      "prepare": {
+        "name": "Připravit místa",
+        "desc": "Vyslat robotické výsadky před kolonisty, aby v prozkoumaných prázdných soustavách postavily habitaty, porodnice a pole. Kolonisté na připraveném místě rostou rychleji, lépe jedí a méně trpí; embryonální lodě tam letí nalehko. Roboti mohou selhat, často beze slova, a kolonisté pak přistanou na nepřipraveném světě. Vyžaduje robotiku výsadků."
       }
     },
     "military": {
@@ -541,8 +573,12 @@
         "desc": "Jak rychle obnovit zničené relé."
       },
       "autonomy": {
-        "name": "Samospráva",
-        "desc": "Jak volně guvernér vykládá rozkazy."
+        "name": "Autonomie",
+        "desc": "Kolik volnosti má guvernér. Pevná ruka dráždí vzdálené kolonie; široká autonomie zmírňuje odcizení, ale guvernér pak přehlíží rozkazy s nízkou prioritou. Tento rozkaz přijmou i autonomní kolonie."
+      },
+      "missions": {
+        "name": "Kulturní mise",
+        "desc": "Vysílat kulturní mise (písně, archivy, vyslance) do nejméně věrných kolonií, o kterých hlavní město ví. Každá obnoví velkou část věrnosti kolonie. Vyžaduje kulturní mise."
       }
     },
     "economy": {
@@ -592,7 +628,8 @@
     "program": "Program",
     "field": "Obor",
     "stance": "Postoj",
-    "vessel": "Kolonizační lodě"
+    "vessel": "Kolonizační lodě",
+    "threshold": "Poslat do"
   },
   "option": {
     "priority": {
@@ -619,7 +656,8 @@
     "criteria": {
       "nearest": "nejbližší",
       "habitable": "nejobyvatelnější",
-      "rich": "nejbohatší"
+      "rich": "nejbohatší",
+      "prepared": "připravená místa"
     },
     "posture": {
       "peace": "mír",
@@ -690,6 +728,11 @@
       "embryo": "embryonální lodě",
       "ark": "generační archy",
       "cryo": "kryospánkové lodě"
+    },
+    "threshold": {
+      "restless": "neklidné kolonie",
+      "wavering": "kolísající (pod 75 %)",
+      "all": "každá kolonie"
     }
   },
   "research": {
@@ -780,10 +823,18 @@
       "weapon": "Zbraň",
       "planet": {
         "terraform": "Terraformace",
-        "processors": "Rychlejší terraformace"
+        "processors": "Rychlejší terraformace",
+        "ecopoiesis": "Ekopoéza (terraformace osetých světů)",
+        "terraformSpeed": "Rychlost terraformace"
       },
       "population": "Obyvatelstvo",
-      "loyalty": "Loajalita",
+      "loyalty": {
+        "missions": "Kulturní mise",
+        "push": "Tlaky k nezávislosti",
+        "pull": "Věrnost ročně",
+        "latency": "Odcizení vzdáleností",
+        "secession": "Pravděpodobnost odtržení"
+      },
       "governor": "Guvernéři",
       "espionage": "Špionáž",
       "wormhole": "Červí díry",
@@ -816,13 +867,20 @@
           "embryo": "Embryonální lodě",
           "ark": "Generační archy",
           "cryo": "Kryospánkové lodě"
-        }
+        },
+        "prepare": "Robotické přípravné mise",
+        "instability": "Nestálost společností zrozených z embryí"
       },
       "risk": {
         "prion": "Riziko prionových nákaz",
         "radiation": "Škody hvězdných erupcí",
         "crops": "Riziko neúrody a selhání recyklace",
         "unrest": "Riziko nepokojů"
+      },
+      "prepare": {
+        "failure": "Selhání robotických příprav",
+        "time": "Doba přípravy místa",
+        "headStart": "Terraformace zahájená výsadky"
       }
     },
     "module": {
@@ -837,7 +895,8 @@
       "governance": "správa",
       "diplomacy": "diplomacie",
       "events": "události",
-      "security": "bezpečnost"
+      "security": "bezpečnost",
+      "loyalty": "věrnost"
     },
     "condition": {
       "relic": "nalezený mimozemský relikt",
@@ -895,6 +954,59 @@
       "unrest": "Nepokoje: práce stojí.",
       "strangeness": "Vychovaní stroji jsou neklidní: práce stojí.",
       "hunger": "Kolonie se neuživí."
+    },
+    "prepared": "Připravené místo",
+    "preparing": "Roboti připravují",
+    "prepStatus": {
+      "working": "roboti pracují",
+      "ready": "připraveno pro kolonisty",
+      "lost": "spojení ztraceno",
+      "taken": "obsazeno"
     }
+  },
+  "legend": {
+    "politics": {
+      "capital": "naše hlavní město",
+      "loyal": "věrná",
+      "restless": "neklidná",
+      "autonomous": "autonomní",
+      "unreported": "věrnost dosud nehlášena",
+      "foreign": "{empire}"
+    },
+    "economy": {
+      "billions": "miliardy",
+      "millions": "miliony",
+      "thousands": "tisíce",
+      "few": "několik set",
+      "hungry": "hladovějící nebo v nesnázích",
+      "unreported": "nehlášeno",
+      "foreign": "cizí"
+    }
+  },
+  "loyalty": {
+    "title": "Věrnost",
+    "value": "{percent} · {stage}",
+    "stage": {
+      "loyal": "věrná",
+      "restless": "neklidná",
+      "autonomous": "autonomní"
+    },
+    "forces": "Co ji ovlivňuje (procentní body ročně)",
+    "push": {
+      "latency": "vzdálenost",
+      "neglect": "zanedbání",
+      "instability": "nestálost",
+      "hardship": "strádání",
+      "selfSufficiency": "soběstačnost"
+    },
+    "pull": {
+      "base": "sounáležitost",
+      "prosperity": "prosperita",
+      "technology": "instituce"
+    },
+    "net": "celkem",
+    "capital": "Hlavní město: sídlo impéria se neodcizuje.",
+    "unknownForces": "Síly jsou známy jen zde (Skutečnost).",
+    "points": "{n} b."
   }
 }

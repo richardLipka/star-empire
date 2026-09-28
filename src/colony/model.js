@@ -35,10 +35,11 @@ const colonyCaps = (caps) => caps?.colony ?? baseCapabilities().colony;
 
 /**
  * @param {Site} site @param {import('../research/effects.js').Capabilities | undefined} caps
+ * @param {number} [prepared] 0–1: how well robots prepared the site before the colonists came
  */
-export function capacity(site, caps) {
+export function capacity(site, caps, prepared = 0) {
   const base = RULES.sites[site.kind].capacity * (site.kind === 'habitable' || site.kind === 'terraformed' ? Math.max(0.2, site.quality) : 1);
-  return base * (colonyCaps(caps).capacity[site.kind] ?? 1);
+  return base * (colonyCaps(caps).capacity[site.kind] ?? 1) * (1 + RULES.preparation.bonus.capacity * prepared);
 }
 
 /**
@@ -50,12 +51,12 @@ export const resilience = (population) => Math.min(1, Math.log10(1 + Math.max(0,
 /**
  * Food produced over food needed (1 = exactly enough).
  * @param {Site} site @param {import('../research/effects.js').Capabilities | undefined} caps
- * @param {string} focus economy focus @param {boolean} cropFailure @param {number} [population]
+ * @param {string} focus economy focus @param {boolean} cropFailure @param {number} [population] @param {number} [prepared]
  */
-export function foodRatio(site, caps, focus, cropFailure, population = 0) {
+export function foodRatio(site, caps, focus, cropFailure, population = 0, prepared = 0) {
   const s = RULES.sites[site.kind];
   const c = colonyCaps(caps);
-  let food = s.food + (s.crops ? 0 : c.foodClosed);
+  let food = s.food + (s.crops ? 0 : c.foodClosed) + RULES.preparation.bonus.food * prepared;
   food *= c.food * (RULES.focus[/** @type {keyof typeof RULES.focus} */ (focus)]?.food ?? 1);
   if (cropFailure) food *= 1 - (1 - RULES.risks.crops.foodLeft) * (1 - RULES.resilience.loss * resilience(population));
   return food;
@@ -93,20 +94,23 @@ export function growth(population, cap, food, caps) {
 
 /**
  * Yearly chance of each kind of disaster.
- * @param {{ population: number, site: Site, society: string, instability: number }} colony
+ * @param {{ population: number, site: Site, society: string, instability: number, prepared?: number, founded?: number }} colony
  * @param {string} starClass @param {import('../research/effects.js').Capabilities | undefined} caps
+ * @param {number} [now] game time (a prepared site shelters its first generations)
  */
-export function riskChances(colony, starClass, caps) {
+export function riskChances(colony, starClass, caps, now = Infinity) {
   const r = RULES.risks;
   const c = colonyCaps(caps).risk;
   const small = 1 + r.prion.smallFactor * Math.exp(-colony.population / r.prion.smallScale);
   const society = /** @type {Record<string, any>} */ (RULES.society)[colony.society] ?? {};
   const exposure = r.radiation.exposure[colony.site.kind] * (colony.site.tidalLock ? 1.2 : 1);
   const steady = 1 - RULES.resilience.chance * resilience(colony.population);
+  const b = RULES.preparation.bonus;
+  const sheltered = colony.prepared && now - (colony.founded ?? 0) < b.riskYears ? 1 - b.risk * colony.prepared : 1;
   return {
-    prion: Math.min(0.9, r.prion.chance * small * steady * (society.prion ?? 1) * c.prion),
-    radiation: Math.min(0.9, (r.radiation.chanceByClass[/** @type {keyof typeof r.radiation.chanceByClass} */ (starClass)] ?? 0.02) * exposure * c.radiation),
-    crops: Math.min(0.9, (RULES.sites[colony.site.kind].crops ? r.crops.chanceCrops : r.crops.chanceClosed) * steady * c.crops),
+    prion: Math.min(0.9, r.prion.chance * small * steady * (society.prion ?? 1) * c.prion * sheltered),
+    radiation: Math.min(0.9, (r.radiation.chanceByClass[/** @type {keyof typeof r.radiation.chanceByClass} */ (starClass)] ?? 0.02) * exposure * c.radiation * sheltered),
+    crops: Math.min(0.9, (RULES.sites[colony.site.kind].crops ? r.crops.chanceCrops : r.crops.chanceClosed) * steady * c.crops * sheltered),
     unrest: Math.min(0.9, r.unrest.chance * colony.instability * c.unrest),
   };
 }

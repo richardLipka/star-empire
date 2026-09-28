@@ -78,10 +78,36 @@ The *Settle* directive has a **Colony ships** parameter:
 - *best available* (the default): cryo if known; else an ark when the system can pay for one; else embryos;
 - or a specific mode. A mode that is not known here launches nothing.
 
+## Robotic preparation (M6)
+
+*Expansion › Prepare sites* (needs *Seeder robotics*, tier 1) sends **seeders** (cost 80) ahead of the colonists. Seeders are robot ships with no people aboard. The directive's parameters are criteria (nearest, habitable, rich), frequency, range and direction. It targets surveyed, empty systems not already being prepared.
+
+1. **On landing** the robots start building habitats, nurseries and fields. The seeder reports *work begun*.
+2. **The work takes 25 years** (×0.5 with *Self-replicating builders*) and **can fail**:
+   - the base chance is 25 %, +10 % at M and A stars, +20 % at O and B stars;
+   - *Hardened robotics* ×0.5, *Self-replicators* ×0.7.
+   - The failure comes at a random moment during the work. **60 % of failures are silent:** the capital still believes the site is being prepared.
+3. **On success** the seeder reports *site ready*. The robots stay as part of the site.
+
+*Settle › prepared sites* sends colonists to sites the capital believes prepared (working or ready). **Embryo ships sent there travel light:** they cost ×0.7, because they rely on the robots' nurseries.
+
+What colonists find:
+
+| Site | Effect |
+|---|---|
+| ready | *prepared* = 1: food +0.25, capacity ×1.5, prion, flare and crop risks ×0.5 for 100 years, embryo decanting ×2, instability ×0.6; a terraformable world starts with the seeders' terraforming head start |
+| still being prepared | the same bonuses in proportion to the work done |
+| failed, but believed prepared | **no bonus**, and embryo ships that travelled light **lose half their frozen stock**; the dispatch says the colonists found no prepared site |
+
+**Terraforming for embryo colonies:**
+- *Microbial seeding* (+25 % head start) and *Ecopoiesis* (+15 %): seeders begin terraforming before anyone lands.
+- With *Ecopoiesis*, a colony on a seeded world keeps terraforming at half speed, even without *Full terraforming*.
+- *Gaian engineering* makes all terraforming half again as fast.
+
 ## Ships cost materiel
 
 - Every ship a governor builds is paid from the system's store:
-  - scout 25, courier 12, other ships 45;
+  - scout 25, courier 12, seeder 80, envoy (cultural mission) 50, other ships 45;
   - colony ships by mode (see the table above).
 - **The shipyard** still launches at most one ship per interval. It builds the highest-priority proposal it can **pay for**; unaffordable proposals wait.
 - **Courier runs** are retried the next year.
@@ -146,7 +172,7 @@ The effect targets are `colony.*` (capacity per site, food, closed-habitat food,
 
 ## Later
 
-- **M6/M13:** loyalty built on instability. Embryo societies drift toward independence first.
+- **M6 (done, see [POLITICS.md](POLITICS.md)):** loyalty built on instability. Embryo societies drift toward independence first. A restless colony works less (industry ×0.9).
 - **M8:**
   - bodies become real places with installations;
   - materiel splits into resources;

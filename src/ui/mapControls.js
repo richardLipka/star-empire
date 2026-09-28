@@ -9,13 +9,13 @@ import { t } from '../i18n/index.js';
  * @property {boolean} network
  * @property {boolean} ranges
  * @property {boolean} security   mark our relay links exposed to foreign listeners
- * @property {'spectral' | 'status' | 'age'} colourBy
+ * @property {'spectral' | 'status' | 'age' | 'politics' | 'economy'} colourBy
  * @property {Set<string> | null} highlight   legend filter: only these keys at full brightness
  *
  * @typedef {{ key: string, label: string, color: string, count: number }} LegendItem
  */
 
-const COLOUR_MODES = /** @type {const} */ (['spectral', 'status', 'age']);
+const COLOUR_MODES = /** @type {const} */ (['spectral', 'status', 'age', 'politics', 'economy']);
 
 /**
  * Perspective, layers, colour mode and legend, floating over the map.

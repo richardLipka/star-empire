@@ -58,8 +58,11 @@ describe('save migration', () => {
     for (const k of Object.values(w.state.info.knowledge)) delete k.explored;
     w.state.info.pauseOnDispatch = false;
     w.queue.heap = w.queue.heap.filter((e) => !e.type.startsWith('detection/') && !e.type.startsWith('governors/'));
-    w.modules = w.modules.filter((m) => m !== 'governors' && m !== 'research' && m !== 'security' && m !== 'colony');
+    w.modules = w.modules.filter((m) => m !== 'governors' && m !== 'research' && m !== 'security' && m !== 'colony' && m !== 'loyalty' && m !== 'ai');
     delete w.state.colony;
+    delete w.state.loyalty;
+    delete w.state.ai;
+    w.queue.heap = w.queue.heap.filter((e) => !e.type.startsWith('colony/'));
     delete w.state.governors;
     delete w.state.research;
     delete w.state.security;

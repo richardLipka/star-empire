@@ -70,6 +70,28 @@ const migrations = {
     }
     return { ...w, version: 6 };
   },
+  /** v6 → v7: loyalty, AI, robotic preparation, independent polities. */
+  6: (w) => {
+    const insertAfter = (/** @type {string} */ id, /** @type {string} */ after) => {
+      if (w.modules.includes(id)) return;
+      const at = w.modules.indexOf(after);
+      w.modules.splice(at < 0 ? w.modules.length : at + 1, 0, id);
+    };
+    insertAfter('loyalty', 'governors');
+    w.state.loyalty ??= { records: {} };
+    if (!w.modules.includes('ai')) w.modules.push('ai');
+    w.state.ai ??= { controllers: {} };
+    w.state.colony.preparations ??= {};
+    w.state.empire.nextIndependent ??= 1;
+    for (const e of Object.values(w.state.empire.empires)) {
+      const emp = /** @type {any} */ (e);
+      emp.parent ??= null;
+      emp.founded ??= 0;
+      emp.dissolvedAt ??= null;
+    }
+    for (const b of Object.values(w.state.governors?.books ?? {})) /** @type {any} */ (b).settings.autonomy ??= 'normal';
+    return { ...w, version: 7 }; // loyalty records start on the next tick; capabilities gain defaults when next recomputed
+  },
 };
 
 /**

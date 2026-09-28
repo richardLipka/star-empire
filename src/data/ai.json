@@ -1,0 +1,20 @@
+{
+  "note": "Rival and independent AI (M6, docs/POLITICS.md). The AI decides from its own capital's knowledge, and acts only through directives, like the player.",
+  "thinkEvery": 8,
+  "personalities": {
+    "expansionist": {
+      "research": { "engines": 3, "planetary": 3, "sociology": 2, "communication": 2, "informatics": 1, "projectile": 1, "energy": 1, "missiles": 1, "wormholes": 0.5, "exotic": 0.5 },
+      "exploreRange": 20, "settleRange": 16, "settleFrequency": "high", "settleEmpireAfter": 60, "missions": true
+    },
+    "scholar": {
+      "research": { "informatics": 3, "communication": 2, "sociology": 2, "planetary": 2, "engines": 1, "energy": 1, "exotic": 1, "projectile": 0.5, "missiles": 0.5, "wormholes": 1 },
+      "exploreRange": 15, "settleRange": 12, "settleFrequency": "normal", "settleEmpireAfter": 150, "missions": true
+    },
+    "cautious": {
+      "research": { "sociology": 3, "planetary": 3, "communication": 1, "informatics": 1, "engines": 1, "energy": 0.5, "projectile": 0.5, "missiles": 0.5, "wormholes": 0.2, "exotic": 0.2 },
+      "exploreRange": 10, "settleRange": 10, "settleFrequency": "low", "settleEmpireAfter": 400, "missions": false
+    }
+  },
+  "hungry": 1.0,
+  "fed": 1.15
+}

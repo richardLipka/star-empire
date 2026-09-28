@@ -164,6 +164,14 @@ Every colony has a **loyalty** value that drifts over time:
 - **Stages:** Loyal → Restless → Autonomous (follows only some directives, pays reduced tribute) → **Seceded** (becomes an independent faction run by the AI).
 - **Player tools:** influence missions, garrisons, investment, appointing or replacing governors, and *granting autonomy*. Granting autonomy slows drift but loosens control. Seceded worlds can be won back by diplomacy or force.
 
+**Implemented in M6** ([POLITICS.md](POLITICS.md)):
+- loyalty per colony with pushes (distance, neglect, instability, hardship, self-sufficiency, disasters) and pulls (belonging, prosperity, orders, cultural missions, technology);
+- stages Loyal → Restless → Autonomous → independence as a new AI polity that nearby autonomous colonies join;
+- the autonomy directive;
+- a moving seat when a capital dies out, and dissolution when nothing remains.
+
+Still to come: garrisons, investment, governors (M13), and the loss of the capital as a loyalty shock carried by the news.
+
 **Losing the capital.** If the capital system is lost, the empire does not end, but it weakens:
 
 - Loyalty drops across the empire, and the drop reaches each system when news of the fall arrives there.
@@ -211,6 +219,7 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 | `perspective/` | Read-only views for the UI: what an empire knows (`knowledgePicture`) or the truth (`truthPicture`), star status classification, shared descriptions. |
 | `empire/` | Empire state, capital, presence and relays, exploration records (later: loyalty and secession, Legacy score). |
 | `governors/` | Directive catalogue, issuing and revoking, governors' books, behaviours (explore, settle, send fleet, courier runs, standing settings). Ships are paid for in materiel. |
+| `loyalty/` | Loyalty and drift of every colony, stages, obedience, independence of breakaway polities ([POLITICS.md](POLITICS.md)). |
 | `colony/` | People in every held system: site choice (habitable > terraformable > domes > orbital base), growth, food, materiel, research output, disasters, extinction, colonisation modes and societies ([COLONIES.md](COLONIES.md)). |
 
 ### Gameplay
@@ -220,11 +229,11 @@ Each module is a folder under `src/`. Simulation logic is kept separate from its
 3. **`planet/`: planet management.** Surface and orbital installations, population, habitability and terraforming, production chains.
 4. **`fleet/`: fleets and ship design.** Hulls and components, fleet composition, sealed orders, transit planning.
 5. **`combat/`: engagement planning.** Battles are decided in seconds at relativistic closing speeds. The player prepares formations, approach vectors, weapon schedules and point-defense priorities as part of a fleet's sealed orders. A deterministic high-resolution simulation resolves the crossing, and the report travels home at c.
-6. **`research/`: technology.** Implemented in M12, see **[RESEARCH.md](RESEARCH.md)**. Ten areas and 112 technologies (theories and applications, many prerequisites crossing areas). Each system researches its governor's focus area. A breakthrough reveals one of up to three candidates and closes off the other applications, which can then only be bought, reverse-engineered or stolen. Blueprints travel at light speed through the capital and with ships, and technologies act per system (drives, relay range, sensors, research rate, colony capacity, food, risks and colony ships) through `presence.capabilities`. The research screen shows the technology web.
+6. **`research/`: technology.** Implemented in M12, see **[RESEARCH.md](RESEARCH.md)**. Ten areas and 126 technologies (theories and applications, many prerequisites crossing areas). Each system researches its governor's focus area. A breakthrough reveals one of up to three candidates and closes off the other applications, which can then only be bought, reverse-engineered or stolen. Blueprints travel at light speed through the capital and with ships, and technologies act per system (drives, relay range, sensors, research rate, colony capacity, food, risks and colony ships) through `presence.capabilities`. The research screen shows the technology web.
 7. **`diplomacy/`: ambassadors.** Written instructions (goals, concessions, red lines). The ambassador negotiates locally, and treaties take effect at each system when the news arrives there.
 8. **`economy/`: resources and trade.** A rich resource model per body. Habitable and terraformed worlds are the main source of food and population. Interstellar trade is slow, expensive cargo hauling, worth it only for rare goods.
 9. **`events/`: special events.** Wormholes (ships pass instantly, messages do not, so couriers become a faster-than-light channel), alien relics and technology, unique weapons, ansibles.
-10. **`ai/`: other factions.** Rival empires and seceded colonies, playing under the same rules and the same fog.
+10. **`ai/`: other factions.** Rival empires and seceded colonies, playing under the same rules and the same fog. Implemented in M6: an AI sees only its capital's knowledge and acts only through directives (research, expansion, robotic preparation, food, cultural missions, autonomy), with personalities ([POLITICS.md](POLITICS.md)).
 
 ### Presentation
 

@@ -6,6 +6,8 @@ import { systemTraits } from '../../galaxy/traits.js';
 import { reportFleetEvent } from '../../info/module.js';
 import { candidates, isExplored } from '../targets.js';
 import { chooseMode, shipCost, prepareFounding } from '../../colony/module.js';
+import { knownPreparations } from '../../colony/preparation.js';
+import colonyRules from '../../data/colonies.json';
 
 /**
  * expansion.settle: send colony ships. "Nearest" takes any free system; "most
@@ -23,10 +25,13 @@ export default {
     if (!target) return null;
     const mode = chooseMode(world, book.system, d.params.vessel ?? 'auto');
     if (!mode) return null; // no way to carry colonists known here
-    return { cost: shipCost(world, book.system, `settler:${mode}`), run: () => {
+    // Colonists for a site the capital believes prepared travel light (embryo ships carry less stock).
+    const expectPrepared = ['working', 'ready'].includes(knownPreparations(world, book.empire)[target]?.status ?? '');
+    const light = expectPrepared && mode === 'embryo' ? colonyRules.preparation.lightEmbryo.cost : 1;
+    return { cost: shipCost(world, book.system, `settler:${mode}`) * light, run: () => {
       const f = createFleet(world, ctx, {
         empire: book.empire, at: book.system, drive: driveFor(empireState(world).presence[book.system]), transmitter: true, role: 'settler',
-        mission: { kind: 'settle', target, buildRelay: d.params.buildRelay, directive: d.id, mode },
+        mission: { kind: 'settle', target, buildRelay: d.params.buildRelay, directive: d.id, mode, expectPrepared },
       });
       launchFleet(world, ctx, { fleet: f.id, to: target });
     } };
@@ -42,7 +47,7 @@ export default {
       return;
     }
     reportFleetEvent(world, ctx, fleet, system, 'settled');
-    prepareFounding(world, system, { mode: m.mode ?? 'cryo' });
+    prepareFounding(world, system, { mode: m.mode ?? 'cryo', expectPrepared: !!m.expectPrepared });
     establishPresence(world, ctx, { empire: fleet.empire, system, relay: m.buildRelay });
     disbandFleet(world, ctx, fleet.id);
   },
@@ -57,6 +62,11 @@ function pick(world, ctx, book, p) {
   const list = candidates(world, ctx, { from: book.system, empire: book.empire, maxRange: p.maxRange, toward: p.toward, mission: 'settle' })
     .filter((c) => presence[c.id]?.empire !== book.empire); // foreign holdings are not known here: settlers find out
   if (p.criteria === 'nearest') return list[0]?.id ?? null;
+  if (p.criteria === 'prepared') {
+    // Sites our robots are preparing or have prepared (as far as the capital knows).
+    const known = knownPreparations(world, book.empire);
+    return list.find((c) => ['working', 'ready'].includes(known[c.id]?.status ?? ''))?.id ?? null;
+  }
   const surveyed = list.filter((c) => isExplored(world, book.empire, c.id));
   const key = p.criteria === 'habitable' ? 'habitability' : 'richness';
   const score = (/** @type {string} */ id) => systemTraits(world.seed, ctx.data.catalog.get(id))[key];

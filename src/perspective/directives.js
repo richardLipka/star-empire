@@ -8,7 +8,7 @@ import { knowledgeOf } from '../info/module.js';
  * target comes only from what has come back: the planned arrival time, and
  * the governor's book as quoted in the latest report from that system.
  *
- * @typedef {'inTransit' | 'awaitingReport' | 'inEffect' | 'carriedOut' | 'superseded' | 'unreachable' | 'expired' | 'revoked'} OrderStatus
+ * @typedef {'inTransit' | 'awaitingReport' | 'inEffect' | 'carriedOut' | 'superseded' | 'unreachable' | 'expired' | 'revoked' | 'refused' | 'lost'} OrderStatus
  * @typedef {{ system: string, status: OrderStatus, plannedArrival: number | null }} OrderTarget
  * @typedef {import('../governors/issue.js').IssuedDirective & { implemented: boolean, targetStatus: OrderTarget[], counts: Partial<Record<OrderStatus, number>> }} OrderView
  */
@@ -42,7 +42,9 @@ function statusAt(d, oneShot, system, plannedArrival, k, now) {
   if (d.revokedAt != null) return 'revoked';
   if (d.expiresAt != null && now >= d.expiresAt) return 'expired';
   const report = k.systems[system];
+  if (report && report.validAt >= d.issuedAt && report.data.owner && report.data.owner !== d.empire) return 'lost'; // the system is no longer ours
   const governor = report && report.validAt >= d.issuedAt ? report.data.governor : null;
+  if (governor?.refused?.includes(d.id)) return 'refused';
   if (governor?.received.includes(d.id)) {
     if (oneShot) return 'carriedOut';
     return governor.directives.some((/** @type {{ id: string }} */ x) => x.id === d.id) ? 'inEffect' : 'superseded';

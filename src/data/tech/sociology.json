@@ -63,8 +63,16 @@
       ],
       "effects": [
         {
-          "kind": "unlock",
-          "target": "loyalty.charters"
+          "kind": "modifier",
+          "target": "loyalty.push",
+          "op": "mul",
+          "value": 0.75
+        },
+        {
+          "kind": "modifier",
+          "target": "loyalty.secession",
+          "op": "mul",
+          "value": 0.6
         }
       ]
     },
@@ -105,8 +113,16 @@
       ],
       "effects": [
         {
-          "kind": "unlock",
-          "target": "loyalty.consensus"
+          "kind": "modifier",
+          "target": "loyalty.pull",
+          "op": "add",
+          "value": 0.004
+        },
+        {
+          "kind": "modifier",
+          "target": "loyalty.push",
+          "op": "mul",
+          "value": 0.8
         }
       ]
     },
@@ -237,6 +253,141 @@
           "target": "colony.growth",
           "op": "mul",
           "value": 1.1
+        }
+      ]
+    },
+    {
+      "id": "soc.calendar",
+      "kind": "application",
+      "tier": 1,
+      "requires": [
+        "soc.administration"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "loyalty.latency",
+          "op": "mul",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "soc.broadcasts",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "soc.administration",
+        "com.relay"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "loyalty.pull",
+          "op": "add",
+          "value": 0.002
+        }
+      ]
+    },
+    {
+      "id": "soc.development",
+      "kind": "theory",
+      "tier": 2,
+      "requires": [
+        "soc.biostasis"
+      ],
+      "effects": []
+    },
+    {
+      "id": "soc.curricula",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "soc.development"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.instability",
+          "op": "mul",
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "id": "soc.surrogates",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.development",
+        "inf.beta"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "colony.instability",
+          "op": "mul",
+          "value": 0.5
+        },
+        {
+          "kind": "modifier",
+          "target": "risk.unrest",
+          "op": "mul",
+          "value": 0.7
+        }
+      ]
+    },
+    {
+      "id": "soc.diaspora",
+      "kind": "theory",
+      "tier": 3,
+      "requires": [
+        "soc.legitimacy"
+      ],
+      "effects": []
+    },
+    {
+      "id": "soc.compact",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "soc.diaspora"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "loyalty.secession",
+          "op": "mul",
+          "value": 0.4
+        },
+        {
+          "kind": "modifier",
+          "target": "loyalty.push",
+          "op": "mul",
+          "value": 0.9
+        }
+      ]
+    },
+    {
+      "id": "soc.memetics",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "soc.neural",
+        "soc.broadcasts"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "loyalty.pull",
+          "op": "add",
+          "value": 0.004
+        },
+        {
+          "kind": "modifier",
+          "target": "risk.unrest",
+          "op": "mul",
+          "value": 0.7
         }
       ]
     }

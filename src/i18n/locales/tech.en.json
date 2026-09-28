@@ -275,6 +275,30 @@
     "arcologies": {
       "name": "Arcologies",
       "desc": "Cities as single buildings, a world's capacity multiplied."
+    },
+    "seeders": {
+      "name": "Seeder robotics",
+      "desc": "Robot ships that land ahead of the colonists and build: habitats, nurseries, fields. Unlocks robotic preparation missions."
+    },
+    "hardened-robotics": {
+      "name": "Hardened robotics",
+      "desc": "Machines that survive decades alone under a hostile sky. Preparations fail half as often."
+    },
+    "microbial-seeding": {
+      "name": "Microbial seeding",
+      "desc": "Seeders sow engineered microbes: a terraformable world starts to change before anyone lands."
+    },
+    "self-replicators": {
+      "name": "Self-replicating builders",
+      "desc": "Robots that build more robots. Preparations take half the time."
+    },
+    "ecopoiesis": {
+      "name": "Ecopoiesis",
+      "desc": "A biosphere grown from seed: colonies on seeded worlds keep terraforming, slowly, without full terraforming."
+    },
+    "gaian": {
+      "name": "Gaian engineering",
+      "desc": "Whole worlds steered like gardens. Terraforming goes half again as fast."
     }
   },
   "soc": {
@@ -296,7 +320,7 @@
     },
     "missions": {
       "name": "Cultural missions",
-      "desc": "Songs, archives and envoys that remind colonies who they are."
+      "desc": "Songs, archives and envoys that remind colonies who they are. Lets governors send missions that restore a colony's loyalty."
     },
     "charters": {
       "name": "Colonial charters",
@@ -312,7 +336,7 @@
     },
     "consensus": {
       "name": "Consensus networks",
-      "desc": "Minds linked into a single will. Some call it a hive."
+      "desc": "Minds linked into a single will. Some call it a hive. Colonies drift far less."
     },
     "plague": {
       "name": "Nanotech plague defence",
@@ -345,6 +369,38 @@
     "tutors": {
       "name": "Tutor intelligences",
       "desc": "Patient machine teachers who remember what the parents never knew."
+    },
+    "calendar": {
+      "name": "Common calendar",
+      "desc": "One reckoning of time and one archive across light-years: distance divides a little less."
+    },
+    "broadcasts": {
+      "name": "Home broadcasts",
+      "desc": "The capital's voice, years old but never silent, in every colony's sky."
+    },
+    "development": {
+      "name": "Developmental psychology",
+      "desc": "How children become people, and what happens when no people raise them."
+    },
+    "curricula": {
+      "name": "Nursery curricula",
+      "desc": "What the machines should teach the first generation: stories, faces, a home they never saw."
+    },
+    "surrogates": {
+      "name": "Surrogate minds",
+      "desc": "Simulated parents with human patience. Embryo-born societies grow up far less strange."
+    },
+    "diaspora": {
+      "name": "Diaspora studies",
+      "desc": "Why peoples scattered across light-years stay one, and why they stop."
+    },
+    "compact": {
+      "name": "Federal compact",
+      "desc": "A union colonies may leave, and therefore rarely do."
+    },
+    "memetics": {
+      "name": "Memetic engineering",
+      "desc": "Ideas designed to spread and to bind. Useful, and not entirely honest."
     }
   },
   "kin": {

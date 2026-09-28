@@ -307,6 +307,116 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "pla.seeders",
+      "kind": "application",
+      "tier": 1,
+      "requires": [
+        "pla.survey"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "colony.prepare"
+        }
+      ]
+    },
+    {
+      "id": "pla.hardened-robotics",
+      "kind": "application",
+      "tier": 2,
+      "requires": [
+        "pla.seeders",
+        "inf.computation"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "prepare.failure",
+          "op": "mul",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "pla.microbial-seeding",
+      "kind": "application",
+      "tier": 3,
+      "requires": [
+        "pla.seeders",
+        "pla.climate"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "prepare.headStart",
+          "op": "add",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "id": "pla.self-replicators",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "pla.hardened-robotics",
+        "inf.beta"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "prepare.time",
+          "op": "mul",
+          "value": 0.5
+        },
+        {
+          "kind": "modifier",
+          "target": "prepare.failure",
+          "op": "mul",
+          "value": 0.7
+        }
+      ]
+    },
+    {
+      "id": "pla.ecopoiesis",
+      "kind": "application",
+      "tier": 4,
+      "requires": [
+        "pla.microbial-seeding",
+        "soc.biostasis"
+      ],
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": "planet.ecopoiesis"
+        },
+        {
+          "kind": "modifier",
+          "target": "prepare.headStart",
+          "op": "add",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "id": "pla.gaian",
+      "kind": "application",
+      "tier": 6,
+      "requires": [
+        "pla.terraform",
+        "pla.ecopoiesis",
+        "pla.biosphere"
+      ],
+      "effects": [
+        {
+          "kind": "modifier",
+          "target": "planet.terraformSpeed",
+          "op": "mul",
+          "value": 1.5
+        }
+      ]
     }
   ]
 }

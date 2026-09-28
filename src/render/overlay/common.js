@@ -7,7 +7,7 @@ import { theme } from '../theme.js';
 export const P = (/** @type {import('../../core/vec3.js').Vec3} */ v) => toScene(v);
 
 /** @param {string} faction */
-export const factionColor = (faction) => theme.factions[/** @type {keyof typeof theme.factions} */ (faction)] ?? theme.text;
+export const factionColor = (faction) => theme.factions[/** @type {keyof typeof theme.factions} */ (faction)] ?? theme.factionOther;
 
 /**
  * Colour for information of a given age: the base colour fading to grey; overdue in red.

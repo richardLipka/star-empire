@@ -4,6 +4,9 @@ import { random, hashUnit } from '../core/rng.js';
 import { empireState, abandonPresence } from '../empire/module.js';
 import { send, systemSnapshot, extendSystemSnapshot, recordDispatch, absorbSystemReport } from '../info/module.js';
 import { RULES, chooseSite, capacity, foodRatio, industry, research, growth, riskChances, lossFraction } from './model.js';
+import { startPreparation, finishPreparation, consumePreparation, learnPreparation, preparations } from './preparation.js';
+
+export { startPreparation, preparations };
 
 /**
  * Colonies (see docs/COLONIES.md).
@@ -37,14 +40,15 @@ import { RULES, chooseSite, capacity, foodRatio, industry, research, growth, ris
  * @property {number | null} unrestUntil
  * @property {number | null} terraform    progress 0–1 while terraforming
  * @property {number} nextRollAt
+ * @property {number} prepared     0–1: how well robots prepared the site before the colonists came
  * @property {{ food: number, capacity: number, industry: number, research: number }} last  last month's figures
  */
 
-/** @typedef {{ mode: Mode, colonists?: number }} Founding */
+/** @typedef {{ mode: Mode, colonists?: number, expectPrepared?: boolean }} Founding */
 /**
  * @typedef {{ population: number, mode: Mode, society: string, founded: number, site: { kind: string, body: string | null, name: string | null },
  *   materiel: number, food: number, capacity: number, industry: number, research: number, crops: boolean, unrest: boolean,
- *   terraform: number | null, instability: number, stock: number }} ColonyReport
+ *   terraform: number | null, instability: number, stock: number, prepared: number }} ColonyReport
  */
 
 export const colonyModule = defineModule({
@@ -57,12 +61,20 @@ export const colonyModule = defineModule({
     pending: {},
     /** disasters on or off (sandbox and tests) */
     risks: true,
+    /** @type {Record<string, import('./preparation.js').Preparation>} system → robotic preparation under way */
+    preparations: {},
   }),
+
+  handlers: {
+    'colony/prepared'(world, e, ctx) {
+      finishPreparation(world, ctx, e);
+    },
+  },
 
   tick(world, dt, ctx) {
     const es = empireState(world);
     for (const [system, p] of Object.entries(es.presence)) {
-      if (colonies(world)[system]?.empire !== p.empire) found(world, ctx, system, p.empire);
+      if (colonies(world)[system]?.empire !== p.empire) settleOwner(world, ctx, system, p.empire);
     }
     for (const [system, c] of Object.entries(colonies(world))) {
       const p = es.presence[system];
@@ -76,12 +88,17 @@ export const colonyModule = defineModule({
 
   listeners: {
     'empire/presenceChanged'(world, { system, empire }, ctx) {
-      if (colonies(world)[system]?.empire !== empire) found(world, ctx, system, empire);
+      if (colonies(world)[system]?.empire !== empire) settleOwner(world, ctx, system, empire);
     },
     'empire/presenceLost'(world, { system }) {
       delete colonies(world)[system];
     },
     'info/delivered'(world, { message }, ctx) {
+      if (message.kind === 'fleetReport') {
+        const emp = empireState(world).empires[message.empire];
+        if (message.target === emp.capital) learnPreparation(world, message.empire, message.payload.system, message.payload.event, message.validAt);
+        return;
+      }
       if (message.kind !== 'colony') return;
       const emp = empireState(world).empires[message.empire];
       if (message.target !== emp.capital) return;
@@ -109,6 +126,17 @@ export function prepareFounding(world, system, founding) {
 }
 
 /**
+ * A system's owner changed: the people stay (secession), or a colony is founded.
+ * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
+ * @param {string} system @param {string} empire
+ */
+function settleOwner(world, ctx, system, empire) {
+  const c = colonies(world)[system];
+  if (c) c.empire = empire;
+  else found(world, ctx, system, empire);
+}
+
+/**
  * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
  * @param {string} system @param {string} empire
  */
@@ -122,16 +150,26 @@ function found(world, ctx, system, empire) {
   const def = mode === 'old' ? null : RULES.modes[mode];
   const society = def?.society ?? 'old';
   const site = chooseSite(world.seed, ctx.data.catalog.get(system));
+  const caps = empireState(world).presence[system]?.capabilities;
+  const prep = consumePreparation(world, ctx, system, empire);
+  // Embryo ships sent to a site believed ready carry little: without the robots' nurseries, half the frozen stock is lost.
+  const unprepared = !!f.expectPrepared && prep.status !== 'ready';
+  const stock = mode === 'embryo' ? RULES.modes.embryo.stock * (unprepared ? 0.5 : 1) : 0;
+  const instability = (/** @type {Record<string, any>} */ (RULES.society)[society]?.instability ?? 0)
+    * (1 - RULES.preparation.bonus.instability * prep.prepared) * (mode === 'embryo' ? caps?.colony.instability ?? 1 : 1);
   st.colonies[system] = {
     empire, founded: ctx.now, mode, society, site,
-    population: f.colonists ?? (def ? def.colonists : RULES.start.capitalShare * capacity(site, empireState(world).presence[system]?.capabilities)),
-    stock: mode === 'embryo' ? RULES.modes.embryo.stock : 0,
+    population: f.colonists ?? (def ? def.colonists : RULES.start.capitalShare * capacity(site, caps)),
+    stock,
     materiel: capital ? RULES.start.capitalMateriel : RULES.start.materiel,
-    instability: /** @type {Record<string, any>} */ (RULES.society)[society]?.instability ?? 0,
-    cropsUntil: null, unrestUntil: null, terraform: null,
+    instability,
+    cropsUntil: null, unrestUntil: null, terraform: site.kind === 'terraformable' && prep.headStart > 0 ? prep.headStart : null,
     nextRollAt: ctx.now + hashUnit(world.seed, `colony:${system}:${ctx.now}`),
+    prepared: prep.prepared,
     last: { food: 1, capacity: 0, industry: 0, research: 0 },
   };
+  if (prep.status === 'ready' || prep.prepared > 0) report(world, ctx, system, st.colonies[system], 'preparedLanding', { percent: Math.round(prep.prepared * 100) });
+  else if (unprepared) report(world, ctx, system, st.colonies[system], 'unprepared', {});
 }
 
 /**
@@ -161,8 +199,11 @@ function live(world, ctx, system, c, p, dt) {
   const focus = focusAt(world, system);
   const unlocks = caps?.unlocks ?? [];
 
-  if (c.site.kind === 'terraformable' && unlocks.includes('planet.terraform') && terraformProgramme(world, system) === 'full') {
-    const years = RULES.terraforming.years * (unlocks.includes('planet.processors') ? 0.5 : 1);
+  // Full terraforming, or ecopoiesis carrying on what the seeders' microbes began (at half speed).
+  const full = unlocks.includes('planet.terraform');
+  const seeded = !full && c.terraform != null && unlocks.includes('planet.ecopoiesis');
+  if (c.site.kind === 'terraformable' && (full || seeded) && terraformProgramme(world, system) === 'full') {
+    const years = RULES.terraforming.years * (unlocks.includes('planet.processors') ? 0.5 : 1) * (seeded ? 2 : 1) / (caps?.colony.terraformSpeed ?? 1);
     c.terraform = (c.terraform ?? 0) + dt / years;
     if (c.terraform >= 1) {
       c.site = { ...c.site, kind: 'terraformed' };
@@ -175,15 +216,18 @@ function live(world, ctx, system, c, p, dt) {
   const unrest = c.unrestUntil != null && ctx.now < c.unrestUntil;
   if (!crops) c.cropsUntil = null;
   if (!unrest) c.unrestUntil = null;
-  const cap = capacity(c.site, caps);
-  const food = foodRatio(c.site, caps, focus, crops, c.population);
+  const prepared = c.prepared ?? 0;
+  const cap = capacity(c.site, caps, prepared);
+  const food = foodRatio(c.site, caps, focus, crops, c.population, prepared);
   c.population = Math.max(0, c.population + growth(c.population, cap, food, caps) * dt);
   if (c.stock > 0) {
-    const n = Math.min(c.stock, RULES.modes.embryo.decant * dt);
+    const n = Math.min(c.stock, RULES.modes.embryo.decant * (1 + RULES.preparation.bonus.decant * prepared) * dt);
     c.stock -= n;
     c.population += n;
   }
-  const slowed = unrest ? RULES.risks.unrest.output : 1;
+  // Unrest stops work; a restless colony (loyalty module) drags its feet.
+  const restless = world.state.loyalty?.records[system]?.stage === 'restless' ? RULES.restlessIndustry : 1;
+  const slowed = (unrest ? RULES.risks.unrest.output : 1) * restless;
   const made = industry(c.population, c.site, caps, focus) * slowed;
   c.materiel += made * dt;
   c.instability *= Math.exp(-dt / RULES.risks.unrest.fades);
@@ -194,8 +238,8 @@ function live(world, ctx, system, c, p, dt) {
     if (world.state.colony.risks) roll(world, ctx, system, c, caps);
   }
 
-  const capital = empireState(world).empires[c.empire].capital === system;
-  if (c.population < RULES.growth.extinctBelow && c.stock <= 0 && !capital) die(world, ctx, system, c);
+  // Even a capital can die out (a small breakaway polity); the seat then moves (empire module).
+  if (c.population < RULES.growth.extinctBelow && c.stock <= 0) die(world, ctx, system, c);
 }
 
 /**
@@ -206,7 +250,7 @@ function live(world, ctx, system, c, p, dt) {
 function roll(world, ctx, system, c, caps) {
   const r = RULES.risks;
   const star = ctx.data.catalog.get(system).stars[0]?.cls ?? '?';
-  const chance = riskChances(c, star, caps);
+  const chance = riskChances(c, star, caps, ctx.now);
   const hit = (/** @type {'prion' | 'radiation'} */ kind) => {
     const loss = lossFraction(/** @type {[number, number]} */ (r[kind].loss), c.population, random(ctx.rng));
     const lost = Math.round(c.population * loss);
@@ -246,10 +290,11 @@ function die(world, ctx, system, c) {
  * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
  * @param {string} system @param {Colony} c @param {string} event @param {Record<string, number>} params @param {Record<string, any>} [override]
  */
-function report(world, ctx, system, c, event, params, override = {}) {
+export function report(world, ctx, system, c, event, params, override = {}) {
   const capital = empireState(world).empires[c.empire].capital;
   const data = { ...systemSnapshot(world, system), ...override };
   send(world, ctx, { empire: c.empire, kind: 'colony', origin: system, target: capital, payload: { system, event, params, data }, via: system === capital ? 'capital' : 'relay' });
+  ctx.notify('colony/event', { system, event });
 }
 
 /**
@@ -328,7 +373,7 @@ export function colonySummary(world, system) {
     materiel: Math.round(c.materiel), food: round2(c.last.food), capacity: Math.round(c.last.capacity),
     industry: round2(c.last.industry), research: round2(c.last.research),
     crops: c.cropsUntil != null, unrest: c.unrestUntil != null, terraform: c.terraform == null ? null : round2(c.terraform),
-    instability: round2(c.instability), stock: Math.round(c.stock),
+    instability: round2(c.instability), stock: Math.round(c.stock), prepared: round2(c.prepared ?? 0),
   };
 }
 

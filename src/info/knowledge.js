@@ -14,6 +14,7 @@
  * @property {Record<string, Entry>} fleets       latest report per own fleet
  * @property {Record<string, number>} explored    systems known to have been visited → time of the visit
  * @property {Dispatch[]} dispatches              notable news, in order of arrival
+ * @property {Record<string, { status: 'working' | 'ready' | 'lost' | 'taken', validAt: number }>} [preparations]  robotic preparations, as their seeders reported them
  */
 
 const MAX_DISPATCHES = 200;

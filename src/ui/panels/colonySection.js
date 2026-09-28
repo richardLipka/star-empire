@@ -3,6 +3,26 @@ import { h, kv } from '../dom.js';
 import { t } from '../../i18n/index.js';
 import { fmtDuration, fmtNumber, fmtPeople, fmtPercent, fmtYear, fmtYearShort } from '../../i18n/format.js';
 import { colonyView } from '../../perspective/colony.js';
+import { driftOf } from '../../loyalty/module.js';
+
+/**
+ * What pushes and pulls a colony's loyalty. Only the truth shows the forces
+ * themselves; the capital sees just the reported loyalty.
+ * @param {import('./context.js').PanelContext} c @param {string} id @param {boolean} truth
+ */
+function renderForces(c, id, truth) {
+  if (!truth) return [h('p.hint', {}, t('loyalty.unknownForces'))];
+  const f = driftOf(c.game.world, c.game.sim.ctx, id);
+  if (!f) return [];
+  const n = (/** @type {number} */ x) => t('loyalty.points', { n: fmtNumber(x * 100, 2) });
+  /** @type {[string, string][]} */
+  const rows = [
+    ...Object.entries(f.push).filter(([, v]) => v > 0).map(([k, v]) => /** @type {[string, string]} */ ([t(`loyalty.push.${k}`), `−${n(v)}`])),
+    ...Object.entries(f.pull).filter(([, v]) => v > 0).map(([k, v]) => /** @type {[string, string]} */ ([t(`loyalty.pull.${k}`), `+${n(v)}`])),
+    [t('loyalty.net'), `${f.net >= 0 ? '+' : '−'}${n(Math.abs(f.net))}`],
+  ];
+  return [h('div.dim.small', {}, t('loyalty.forces')), kv(rows)];
+}
 
 /** Food ratio → how the colony eats. @param {number} food */
 const foodWord = (food) => (food < 1 ? 'starving' : food < 1.1 ? 'tight' : 'surplus');
@@ -34,7 +54,12 @@ export function renderColony(c, id) {
   if (col.stock > 0) rows.push([t('colony.embryos'), fmtPeople(col.stock)]);
   if (col.instability >= 0.1) rows.push([t('colony.instability'), fmtPercent(col.instability)]);
   if (col.terraform != null) rows.push([t('colony.terraforming'), fmtPercent(col.terraform)]);
+  if (col.prepared > 0) rows.push([t('colony.prepared'), fmtPercent(col.prepared)]);
+  const known = pic.systems.find((s) => s.id === id);
+  if (id === pic.capital) rows.push([t('loyalty.title'), t('loyalty.capital')]);
+  else if (known?.loyalty) rows.push([t('loyalty.title'), t('loyalty.value', { percent: fmtPercent(known.loyalty.value), stage: t(`loyalty.stage.${known.loyalty.stage}`) })]);
   nodes.push(kv(rows));
+  if (id !== pic.capital && known?.loyalty) nodes.push(...renderForces(c, id, pic.mode === 'truth'));
   const troubles = [];
   if (col.crops) troubles.push(t(col.site.kind === 'habitable' || col.site.kind === 'terraformed' ? 'colony.trouble.famine' : 'colony.trouble.rationing'));
   if (col.unrest) troubles.push(t(col.society === 'embryo' ? 'colony.trouble.strangeness' : 'colony.trouble.unrest'));

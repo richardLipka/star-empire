@@ -7,6 +7,8 @@ import { infoState, knowledgeOf, truthNetwork } from '../info/module.js';
 import { createNetwork, isFleetNode } from '../info/network.js';
 import { sightingsOf, SIGHTING_MEMORY } from '../detection/module.js';
 import { distance, lerp } from '../core/vec3.js';
+import { colonySummary } from '../colony/module.js';
+import { loyaltyAt } from '../loyalty/module.js';
 
 /**
  * A "picture" is everything the map draws, as seen from one perspective:
@@ -23,7 +25,9 @@ import { distance, lerp } from '../core/vec3.js';
  *
  * @typedef {import('../core/vec3.js').Vec3} Vec3
  * @typedef {'live' | 'confirmed' | 'expected' | 'unconfirmed' | 'actual'} Certainty
- * @typedef {{ id: string, owner: string, relay: string, validAt: number, receivedAt: number, age: number, overdue: boolean, via: string, hops: number }} PicSystem
+ * @typedef {{ id: string, owner: string, relay: string, validAt: number, receivedAt: number, age: number, overdue: boolean, via: string, hops: number,
+ *   loyalty: { value: number, stage: string } | null, population: number | null, troubled: boolean }} PicSystem
+ *   loyalty and population as reported (null: not in the report, e.g. a capital's loyalty or a foreign system)
  * @typedef {object} PicFleet
  * @property {string} id
  * @property {string} name
@@ -88,6 +92,7 @@ export function knowledgePicture(world, ctx, empire) {
     systems.push({
       id, owner: e.data.owner, relay: e.data.relay, validAt: e.validAt, receivedAt: e.receivedAt, age: now - e.validAt,
       overdue: ours && id !== emp.capital && now - e.receivedAt > OVERDUE_INTERVALS * emp.reportInterval, via: e.via, hops: e.hops,
+      ...politics(e.data.loyalty, e.data.colony),
     });
   }
   const relays = systems.filter((s) => s.owner === empire && s.relay === 'ok').map((s) => s.id);
@@ -139,6 +144,19 @@ export function knowledgePicture(world, ctx, empire) {
 }
 
 /**
+ * Loyalty and people of a system, from a report or the truth.
+ * @param {{ value: number, stage: string } | null | undefined} loyalty
+ * @param {{ population: number, food: number, crops: boolean, unrest: boolean } | null | undefined} colony
+ */
+function politics(loyalty, colony) {
+  return {
+    loyalty: loyalty ?? null,
+    population: colony ? colony.population : null,
+    troubled: !!colony && (colony.food < 1 || colony.crops || colony.unrest),
+  };
+}
+
+/**
  * The real state of the galaxy (all empires). `empire` sets range, capital and exploration.
  * @param {import('../sim/world.js').World} world
  * @param {{ now: number, data: Record<string, any> }} ctx
@@ -150,7 +168,13 @@ export function truthPicture(world, ctx, empire) {
   const posOf = posLookup(ctx);
   const es = empireState(world);
   const emp = es.empires[empire];
-  const systems = Object.entries(es.presence).map(([id, p]) => ({ id, owner: p.empire, relay: p.relay, validAt: now, receivedAt: now, age: 0, overdue: false, via: 'truth', hops: 0 }));
+  const systems = Object.entries(es.presence).map(([id, p]) => {
+    const rec = loyaltyAt(world, id);
+    return {
+      id, owner: p.empire, relay: p.relay, validAt: now, receivedAt: now, age: 0, overdue: false, via: 'truth', hops: 0,
+      ...politics(rec && { value: rec.value, stage: rec.stage }, colonySummary(world, id)),
+    };
+  });
   const net = truthNetwork(world, ctx, empire);
 
   /** @type {PicFleet[]} */

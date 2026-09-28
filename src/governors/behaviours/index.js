@@ -3,6 +3,8 @@ import explore from './explore.js';
 import settle from './settle.js';
 import courier from './courier.js';
 import fleetSend from './fleetSend.js';
+import prepare from './prepare.js';
+import missions from './missions.js';
 
 /**
  * Behaviour per directive type. Types without an entry are "standing
@@ -15,6 +17,8 @@ export const BEHAVIOURS = {
   'expansion.settle': settle,
   'logistics.courier': courier,
   'fleet.send': fleetSend,
+  'expansion.prepare': prepare,
+  'governance.missions': missions,
 };
 
 /** mission kind → behaviour that handles arrivals. */

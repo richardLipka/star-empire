@@ -82,12 +82,27 @@ export function createNetwork(input) {
     return out;
   }
 
+  /** @type {Map<string, Route | null>} */
+  const routes = new Map();
+  /**
+   * Fastest route, remembered for the life of this network (routes are asked
+   * for again and again: every message at every node).
+   * @param {string} from @param {string} target
+   * @returns {Route | null}
+   */
+  function route(from, target) {
+    const key = `${from}>${target}`;
+    if (!routes.has(key)) routes.set(key, findRoute(from, target));
+    const r = /** @type {Route | null} */ (routes.get(key));
+    return r && { nodes: [...r.nodes], hops: r.hops.map((h) => ({ ...h })), delay: r.delay };
+  }
+
   /**
    * Fastest route from `from` to `target` (Dijkstra on delay; fewer hops break ties).
    * @param {string} from @param {string} target
    * @returns {Route | null}
    */
-  function route(from, target) {
+  function findRoute(from, target) {
     if (from === target) return { nodes: [from], hops: [], delay: 0 };
     const HOP_COST = 1e-9;
     /** @type {Map<string, number>} */ const best = new Map([[from, 0]]);

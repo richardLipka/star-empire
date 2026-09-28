@@ -102,7 +102,8 @@ export const researchModule = defineModule({
 export const labs = (world) => world.state.research.labs;
 
 /**
- * A new outpost knows the start technologies and whatever its founders carried.
+ * A new colony knows the start technologies and whatever its founders carried;
+ * a system changing hands keeps what it knew.
  * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
  * @param {string} system @param {string} empire
  */
@@ -110,8 +111,10 @@ function openLab(world, ctx, system, empire) {
   const carried = Object.values(fleetState(world).fleets)
     .filter((f) => f.empire === empire && f.status === 'docked' && f.at === system)
     .flatMap((f) => f.blueprints ?? []);
+  // A system that changes hands (secession) keeps what its people know.
+  const old = labs(world)[system];
   /** @type {Lab} */
-  const lab = { empire, known: {}, blocked: {}, progress: {} };
+  const lab = { empire, known: { ...(old?.known ?? {}) }, blocked: { ...(old?.blocked ?? {}) }, progress: {} };
   for (const id of [...START_TECHS, ...carried]) lab.known[id] ??= ctx.now;
   labs(world)[system] = lab;
   applyCapabilities(world, ctx, system);
@@ -129,7 +132,11 @@ export const conditionMet = (world, empire, condition) => world.state.research.c
  * @param {Lab} lab @param {string} area
  */
 export function breakthroughCost(lab, area) {
-  const known = Object.keys(lab.known).filter((id) => tech(id).area === area && !tech(id).start).length;
+  let known = 0;
+  for (const id in lab.known) {
+    const t = tech(id);
+    if (t.area === area && !t.start) known++;
+  }
   return RULES.baseCost * RULES.costGrowth ** known;
 }
 

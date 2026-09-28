@@ -7,7 +7,10 @@
     "label": "Language"
   },
   "empire": {
-    "name": "Empire {id}"
+    "name": "Empire {id}",
+    "polity": "Empire {id}",
+    "brokeAway": "broke away from Empire {parent} in {year}",
+    "dissolved": "dissolved in {year}"
   },
   "time": {
     "year": "YEAR",
@@ -87,7 +90,9 @@
     "galacticCentre": "▸ galactic centre",
     "ring": "{n} ly",
     "security": "Security",
-    "securityTitle": "Our relay links within the beam spill of foreign systems (they may be overheard)"
+    "securityTitle": "Our relay links within the beam spill of foreign systems (they may be overheard)",
+    "politics": "Politics",
+    "economy": "Economy"
   },
   "symbol": {
     "fleetKnown": "fleet, position known",
@@ -187,7 +192,10 @@
     "colony": "People",
     "population": "Population",
     "populationKnown": "Population (as reported)",
-    "troubled": "Colonies in trouble"
+    "troubled": "Colonies in trouble",
+    "restless": "Restless colonies",
+    "autonomousCount": "Autonomous colonies",
+    "polities": "Polities known"
   },
   "control": {
     "click": "Click",
@@ -330,7 +338,12 @@
       "departed": "{fleet} departed {system}",
       "arrived": "{fleet} arrived at {system}",
       "settled": "{fleet} founded a colony at {system}",
-      "settleFailed": "{fleet} found {system} already taken"
+      "settleFailed": "{fleet} found {system} already taken",
+      "prepStarted": "{fleet} landed at {system}: robots at work preparing the site",
+      "prepReady": "{fleet}: the site at {system} is ready for colonists",
+      "prepLost": "{fleet} at {system}: contact lost, the preparation has failed",
+      "prepTaken": "{fleet} found {system} already taken or being prepared",
+      "missionArrived": "Cultural mission {fleet} arrived at {system}"
     },
     "note": "Note from {from}: {text}",
     "foreignFleetPresent": "Empire {empire} fleet present at {system}",
@@ -378,7 +391,15 @@
       "unrest": "Unrest at {system}: work stops, {lost} dead",
       "strangeness": "The machine-raised people of {system} turn strange and restless: work stops, {lost} dead",
       "extinct": "The colony at {system} has died out after {years} years. The system is lost.",
-      "terraformed": "{system}: terraforming complete. The world is open to the sky."
+      "terraformed": "{system}: terraforming complete. The world is open to the sky.",
+      "restless": "{system} is growing restless: low-priority orders are ignored",
+      "autonomous": "{system} has become autonomous: it no longer follows our orders",
+      "loyalAgain": "{system} is loyal again",
+      "restlessAgain": "{system} is restless but follows orders again",
+      "independence": "{system} has declared independence",
+      "joined": "{system} has joined a breakaway polity",
+      "preparedLanding": "Colonists landed at {system} on a site prepared by our robots ({percent} %)",
+      "unprepared": "Colonists reached {system} expecting a prepared site and found none: half the frozen embryos are lost"
     }
   },
   "sandbox": {
@@ -406,7 +427,11 @@
     "courier": "courier",
     "disasters": "Colony disasters",
     "supply": "+500 materiel",
-    "supplied": "Materiel delivered to {system}"
+    "supplied": "Materiel delivered to {system}",
+    "secede": "Declare independence",
+    "seceded": "{system} declared independence",
+    "loyaltyDown": "−25 % loyalty",
+    "loyaltyChanged": "Loyalty of {system} changed"
   },
   "governor": {
     "none": "No report of this governor yet.",
@@ -418,7 +443,8 @@
     "noOrders": "No standing orders (defaults apply).",
     "onTheWay": "Orders on the way here",
     "arrives": "arrives {year}",
-    "economyFocus": "Production focus"
+    "economyFocus": "Production focus",
+    "autonomy": "Autonomy"
   },
   "orders": {
     "compose": "New directive",
@@ -460,7 +486,9 @@
       "superseded": "superseded",
       "unreachable": "unreachable",
       "expired": "expired",
-      "revoked": "revoked"
+      "revoked": "revoked",
+      "refused": "refused",
+      "lost": "system lost"
     },
     "targetDesc": {
       "system": "{system}",
@@ -491,6 +519,10 @@
       "settle": {
         "name": "Settle",
         "desc": "Send colony ships. 'Most habitable' and 'richest' consider only surveyed systems. Ships cost materiel: embryo ships are cheap but raise strange, unstable societies; arks carry thousands for centuries; cryo sleepers arrive as a settled people."
+      },
+      "prepare": {
+        "name": "Prepare sites",
+        "desc": "Send robotic seeders ahead of the colonists to build habitats, nurseries and fields at surveyed, empty systems. Colonists on a prepared site grow faster, eat better and suffer less; embryo ships sent there travel light. Robots can fail, often without a word, and colonists then land on an unprepared world. Needs seeder robotics."
       }
     },
     "military": {
@@ -530,7 +562,11 @@
       },
       "autonomy": {
         "name": "Autonomy",
-        "desc": "How freely the governor interprets orders."
+        "desc": "How much freedom the governor has. Tight control chafes distant colonies; broad autonomy eases the drift, but the governor then ignores low-priority orders. Even autonomous colonies accept this order."
+      },
+      "missions": {
+        "name": "Cultural missions",
+        "desc": "Send cultural missions (songs, archives, envoys) to the least loyal colonies the capital knows of. Each restores much of a colony's loyalty. Needs cultural missions."
       }
     },
     "economy": {
@@ -580,7 +616,8 @@
     "program": "Programme",
     "field": "Field",
     "stance": "Stance",
-    "vessel": "Colony ships"
+    "vessel": "Colony ships",
+    "threshold": "Send to"
   },
   "option": {
     "priority": {
@@ -607,7 +644,8 @@
     "criteria": {
       "nearest": "nearest",
       "habitable": "most habitable",
-      "rich": "richest"
+      "rich": "richest",
+      "prepared": "prepared sites"
     },
     "posture": {
       "peace": "peace",
@@ -678,6 +716,11 @@
       "embryo": "embryo ships",
       "ark": "generation arks",
       "cryo": "cryo sleepers"
+    },
+    "threshold": {
+      "restless": "restless colonies",
+      "wavering": "wavering (below 75 %)",
+      "all": "every colony"
     }
   },
   "research": {
@@ -768,10 +811,18 @@
       "weapon": "Weapon",
       "planet": {
         "terraform": "Terraforming",
-        "processors": "Faster terraforming"
+        "processors": "Faster terraforming",
+        "ecopoiesis": "Ecopoiesis (terraforming seeded worlds)",
+        "terraformSpeed": "Terraforming speed"
       },
       "population": "Population",
-      "loyalty": "Loyalty",
+      "loyalty": {
+        "missions": "Cultural missions",
+        "push": "Pressures toward independence",
+        "pull": "Loyalty per year",
+        "latency": "Estrangement by distance",
+        "secession": "Chance of secession"
+      },
       "governor": "Governors",
       "espionage": "Espionage",
       "wormhole": "Wormholes",
@@ -804,13 +855,20 @@
           "embryo": "Embryo ships",
           "ark": "Generation arks",
           "cryo": "Cryo sleeper ships"
-        }
+        },
+        "prepare": "Robotic preparation missions",
+        "instability": "Instability of embryo-born societies"
       },
       "risk": {
         "prion": "Risk of prion outbreaks",
         "radiation": "Harm from stellar flares",
         "crops": "Risk of crop and recycler failure",
         "unrest": "Risk of unrest"
+      },
+      "prepare": {
+        "failure": "Failure of robotic preparations",
+        "time": "Time to prepare a site",
+        "headStart": "Terraforming begun by seeders"
       }
     },
     "module": {
@@ -825,7 +883,8 @@
       "governance": "governance",
       "diplomacy": "diplomacy",
       "events": "events",
-      "security": "security"
+      "security": "security",
+      "loyalty": "loyalty"
     },
     "condition": {
       "relic": "an alien relic found",
@@ -883,6 +942,59 @@
       "unrest": "Unrest: work has stopped.",
       "strangeness": "The machine-raised are restless: work has stopped.",
       "hunger": "The colony cannot feed itself."
+    },
+    "prepared": "Prepared site",
+    "preparing": "Robots preparing",
+    "prepStatus": {
+      "working": "robots at work",
+      "ready": "ready for colonists",
+      "lost": "contact lost",
+      "taken": "taken"
     }
+  },
+  "legend": {
+    "politics": {
+      "capital": "our capital",
+      "loyal": "loyal",
+      "restless": "restless",
+      "autonomous": "autonomous",
+      "unreported": "loyalty not yet reported",
+      "foreign": "{empire}"
+    },
+    "economy": {
+      "billions": "billions",
+      "millions": "millions",
+      "thousands": "thousands",
+      "few": "a few hundred",
+      "hungry": "hungry or in trouble",
+      "unreported": "not reported",
+      "foreign": "foreign"
+    }
+  },
+  "loyalty": {
+    "title": "Loyalty",
+    "value": "{percent} · {stage}",
+    "stage": {
+      "loyal": "loyal",
+      "restless": "restless",
+      "autonomous": "autonomous"
+    },
+    "forces": "What moves it (percentage points per year)",
+    "push": {
+      "latency": "distance",
+      "neglect": "neglect",
+      "instability": "instability",
+      "hardship": "hardship",
+      "selfSufficiency": "self-sufficiency"
+    },
+    "pull": {
+      "base": "belonging",
+      "prosperity": "prosperity",
+      "technology": "institutions"
+    },
+    "net": "net",
+    "capital": "The capital: the seat of the empire does not drift.",
+    "unknownForces": "The forces are known only here (Truth).",
+    "points": "{n} pts"
   }
 }

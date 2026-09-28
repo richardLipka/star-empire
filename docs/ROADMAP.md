@@ -112,12 +112,38 @@ star-empire/
   - build times;
   - the Legacy stats panel.
 
-### M6: First rival and first drift (`ai/`, `empire/`)
-- Human Empire B starts at another star with the same rules and the same fog. Contested colony targets. Braking detections of each other's ships.
-- Basic loyalty: latency and neglect push, prosperity pulls. Stages Loyal → Restless → Autonomous → Seceded; a seceded colony becomes an independent AI faction.
-- Loss of the capital: empire-wide loyalty shock arriving with the news, proclaiming a new seat, rebellions forming multi-system factions.
-- Dissolution when no system remains, and a first simple Chronicle screen.
-- This proves that fog of war and drift both matter before the game gains depth.
+### M6: First rival and first drift (`ai/`, `loyalty/`, `empire/`) ✔
+- See [POLITICS.md](POLITICS.md).
+- **Empire B is played by the AI:**
+  - from its own capital's knowledge, only through directives;
+  - research, expansion, robotic preparation, food, cultural missions, autonomy;
+  - personalities.
+- **Loyalty per colony:**
+  - pushes: distance, neglect, instability, hardship, self-sufficiency, disasters;
+  - pulls: belonging, prosperity, orders, cultural missions, technology.
+- **Stages:** restless (ignores low-priority orders), autonomous (refuses orders), independence. The new polity gets the next faction letter, keeps people and knowledge, is joined by autonomous neighbours, is played by the AI, and news of it reaches the capital by light. Refused orders show as refused.
+- **Capitals that die out** move their seat; a polity with no system left dissolves.
+- **Robotic preparation missions:**
+  - seeders prepare sites for colonists (big bonuses, especially for embryo ships), and can fail, often silently;
+  - colonists expecting a prepared site may land on an unprepared one;
+  - *Settle › prepared sites*.
+- **14 new technologies:**
+  - sociology: loyalty, embryo societies;
+  - planetary: seeding and terraforming for embryo colonies.
+  - Charters and consensus now act on loyalty.
+- **Map colour modes** *Politics* and *Economy*; loyalty in the People section; forces in *Truth*; overview counts; sandbox tools.
+- **Performance:**
+  - routes memoized per network;
+  - networks cached across time unless ansibles fly;
+  - fleet index for snapshots;
+  - cheaper report extensions.
+  - A 500-year sandbox with two AI empires runs in about 3 s headless.
+- Save migration v6 → v7.
+- **Tests (174).**
+- **Still open:**
+  - loss of the capital as an empire-wide loyalty shock (M13);
+  - the Chronicle screen (M17);
+  - contested targets beyond first-come (M10).
 
 ---
 
@@ -143,12 +169,12 @@ star-empire/
 - Security map layer (exposed links) and counts; the capital sends missing blueprints to systems that lack them.
 - **Tests (134).**
 
-## Suggested next steps (after M5)
+## Suggested next steps (after M6)
 
 In this order, because each one makes the next meaningful:
 
 1. ~~M5 Colonies and production~~ done.
-2. **M6 Loyalty and drift, plus AI for Empire B.** Colony instability (embryo societies first) is the natural seed for drift. Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
+2. ~~M6 Loyalty and drift, plus AI for Empire B~~ done. Empire B gets governors and its own directive-issuing AI, using the same modules as the player. Colony loyalty is driven by latency, neglect and prosperity. This is the core tension of the design, and the governors module already provides the hooks (books, settings, the "autonomy" directive).
 3. **M9 Fleets (ship design and sealed orders), then M10 combat.** Once rivals expand, contested systems need warships and battle plans. Detection (M3.1) already gives the warning times.
 4. ~~M12 Research~~ done. What remains for research: real output from institutes (M8), and trade, espionage and salvage as channels for closed-off technologies (M10, M14).
 5. **M7 Star systems and M8 planets.** Bodies already exist (M5). What remains: Kepler orbits and a 3D system view, installations per body, resources beyond materiel, food and colonists moving between systems.

@@ -57,11 +57,17 @@ export const infoModule = defineModule({
 
   tick(world, _dt, ctx) {
     // The capital knows its own system and anything linked by ansible without delay.
+    /** @type {Map<string, import('../fleet/module.js').Fleet[]>} */
+    const byEmpire = new Map();
+    for (const f of Object.values(fleetState(world).fleets)) {
+      if (!byEmpire.has(f.empire)) byEmpire.set(f.empire, []);
+      /** @type {import('../fleet/module.js').Fleet[]} */ (byEmpire.get(f.empire)).push(f);
+    }
     for (const emp of Object.values(empireState(world).empires)) {
+      if (emp.dissolvedAt != null) continue;
       absorbSystemReport(world, ctx, emp.id, emp.capital, { validAt: ctx.now, receivedAt: ctx.now, via: 'capital', hops: 0 }, systemSnapshot(world, emp.capital));
       const k = knowledgeOf(world, emp.id);
-      for (const f of Object.values(fleetState(world).fleets)) {
-        if (f.empire !== emp.id) continue;
+      for (const f of byEmpire.get(emp.id) ?? []) {
         const instant = f.ansible || f.at === emp.capital;
         if (instant) recordEntry(k.fleets, f.id, { validAt: ctx.now, receivedAt: ctx.now, via: f.ansible ? 'ansible' : 'capital', hops: 0, data: fleetSnapshot(f) });
       }
@@ -141,12 +147,41 @@ export function knowledgeOf(world, empire) {
 }
 
 /**
- * Networks are rebuilt only when something changed: cached per world, empire,
- * moment and network version (core/versions.js, bumped wherever relays,
- * presence, docked fleets or relay technology change). Derived data only.
+ * Networks are rebuilt only when something changed: cached per world, empire
+ * and network version (core/versions.js, bumped wherever relays, presence,
+ * docked fleets or relay technology change). Only an empire with ansible
+ * fleets has a network that also changes with time (fleets in flight are
+ * nodes then). Derived data only.
  * @type {WeakMap<object, Map<string, { key: string, net: import('./network.js').Network }>>}
  */
 const networkCache = new WeakMap();
+
+/** @type {WeakMap<object, { version: number, dockedAt: Map<string, { id: string, empire: string }[]>, ansible: Set<string> }>} */
+const fleetIndexCache = new WeakMap();
+
+/**
+ * Where fleets are docked, and which empires have ansible fleets. Rebuilt
+ * when the network version changes (every launch, arrival, creation and
+ * disbanding bumps it). Derived data only.
+ * @param {import('../sim/world.js').World} world
+ */
+function fleetIndex(world) {
+  const v = version(world, NETWORK);
+  const hit = fleetIndexCache.get(world);
+  if (hit && hit.version === v) return hit;
+  /** @type {Map<string, { id: string, empire: string }[]>} */
+  const dockedAt = new Map();
+  const ansible = new Set();
+  for (const f of Object.values(fleetState(world).fleets)) {
+    if (f.ansible) ansible.add(f.empire);
+    if (f.status !== 'docked' || !f.at) continue;
+    if (!dockedAt.has(f.at)) dockedAt.set(f.at, []);
+    /** @type {{ id: string, empire: string }[]} */ (dockedAt.get(f.at)).push({ id: f.id, empire: f.empire });
+  }
+  const index = { version: v, dockedAt, ansible };
+  fleetIndexCache.set(world, index);
+  return index;
+}
 
 /**
  * The empire's real communication network right now.
@@ -157,7 +192,8 @@ const networkCache = new WeakMap();
 export function truthNetwork(world, ctx, empire) {
   let cache = networkCache.get(world);
   if (!cache) networkCache.set(world, (cache = new Map()));
-  const key = `${ctx.now}|${version(world, NETWORK)}|${Object.keys(empireState(world).presence).length}`;
+  const moving = fleetIndex(world).ansible.has(empire);
+  const key = `${moving ? ctx.now : ''}|${version(world, NETWORK)}|${Object.keys(empireState(world).presence).length}`;
   const hit = cache.get(empire);
   if (hit && hit.key === key) return hit.net;
   const net = buildNetwork(world, ctx, empire);
@@ -275,9 +311,7 @@ function deliver(world, ctx, msg) {
  */
 export function systemSnapshot(world, system) {
   const p = empireState(world).presence[system];
-  const docked = Object.values(fleetState(world).fleets)
-    .filter((f) => f.status === 'docked' && f.at === system)
-    .map((f) => ({ id: f.id, empire: f.empire }));
+  const docked = (fleetIndex(world).dockedAt.get(system) ?? []).map((d) => ({ ...d }));
   const base = { owner: p?.empire ?? null, relay: p?.relay ?? 'none', reporting: p?.reporting ?? 'routine', docked };
   return Object.assign(base, ...snapshotExtensions.map((fn) => fn(world, system)));
 }
@@ -319,6 +353,9 @@ export const fleetSnapshot = (f) => JSON.parse(JSON.stringify({
   ansible: f.ansible, courier: f.courier, transmitter: f.transmitter, role: f.role, drive: f.drive,
 }));
 
+/** Fleet events after which the ship is gone (used up or lost). */
+const DISBANDING = ['settled', 'prepReady', 'prepLost', 'prepTaken', 'missionArrived'];
+
 /**
  * A fleet's final report before it is disbanded (e.g. a settler founding an outpost).
  * @param {import('../sim/world.js').World} world @param {import('../sim/module.js').SimContext} ctx
@@ -328,7 +365,7 @@ export function reportFleetEvent(world, ctx, f, system, event) {
   const emp = empireState(world).empires[f.empire];
   send(world, ctx, {
     empire: f.empire, kind: 'fleetReport', origin: system, target: emp.capital,
-    payload: { fleet: { ...fleetSnapshot(f), status: event === 'settled' ? 'disbanded' : f.status }, event, system, systemData: systemSnapshot(world, system) },
+    payload: { fleet: { ...fleetSnapshot(f), status: DISBANDING.includes(event) ? 'disbanded' : f.status }, event, system, systemData: systemSnapshot(world, system) },
   });
 }
 

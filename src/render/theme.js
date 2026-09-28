@@ -34,6 +34,26 @@ export const theme = {
     explored: '#d8e2ea',
     unexplored: '#3e4a55',
   },
+  /** Star colours in the "Politics" view (our colonies by reported loyalty; foreign ones by faction). */
+  politics: {
+    capital: '#ffd27a',
+    loyal: '#8fdf6a',
+    restless: '#e8c34a',
+    autonomous: '#d9694a',
+    unreported: '#7d8a96',
+  },
+  /** Star colours in the "Economy" view (people, and trouble). */
+  economy: {
+    billions: '#fff1c4',
+    millions: '#f0c060',
+    thousands: '#c08a3e',
+    few: '#7a5f3a',
+    hungry: '#d9694a',
+    unreported: '#56636e',
+    foreign: '#3f6470',
+  },
+  /** Held-nothing stars in the political and economic views. */
+  quiet: '#26313a',
   /** Information older than this (years) is drawn fully faded. */
   staleAfterYears: 40,
   /** One hue per faction, keyed by faction letter. */
@@ -42,7 +62,13 @@ export const theme = {
     B: '#5fb3c9',
     C: '#b98ad9',
     D: '#8fbf6a',
+    E: '#d98a9f',
+    F: '#9fd9c0',
+    G: '#c9b27a',
+    H: '#8aa0e8',
   },
+  /** Faction colour for polities beyond the named ones. */
+  factionOther: '#a8a8b8',
   /** Star colours by spectral class (O B A F G K M, plus white dwarfs and unknown). */
   spectral: {
     O: '#9bb0ff',

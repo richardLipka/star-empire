@@ -9,7 +9,7 @@ import { createSightingLayer } from './sightingLayer.js';
 import { createWormholeLayer } from './wormholeLayer.js';
 
 /**
- * @typedef {'spectral' | 'status' | 'age'} ColourBy
+ * @typedef {'spectral' | 'status' | 'age' | 'politics' | 'economy'} ColourBy
  * @typedef {{ network: boolean, ranges: boolean, security?: boolean, exposed?: { a: string, b: string }[], colourBy: ColourBy, labelMode: 'auto' | 'all' | 'none', focus: THREE.Vector3 }} OverlayOptions
  */
 

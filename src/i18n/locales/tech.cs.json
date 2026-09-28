@@ -275,6 +275,30 @@
     "arcologies": {
       "name": "Arkologie",
       "desc": "Města jako jediné budovy; kapacita světa znásobená."
+    },
+    "seeders": {
+      "name": "Robotika výsadků",
+      "desc": "Robotické lodě, které přistanou před kolonisty a stavějí: habitaty, porodnice, pole. Umožní robotické přípravné mise."
+    },
+    "hardened-robotics": {
+      "name": "Odolná robotika",
+      "desc": "Stroje, které přežijí desetiletí o samotě pod nepřátelským nebem. Přípravy selhávají o polovinu méně."
+    },
+    "microbial-seeding": {
+      "name": "Mikrobiální osev",
+      "desc": "Výsadky sejí upravené mikroby: terraformovatelný svět se začne měnit dřív, než kdokoli přistane."
+    },
+    "self-replicators": {
+      "name": "Samoreplikující stavitelé",
+      "desc": "Roboti, kteří stavějí další roboty. Přípravy trvají poloviční dobu."
+    },
+    "ecopoiesis": {
+      "name": "Ekopoéza",
+      "desc": "Biosféra vypěstovaná ze semene: kolonie na osetých světech pomalu terraformují i bez plné terraformace."
+    },
+    "gaian": {
+      "name": "Gaiské inženýrství",
+      "desc": "Celé světy řízené jako zahrady. Terraformace je o polovinu rychlejší."
     }
   },
   "soc": {
@@ -296,11 +320,11 @@
     },
     "missions": {
       "name": "Kulturní mise",
-      "desc": "Písně, archivy a vyslanci připomínají koloniím, kým jsou."
+      "desc": "Písně, archivy a vyslanci, kteří koloniím připomínají, kým jsou. Guvernéři mohou vysílat mise, které obnovují věrnost kolonií."
     },
     "charters": {
       "name": "Koloniální listiny",
-      "desc": "Psané svobody zpomalují odklon k nezávislosti."
+      "desc": "Psané svobody, které zpomalují cestu k nezávislosti."
     },
     "longevity": {
       "name": "Prodlužování života",
@@ -312,7 +336,7 @@
     },
     "consensus": {
       "name": "Sítě konsenzu",
-      "desc": "Mysli spojené v jedinou vůli. Někdo tomu říká úl."
+      "desc": "Mysli spojené v jedinou vůli. Někdo tomu říká úl. Kolonie se odcizují mnohem méně."
     },
     "plague": {
       "name": "Obrana proti nanomoru",
@@ -345,6 +369,38 @@
     "tutors": {
       "name": "Učitelské inteligence",
       "desc": "Trpěliví strojoví učitelé, kteří pamatují, co rodiče nikdy nevěděli."
+    },
+    "calendar": {
+      "name": "Společný kalendář",
+      "desc": "Jedno počítání času a jeden archiv přes světelné roky: vzdálenost rozděluje o něco méně."
+    },
+    "broadcasts": {
+      "name": "Vysílání z domova",
+      "desc": "Hlas hlavního města, roky starý, ale nikdy nemlčící, na nebi každé kolonie."
+    },
+    "development": {
+      "name": "Vývojová psychologie",
+      "desc": "Jak se z dětí stávají lidé, a co se stane, když je lidé nevychovávají."
+    },
+    "curricula": {
+      "name": "Osnovy porodnic",
+      "desc": "Co mají stroje učit první generaci: příběhy, tváře, domov, který nikdy neviděli."
+    },
+    "surrogates": {
+      "name": "Náhradní mysli",
+      "desc": "Simulovaní rodiče s lidskou trpělivostí. Společnosti zrozené z embryí vyrůstají mnohem méně podivné."
+    },
+    "diaspora": {
+      "name": "Studium diaspory",
+      "desc": "Proč národy rozptýlené přes světelné roky zůstávají jedním, a proč přestávají."
+    },
+    "compact": {
+      "name": "Federální smlouva",
+      "desc": "Unie, ze které mohou kolonie odejít, a proto to dělají jen zřídka."
+    },
+    "memetics": {
+      "name": "Memetické inženýrství",
+      "desc": "Myšlenky navržené, aby se šířily a poutaly. Užitečné, a ne zcela poctivé."
     }
   },
   "kin": {

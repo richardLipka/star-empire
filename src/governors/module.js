@@ -32,7 +32,8 @@ import { retryPendingSends } from './behaviours/fleetSend.js';
  * @property {string} empire
  * @property {Record<string, Directive>} directives   one per directive type; a newer order replaces an older one
  * @property {string[]} received                      ids of recently received orders (acknowledgements)
- * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number>, pendingSends?: Directive[] }} memory
+ * @property {string[]} [refused]                     ids of orders it would not follow (loyalty)
+ * @property {{ nextLaunchAt: number, relayLostAt: number | null, lastThreatAt: number | null, courierDue: Record<string, number>, lastLaunch: Record<string, number>, pendingSends?: Directive[], missionDue?: Record<string, number> }} memory
  * @property {typeof DEFAULT_SETTINGS} settings
  */
 
@@ -101,6 +102,10 @@ function receive(world, ctx, system, empire, payload) {
 
   if (payload.type === 'revoke') {
     if (book.directives[payload.directiveType]?.id === payload.id) delete book.directives[payload.directiveType];
+  } else if (!obeys(world, book, payload.directive)) {
+    (book.refused ??= []).push(payload.directive.id);
+    if (book.refused.length > RECEIVED_MEMORY) book.refused.splice(0, book.refused.length - RECEIVED_MEMORY);
+    ctx.notify('governors/refused', { system, empire, directive: payload.directive.id });
   } else {
     /** @type {Directive} */
     const d = { ...payload.directive, receivedAt: ctx.now };
@@ -117,6 +122,20 @@ function receive(world, ctx, system, empire, payload) {
   }
   applySettings(world, ctx, book);
   ctx.notify('governors/received', { system, empire });
+}
+
+/**
+ * Does the governor follow this order? That depends on the colony's loyalty
+ * (loyalty module): restless colonies, and governors granted broad autonomy,
+ * ignore low-priority orders; autonomous ones accept only governance orders
+ * (such as being granted autonomy).
+ * @param {import('../sim/world.js').World} world @param {Book} book @param {{ type: string, priority: string }} d
+ */
+export function obeys(world, book, d) {
+  const stage = world.state.loyalty?.records[book.system]?.stage ?? 'loyal';
+  if (stage === 'autonomous') return d.type.startsWith('governance.');
+  if ((stage === 'restless' || book.settings.autonomy === 'broad') && d.priority === 'low') return false;
+  return true;
 }
 
 /**
@@ -213,11 +232,13 @@ function repairRelay(world, ctx, book) {
 extendSystemSnapshot((world, system) => {
   const book = world.state.governors?.books[system];
   if (!book) return {};
+  // Copies (reports are a snapshot); directive parameters are never changed in place, so a shallow copy is enough.
   return {
-    governor: JSON.parse(JSON.stringify({
-      directives: Object.values(book.directives).map(({ id, type, params, priority, when, expiresAt, issuedAt }) => ({ id, type, params, priority, when, expiresAt, issuedAt })),
-      received: book.received,
-      settings: book.settings,
-    })),
+    governor: {
+      directives: Object.values(book.directives).map(({ id, type, params, priority, when, expiresAt, issuedAt }) => ({ id, type, params: { ...params }, priority, when, expiresAt, issuedAt })),
+      received: [...book.received],
+      refused: [...(book.refused ?? [])],
+      settings: { ...book.settings },
+    },
   };
 });

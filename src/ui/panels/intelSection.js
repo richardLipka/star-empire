@@ -1,7 +1,9 @@
 // @ts-check
 import { h, kv } from '../dom.js';
 import { t } from '../../i18n/index.js';
-import { fmtDuration, fmtYear } from '../../i18n/format.js';
+import { fmtDuration, fmtYear, fmtYearShort } from '../../i18n/format.js';
+import { empireState } from '../../empire/module.js';
+import { knownPreparations } from '../../colony/preparation.js';
 import { createNetwork } from '../../info/network.js';
 import { describeSighting } from '../text/describe.js';
 
@@ -28,6 +30,8 @@ export function renderIntel(c, id) {
   const rows = [[t('intel.status'), t(`status.${status}`)]];
   if (known) {
     rows.push([t('intel.heldBy'), t('empire.name', { id: known.owner })]);
+    const polity = empireState(c.game.world).empires[known.owner];
+    if (pic.mode === 'truth' && polity?.parent) rows.push(['', t('empire.brokeAway', { parent: polity.parent, year: fmtYearShort(polity.founded ?? 0) })]);
     if (known.owner === pic.empire) rows.push([t('intel.relay'), t(known.relay === 'ok' ? 'intel.relayOk' : known.relay === 'none' ? 'intel.relayNone' : 'intel.relayDown')]);
     if (pic.mode === 'knowledge' && id !== pic.capital) {
       rows.push([t('intel.latest'), fmtYear(known.validAt)]);
@@ -36,6 +40,8 @@ export function renderIntel(c, id) {
       rows.push([t('intel.received'), t('intel.receivedVia', { year: fmtYear(known.receivedAt), via }) + (known.hops ? ` (${t('intel.hops', { count: known.hops })})` : '')]);
     }
   }
+  const prep = pic.mode === 'knowledge' ? knownPreparations(c.game.world, pic.empire)[id] : null;
+  if (prep && !known) rows.push([t('colony.preparing'), `${t(`colony.prepStatus.${prep.status}`)} (${fmtYearShort(prep.validAt)})`]);
   rows.push([t('intel.ordersReach'), out ? `${fmtDuration(out.delay)} · ${relayHops(out)}` : t('intel.notByLight')]);
   if (known?.owner === pic.empire) rows.push([t('intel.reportsNeed'), back ? `${fmtDuration(back.delay)} · ${relayHops(back)}` : t('intel.silent')]);
 

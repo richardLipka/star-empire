@@ -11,12 +11,14 @@ export const sys = (name) => {
 
 /**
  * New sandbox game; `act` runs a world action with the context. Colony
- * disasters are off unless asked for, so timing tests are not disturbed.
+ * disasters and Empire B's AI are off unless asked for, so timing tests are
+ * not disturbed.
  */
-export function sandbox(seed = 'm3', { risks = false } = {}) {
+export function sandbox(seed = 'm3', { risks = false, ai = false } = {}) {
   const sim = createSimulation({ modules: MODULES, data: DATA, seed });
   sim.world.state.colony.risks = risks;
   sandboxScenario(sim.world, sim.ctx);
+  if (!ai) sim.world.state.ai.controllers = {}; // Empire B's AI acts only where a test asks for it
   return { sim, world: sim.world, ctx: sim.ctx, act: (fn) => fn(sim.world, sim.ctx) };
 }
 

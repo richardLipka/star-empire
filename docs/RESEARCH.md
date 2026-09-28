@@ -19,7 +19,7 @@ Ten areas, in display order (`src/data/tech/areas.json`):
 | Wormhole utilisation | `wor` | Finding, holding open and making wormholes |
 | Exotic and alien | `xen` | Relics, alien minds, physics nobody taught us |
 
-The content (112 technologies, including cryptography and interception since M12.1, see [SECURITY.md](SECURITY.md), and colony life since M5, see [COLONIES.md](COLONIES.md)) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
+The content (126 technologies, including cryptography and interception since M12.1, see [SECURITY.md](SECURITY.md), and colony life since M5, see [COLONIES.md](COLONIES.md), and loyalty and robotic preparation since M6, see [POLITICS.md](POLITICS.md)) takes its mood from gothic hard SF (Alastair Reynolds and others). Names are original: sleeper cohorts, beta-level simulations, relic physics, vault ordnance, consensus networks, and signature discipline against whatever listens for noise.
 
 ## How research works
 
@@ -61,13 +61,18 @@ Effects are applied per system to `presence.capabilities` (`src/research/effects
 | `colony.mode.embryo`, `.ark`, `.cryo` | colony, governors | which colony ships can be built here |
 | `risk.prion`, `risk.radiation`, `risk.crops`, `risk.unrest` | colony | chance (or harm) of each disaster |
 | `planet.terraform`, `planet.processors` | colony | terraforming, and at double speed |
+| `planet.ecopoiesis`, `planet.terraformSpeed` | colony | seeded worlds keep terraforming; terraforming speed |
+| `colony.prepare`, `prepare.failure`, `prepare.time`, `prepare.headStart` | governors, colony | robotic preparation missions: whether, how reliable, how fast, how much terraforming they begin |
+| `colony.instability` | colony | instability of embryo-born societies at founding |
+| `loyalty.missions` | governors | cultural missions |
+| `loyalty.push`, `loyalty.pull`, `loyalty.latency`, `loyalty.secession` | loyalty | pressures toward independence, yearly loyalty, estrangement by distance, chance of secession |
 
 Other targets are declared now and take effect when their module arrives (`src/data/tech/targets.json`, `implemented: false`):
 - `ship.*` — fleet design, M9;
 - `weapon.*` — combat, M10;
 - other `planet.*` — planets, M8;
 - `population.*` — the nanotech plague, M16;
-- `loyalty.*` and `governor.*` — governance, M13;
+- other `loyalty.*` and `governor.*` — governance, M13;
 - `espionage.*` — diplomacy, M14;
 - `wormhole.*`, `relic.*`, `aliens.*` and `ansible.*` — events, M16.
 
@@ -153,7 +158,8 @@ Planned additions:
 | ~~M5 colonies~~ | done: life support, hydroponics, domes, shelters, flare forecasting, resilient crops, automation, asteroid mining, arcologies, machine nurseries, population genetics, prion therapeutics, gene banks, founding traditions, tutor intelligences |
 | M8 planets | institutes, terraforming stages, orbital industry |
 | M9 / M10 fleets and combat | hull classes, armour, point defence, battle computers, salvage and reverse engineering |
-| M13 governance | charters and consensus effects on loyalty, simulated governors |
+| ~~M6 politics~~ | done: common calendar, home broadcasts, developmental psychology, nursery curricula, surrogate minds, diaspora studies, federal compact, memetic engineering (charters and consensus now act on loyalty); seeder robotics, hardened robotics, microbial seeding, self-replicating builders, ecopoiesis, Gaian engineering |
+| M13 governance | simulated governors, governor traits, reintegration |
 | M14 diplomacy | agents, embassies, trade protocols, counter-intelligence |
 | M16 events | relic studies per relic type, alien contact lines, wormhole engineering, ansible construction |
 

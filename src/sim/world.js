@@ -3,7 +3,7 @@ import { createRng } from '../core/rng.js';
 import { createQueue } from '../core/scheduler.js';
 
 /** Bump when the saved world shape changes, and add a migration in save.js. */
-export const WORLD_VERSION = 6;
+export const WORLD_VERSION = 7;
 
 /**
  * The complete, JSON-serializable truth of one game.

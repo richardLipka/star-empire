@@ -19,7 +19,7 @@ import { bump, NETWORK } from '../core/versions.js';
  * @property {boolean} ansible      carries an ansible: instant link to the capital
  * @property {boolean} courier      carries information (reports, queued messages) with it
  * @property {boolean} transmitter  carries a relay module: can transmit from any system it is docked at
- * @property {'generic' | 'scout' | 'settler' | 'courier'} role
+ * @property {'generic' | 'scout' | 'settler' | 'courier' | 'seeder' | 'envoy'} role
  * @property {any} mission          what its governor sent it to do (plain data), or null
  * @property {string[]} [blueprints] technologies it carries (known where it was launched)
  * @property {number} [plumeVisibility] how far its drive plume can be seen (1 = normal), from launch-site technology

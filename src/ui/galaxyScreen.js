@@ -63,7 +63,7 @@ export function mountGalaxyScreen({ viewport, viewportEl, side, toolsSlot, catal
     texts: { ring: (ly) => t('map.ring', { n: ly }), distance: fmtLy, galacticCentre: t('map.galacticCentre') },
   });
   const overlay = createInfoOverlay({ scene: view.scene, catalog, labels: { fleet: (f) => fleetLabel(f, name), sighting: (s) => describeSighting(s, name) } });
-  const controls = mountMapControls(viewportEl, { state: map, empire: EMPIRE, legend: () => legendItems(map.colourBy, catalog.systems, statuses), onChange: redraw });
+  const controls = mountMapControls(viewportEl, { state: map, empire: EMPIRE, legend: () => legendItems(map.colourBy, catalog.systems, statuses, picture), onChange: redraw });
   const dispatches = mountDispatchLog(viewportEl, { getDispatches: () => knowledgeOf(game.world, EMPIRE).dispatches, name });
 
   function updateSelection() {

@@ -87,7 +87,8 @@
               "options": [
                 "nearest",
                 "habitable",
-                "rich"
+                "rich",
+                "prepared"
               ],
               "default": "nearest"
             },
@@ -130,6 +131,47 @@
                 "cryo"
               ],
               "default": "auto"
+            }
+          ]
+        },
+        {
+          "id": "expansion.prepare",
+          "implemented": true,
+          "repeating": true,
+          "params": [
+            {
+              "id": "criteria",
+              "type": "enum",
+              "options": [
+                "nearest",
+                "habitable",
+                "rich"
+              ],
+              "default": "habitable"
+            },
+            {
+              "id": "frequency",
+              "type": "enum",
+              "options": [
+                "low",
+                "normal",
+                "high"
+              ],
+              "default": "normal"
+            },
+            {
+              "id": "maxRange",
+              "type": "number",
+              "min": 5,
+              "max": 40,
+              "step": 5,
+              "default": 15,
+              "unit": "ly"
+            },
+            {
+              "id": "toward",
+              "type": "system",
+              "optional": true
             }
           ]
         }
@@ -287,7 +329,7 @@
         },
         {
           "id": "governance.autonomy",
-          "implemented": false,
+          "implemented": true,
           "params": [
             {
               "id": "level",
@@ -298,6 +340,42 @@
                 "broad"
               ],
               "default": "normal"
+            }
+          ]
+        },
+        {
+          "id": "governance.missions",
+          "implemented": true,
+          "repeating": true,
+          "params": [
+            {
+              "id": "threshold",
+              "type": "enum",
+              "options": [
+                "restless",
+                "wavering",
+                "all"
+              ],
+              "default": "wavering"
+            },
+            {
+              "id": "frequency",
+              "type": "enum",
+              "options": [
+                "low",
+                "normal",
+                "high"
+              ],
+              "default": "normal"
+            },
+            {
+              "id": "maxRange",
+              "type": "number",
+              "min": 5,
+              "max": 40,
+              "step": 5,
+              "default": 25,
+              "unit": "ly"
             }
           ]
         }

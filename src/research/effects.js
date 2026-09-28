@@ -13,12 +13,16 @@ import { DRIVE_TIERS } from '../fleet/drives.js';
  * - security:  cipher strength of messages sent from here, decryption level and
  *              listening reach of this system, beam spill of its relay
  * - colonies:  capacity per site kind, food, growth, industry, risk factors,
- *              colonisation modes (colony.mode.*), terraforming (planet.*)
+ *              colonisation modes (colony.mode.*), terraforming (planet.*),
+ *              robotic preparation (prepare.*, colony.prepare)
+ * - loyalty:   drift push and pull, latency, secession; cultural missions
  *
  * @typedef {{ relayBonus: number, sensorRange: number, sensorAngle: number, plumeVisibility: number, researchRate: number,
  *             cipher: number, decrypt: number, interceptRange: number, beamSpill: number, drive: string | null, unlocks: string[],
- *             colony: ColonyCaps }} Capabilities
- * @typedef {{ capacity: Record<string, number>, food: number, foodClosed: number, growth: number, industry: number, risk: Record<string, number> }} ColonyCaps
+ *             colony: ColonyCaps, loyalty: LoyaltyCaps, prepare: PrepareCaps }} Capabilities
+ * @typedef {{ capacity: Record<string, number>, food: number, foodClosed: number, growth: number, industry: number, risk: Record<string, number>, instability: number, terraformSpeed: number }} ColonyCaps
+ * @typedef {{ push: number, pull: number, latency: number, secession: number }} LoyaltyCaps
+ * @typedef {{ failure: number, time: number, headStart: number }} PrepareCaps
  */
 
 /** @returns {Capabilities} */
@@ -29,7 +33,10 @@ export const baseCapabilities = () => ({
     capacity: { habitable: 1, terraformed: 1, terraformable: 1, hostile: 1, orbital: 1 },
     food: 1, foodClosed: 0, growth: 1, industry: 1,
     risk: { prion: 1, radiation: 1, crops: 1, unrest: 1 },
+    instability: 1, terraformSpeed: 1,
   },
+  loyalty: { push: 1, pull: 0, latency: 1, secession: 1 },
+  prepare: { failure: 1, time: 1, headStart: 0 },
 });
 
 /**
@@ -60,6 +67,15 @@ export function capabilities(known) {
         case 'colony.closedFood': caps.colony.foodClosed += e.value; break;
         case 'colony.growth': caps.colony.growth *= e.value; break;
         case 'colony.industry': caps.colony.industry *= e.value; break;
+        case 'colony.instability': caps.colony.instability *= e.value; break;
+        case 'planet.terraformSpeed': caps.colony.terraformSpeed *= e.value; break;
+        case 'loyalty.push': caps.loyalty.push *= e.value; break;
+        case 'loyalty.pull': caps.loyalty.pull += e.value; break;
+        case 'loyalty.latency': caps.loyalty.latency *= e.value; break;
+        case 'loyalty.secession': caps.loyalty.secession *= e.value; break;
+        case 'prepare.failure': caps.prepare.failure *= e.value; break;
+        case 'prepare.time': caps.prepare.time *= e.value; break;
+        case 'prepare.headStart': caps.prepare.headStart += e.value; break;
         default:
           if (e.target.startsWith('colony.capacity.')) caps.colony.capacity[e.target.slice(16)] *= e.value;
           else if (e.target.startsWith('risk.')) caps.colony.risk[e.target.slice(5)] *= e.value;

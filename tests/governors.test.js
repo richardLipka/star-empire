@@ -168,7 +168,8 @@ describe('expansion', () => {
     expect(after.has(first)).toBe(true); // reported by the scout's own transmitter
     expect(after.size - before.size).toBeGreaterThanOrEqual(4);
     // One launch per interval: never more scouts than the shipyard could build.
-    expect(fleets(world, 'scout').length).toBeLessThanOrEqual(Math.floor(400 / CAPACITY.launchInterval.high) + 1);
+    // (Colonies that broke away over the centuries explore for themselves: count Sol's scouts only.)
+    expect(fleets(world, 'scout').filter((f) => f.empire === 'A').length).toBeLessThanOrEqual(Math.floor(400 / CAPACITY.launchInterval.high) + 1);
   });
 
   it('explore toward a system keeps to that direction', () => {
