@@ -1,5 +1,5 @@
 // @ts-check
-import { h } from './dom.js';
+import { h, patch } from './dom.js';
 import { t } from '../i18n/index.js';
 import { fmtDuration, fmtLy } from '../i18n/format.js';
 import { distance } from '../core/vec3.js';
@@ -79,17 +79,17 @@ export function createSidePanel(root, deps) {
 
   function refresh() {
     if (tab === 'orders') {
-      live.orders.replaceChildren(...renderOrderList(c));
+      patch(live.orders, renderOrderList(c));
       return;
     }
     if (current.selected) {
-      live.intel.replaceChildren(...renderIntel(c, current.selected));
-      live.governor.replaceChildren(...renderGovernor(c, current.selected));
-      live.colony.replaceChildren(...renderColony(c, current.selected));
+      patch(live.intel, renderIntel(c, current.selected));
+      patch(live.governor, renderGovernor(c, current.selected));
+      patch(live.colony, renderColony(c, current.selected));
     } else {
-      live.summary.replaceChildren(...renderSummary(c));
+      patch(live.summary, renderSummary(c));
     }
-    live.fleets.replaceChildren(...renderFleetList(c, current.selected));
+    patch(live.fleets, renderFleetList(c, current.selected));
   }
 
   return { render, refresh };

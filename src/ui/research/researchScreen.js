@@ -1,5 +1,5 @@
 // @ts-check
-import { h } from '../dom.js';
+import { h, patch } from '../dom.js';
 import { t } from '../../i18n/index.js';
 import { fmtNumber } from '../../i18n/format.js';
 import { AREAS } from '../../research/catalog.js';
@@ -98,7 +98,7 @@ export function mountResearchScreen({ root, toolsSlot, game, empire, toast }) {
       const r = issueDirective(w, c, { empire, type: 'research.focus', target: scope === 'empire' ? { kind: 'empire' } : { kind: 'system', system: pic.capital }, params: { field: focusChoice } });
       toast(t('research.focusSent', { area: t(`option.field.${focusChoice}`), count: r.targets.length }));
     });
-    left.replaceChildren(...[
+    patch(left, [
       h('h3', {}, t('research.focusTitle')),
       h('p.hint.small', {}, t('research.focusHint')),
       focusSelect,

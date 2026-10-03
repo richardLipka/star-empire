@@ -1,5 +1,5 @@
 // @ts-check
-import { h, kv } from '../dom.js';
+import { h, kv, patch } from '../dom.js';
 import { t } from '../../i18n/index.js';
 import { fmtYearShort, fmtDuration, fmtSeconds, fmtC, fmtNumber } from '../../i18n/format.js';
 import { fleetsPicture, engagementWindows } from '../../perspective/fleets.js';
@@ -49,7 +49,7 @@ export function createFleetTab(c) {
     if (!force && k === key) return;
     key = k;
     if (selected && !fleets.some((f) => f.id === selected)) selected = null;
-    list.replaceChildren(
+    patch(list, [
       h('h3', {}, t('fleets.ours')),
       fleets.length ? h('div.fleet-list', {}, ...fleets.map((f) => h('button', {
         className: `fleet-pick${f.id === selected ? ' on' : ''}`,
@@ -59,11 +59,11 @@ export function createFleetTab(c) {
       h('div.dim.small', {}, `${f.ships ? t('fleets.shipsStrength', { count: f.ships, strength: f.strength }) : t('fleets.civilian')} · ${where(c, f)}`),
       ))) : h('p.hint', {}, t('fleets.none')),
       h('p.hint.small', {}, t(c.mode() === 'truth' ? 'fleets.truthHint' : 'fleets.knowledgeHint')),
-    );
+    ], force);
     const f = fleets.find((x) => x.id === selected) ?? null;
     if (f && draft.fleet !== f.id) draft = { fleet: f.id, plan: { ...(f.plan ?? DEFAULT_PLAN) }, approach: 'normal', waypoints: [] };
-    centre.replaceChildren(...(f ? renderFleet(c, f) : [h('p.hint', {}, t('fleets.pick'))]));
-    orders.replaceChildren(...(f ? renderOrders(c, f, draft, () => refresh(true)) : []));
+    patch(centre, (f ? renderFleet(c, f) : [h('p.hint', {}, t('fleets.pick'))]), force);
+    patch(orders, (f ? renderOrders(c, f, draft, () => refresh(true)) : []), force);
   }
   return { element, refresh };
 }

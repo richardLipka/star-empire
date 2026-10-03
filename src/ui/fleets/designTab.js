@@ -1,5 +1,5 @@
 // @ts-check
-import { h, kv } from '../dom.js';
+import { h, kv, patch } from '../dom.js';
 import { t } from '../../i18n/index.js';
 import { fmtNumber } from '../../i18n/format.js';
 import { HULLS, COMPONENTS, designStats, designNeeds, canBuild } from '../../ships/catalog.js';
@@ -34,7 +34,7 @@ export function createDesignTab(c) {
     const k = `${designs.length}|${selected}|${unlocks.length}|${JSON.stringify(draft)}`;
     if (!force && k === key) return;
     key = k;
-    list.replaceChildren(
+    patch(list, [
       h('h3', {}, t('designs.title')),
       h('div.fleet-list', {}, ...designs.map((d) => {
         const s = designStats(d);
@@ -42,10 +42,10 @@ export function createDesignTab(c) {
           h('div', {}, h('b', {}, designLabel(d)), h('span.dim', {}, ` · ${t(`ship.hull.${d.hull}`)}`)),
           h('div.dim.small', {}, `${t('designs.costStrength', { cost: s.cost, strength: Math.round(s.strength) })}${canBuild(d, unlocks) ? '' : ` · ${t('designs.notYet')}`}`));
       })),
-    );
-    centre.replaceChildren(...renderEditor(c, draft, unlocks, () => refresh(true), (id) => { selected = id; }));
+    ], force);
+    patch(centre, renderEditor(c, draft, unlocks, () => refresh(true), (id) => { selected = id; }), force);
     const current = designs.find((d) => d.id === selected) ?? designs[0];
-    build.replaceChildren(...renderBuild(c, current, order, unlocks, () => refresh(true)));
+    patch(build, renderBuild(c, current, order, unlocks, () => refresh(true)), force);
   }
   return { element, refresh };
 }

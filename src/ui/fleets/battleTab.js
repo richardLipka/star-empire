@@ -1,5 +1,5 @@
 // @ts-check
-import { h, kv } from '../dom.js';
+import { h, kv, patch } from '../dom.js';
 import { t } from '../../i18n/index.js';
 import { fmtYearShort, fmtDuration, fmtSeconds, fmtC, fmtNumber, fmtPeople } from '../../i18n/format.js';
 import { battlesPicture } from '../../perspective/fleets.js';
@@ -33,7 +33,7 @@ export function createBattleTab(c) {
     if (!force && k === key) return;
     key = k;
     if (!selected && reports.length) selected = reports[0].record.id;
-    list.replaceChildren(
+    patch(list, [
       h('h3', {}, t('battles.title')),
       reports.length ? h('div.fleet-list', {}, ...reports.map(({ record: r, receivedAt }) => h('button', {
         className: `fleet-pick${r.id === selected ? ' on' : ''}`, onclick: () => { selected = r.id; refresh(true); },
@@ -42,20 +42,20 @@ export function createBattleTab(c) {
       h('div.dim.small', {}, `${headline(c, r)}${receivedAt != null ? ` · ${t('battles.heard', { age: fmtDuration(receivedAt - r.time) })}` : ''}`),
       ))) : h('p.hint', {}, t('battles.none')),
       h('p.hint.small', {}, t('battles.hint')),
-    );
+    ], force);
     const item = reports.find((x) => x.record.id === selected);
     if (!item) {
-      centre.replaceChildren(h('p.hint', {}, t('battles.pick')));
-      sides.replaceChildren();
+      patch(centre, [h('p.hint', {}, t('battles.pick'))], force);
+      patch(sides, [], force);
       return;
     }
     const r = item.record;
     if (r.kind === 'strike') {
-      centre.replaceChildren(...renderStrike(c, r, item.receivedAt));
-      sides.replaceChildren();
+      patch(centre, renderStrike(c, r, item.receivedAt), force);
+      patch(sides, [], force);
       return;
     }
-    centre.replaceChildren(
+    patch(centre, [
       h('h2', {}, t('battles.at', { system: c.name(r.system), year: fmtYearShort(r.time) })),
       h('p.hint', {}, `${t('empire.name', { id: r.attacker })} → ${t('empire.name', { id: r.defender })} · ${t(`battles.outcome.${r.outcome}`)}`),
       kv([
@@ -67,8 +67,8 @@ export function createBattleTab(c) {
       ]),
       h('div.battle-timeline', {}, timeline(r)),
       h('p.hint.small', {}, t('battles.timelineHint')),
-    );
-    sides.replaceChildren(...r.sides.flatMap((s) => renderSide(s)));
+    ], force);
+    patch(sides, r.sides.flatMap((s) => renderSide(s)), force);
   }
   return { element, refresh };
 }
